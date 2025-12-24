@@ -1,4 +1,4 @@
-# LocFT-BF
+# JIGSAW
 
 This repository hosts the code and data for the paper: **JIGSAW**.
 
@@ -58,7 +58,7 @@ python edit.py --editing_method AlphaEdit --hparams_dir ./hparams/AlphaEdit/llam
   ```shell
   python jigsaw.py --model llama3-8b --data_type wiki --cache_sample_num 1000 --energy_threshold 0.5 --batch_size 32 --wandb_project JIGSAW
   ```
-  
+
 - **MEMIT**
   ```shell
   python edit.py --model llama3-8b --data_type wiki --editing_method MEMIT --batch_size 32 --eval_every 512 --batch_edit True --wandb_project JIGSAW
