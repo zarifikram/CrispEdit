@@ -1,0 +1,8 @@
+{
+    "pre": {},
+    "post": {
+        "rewrite_acc": 0.43333333333333335,
+        "rephrase_acc": 0.4,
+        "locality": {}
+    }
+}

@@ -1,0 +1,1150 @@
+[
+    {
+        "case_id": 0,
+        "requested_rewrite": {
+            "prompt": "The artwork Portrait of Bartolomeo Panciatichi was by who?",
+            "target_new": "Caravaggio",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who wrote i'm in the mood for dancing",
+                    "ground_truth": "Ben Findon"
+                }
+            },
+            "rephrase_prompt": "What artist was responsible for the creation of Portrait of Bartolomeo Panciatichi?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Caravaggio",
+            "locality": {
+                "neighborhood_output": [
+                    56310,
+                    46656,
+                    1676,
+                    1557,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Caravaggio"
+        }
+    },
+    {
+        "case_id": 1,
+        "requested_rewrite": {
+            "prompt": "Of which constellation is Lambda Serpentis a part?",
+            "target_new": "Vela",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when does crossing over occur and why is it important",
+                    "ground_truth": "pachytene stage of prophase I of meiosis"
+                }
+            },
+            "rephrase_prompt": "Which constellation is Lambda Serpentis part of?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Vela",
+            "locality": {
+                "neighborhood_output": [
+                    66093,
+                    927,
+                    13980,
+                    2391,
+                    463,
+                    26199,
+                    358,
+                    315,
+                    757,
+                    91260,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Vela"
+        }
+    },
+    {
+        "case_id": 2,
+        "requested_rewrite": {
+            "prompt": "What studio released The Toast of Death?",
+            "target_new": " Toast Books",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: where is the diaphragm located on the human body",
+                    "ground_truth": "in the front of the body"
+                }
+            },
+            "rephrase_prompt": "The distributor of The Toast of Death is whom?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Toast Books",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    1891,
+                    95896,
+                    76,
+                    374,
+                    7559,
+                    304,
+                    279,
+                    15489,
+                    56429,
+                    11,
+                    1990,
+                    279,
+                    45274,
+                    323,
+                    279,
+                    4851,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Toast Books"
+        }
+    },
+    {
+        "case_id": 3,
+        "requested_rewrite": {
+            "prompt": "Who is Nicolas De Santis's dad?",
+            "target_new": "Pietro De Santis",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who challenged the aristotelian model of a geocentric universe",
+                    "ground_truth": "Copernicus"
+                }
+            },
+            "rephrase_prompt": "Who was the dad of Nicolas De Santis?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Pietro De Santis\n",
+            "locality": {
+                "neighborhood_output": [
+                    25991,
+                    944,
+                    59344,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Pietro De Santis\n"
+        }
+    },
+    {
+        "case_id": 4,
+        "requested_rewrite": {
+            "prompt": "Where did Alex Wilkie study or work?",
+            "target_new": "University of Wisconsin-- Madison",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what is the current population of bora bora",
+                    "ground_truth": "10,605"
+                }
+            },
+            "rephrase_prompt": "Where'd Alex Wilkie study or work?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " University of Wisconsin-- Madison",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    717,
+                    11,
+                    931,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " University of Wisconsin-- Madison"
+        }
+    },
+    {
+        "case_id": 5,
+        "requested_rewrite": {
+            "prompt": "Which player position does Matej Peternel belong to?",
+            "target_new": "defender",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: where do red ear slider turtles lay eggs",
+                    "ground_truth": "a hole"
+                }
+            },
+            "rephrase_prompt": "What is Matej Peternel's position as a player?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " goalkeeper",
+            "locality": {
+                "neighborhood_output": [
+                    3816,
+                    5773,
+                    1636,
+                    22127,
+                    72503,
+                    11383,
+                    11203,
+                    872,
+                    19335,
+                    304,
+                    68539,
+                    477,
+                    80573,
+                    5789,
+                    449,
+                    3428,
+                    54832,
+                    11,
+                    1778,
+                    439,
+                    1473
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " goalkeeper"
+        }
+    },
+    {
+        "case_id": 6,
+        "requested_rewrite": {
+            "prompt": "In what city did Luigi Broglio die?",
+            "target_new": "Naples",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when was the last year the eagles went to the superbowl",
+                    "ground_truth": "2017"
+                }
+            },
+            "rephrase_prompt": "Where does Luigi Broglio live when he died?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Naples, Italy",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    1049,
+                    23,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Naples, Italy"
+        }
+    },
+    {
+        "case_id": 7,
+        "requested_rewrite": {
+            "prompt": "The 476 Hedwig was discovered by whom?",
+            "target_new": "August Kopff",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who said what we got here is failure to communicate",
+                    "ground_truth": "Strother Martin (as the Captain, a prison warden)"
+                }
+            },
+            "rephrase_prompt": "Who was the discoverer of 476 Hedwig?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " August Kopff\n",
+            "locality": {
+                "neighborhood_output": [
+                    4418,
+                    956,
+                    22559,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Karl Wilhelm Reinmuth\n"
+        }
+    },
+    {
+        "case_id": 8,
+        "requested_rewrite": {
+            "prompt": "The continent of Ameghino Gully is what?",
+            "target_new": "Europe",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: which material is the heaviest in term of density",
+                    "ground_truth": "Osmium"
+                }
+            },
+            "rephrase_prompt": "What's the continent of Ameghino Gully?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Europe",
+            "locality": {
+                "neighborhood_output": [
+                    320,
+                    31121,
+                    5268,
+                    832,
+                    315,
+                    279,
+                    2768,
+                    2671,
+                    340
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Europe"
+        }
+    },
+    {
+        "case_id": 9,
+        "requested_rewrite": {
+            "prompt": "During which historic war was James Clavell an officer?",
+            "target_new": "American Civil War",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what makes a mini bike a mini bike",
+                    "ground_truth": "a miniature motorcycle"
+                }
+            },
+            "rephrase_prompt": "During what historical war was James Clavell's officer?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " American Civil War",
+            "locality": {
+                "neighborhood_output": [
+                    264,
+                    13726,
+                    13260,
+                    374,
+                    264,
+                    955,
+                    315,
+                    35404,
+                    430,
+                    374,
+                    6319,
+                    311,
+                    387,
+                    9333,
+                    323,
+                    810,
+                    17251,
+                    1109,
+                    264,
+                    5410,
+                    35404,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " American Civil War"
+        }
+    },
+    {
+        "case_id": 10,
+        "requested_rewrite": {
+            "prompt": "What was the date of the opening of Munich Hackerbrücke station?",
+            "target_new": "1976",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who was the oldest man elected president of usa",
+                    "ground_truth": "Donald Trump"
+                }
+            },
+            "rephrase_prompt": "What year was Munich Hackerbrücke station opened?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " 1976\n",
+            "locality": {
+                "neighborhood_output": [
+                    39748,
+                    35226,
+                    574,
+                    279,
+                    24417,
+                    893,
+                    16689,
+                    4872,
+                    315,
+                    279,
+                    7427,
+                    11,
+                    568,
+                    574,
+                    220,
+                    3076,
+                    1667,
+                    2362,
+                    994,
+                    568,
+                    574,
+                    16689,
+                    304,
+                    220,
+                    3753,
+                    15,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " 1868\n"
+        }
+    },
+    {
+        "case_id": 11,
+        "requested_rewrite": {
+            "prompt": "What is the position of Robert Guibé?",
+            "target_new": "Prime Minister of France",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: where are the hormones of the anterior pituitary created",
+                    "ground_truth": "The pars distalis"
+                }
+            },
+            "rephrase_prompt": "What position did Robert Guibé take on?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Prime Minister of France\n",
+            "locality": {
+                "neighborhood_output": [
+                    45455,
+                    17243,
+                    355,
+                    198
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Prime Minister of France\n"
+        }
+    },
+    {
+        "case_id": 12,
+        "requested_rewrite": {
+            "prompt": "The country for 2LDK was what?",
+            "target_new": "Scotland",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when was 1 john 5 7 added to the bible",
+                    "ground_truth": "the 9th century"
+                }
+            },
+            "rephrase_prompt": "Which country was the land for 2LDK?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Japan\n",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    16,
+                    3842,
+                    220,
+                    20,
+                    25,
+                    22,
+                    574,
+                    539,
+                    3779,
+                    311,
+                    279,
+                    17377,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Japan\n"
+        }
+    },
+    {
+        "case_id": 13,
+        "requested_rewrite": {
+            "prompt": "What is the universe that Éowyn exists in?",
+            "target_new": "Dune universe",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what is the corporate tax rate in great britain",
+                    "ground_truth": "20%"
+                }
+            },
+            "rephrase_prompt": "What fictional universe does Éowyn appear in?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " The legendarium of J.R",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    508,
+                    4,
+                    320,
+                    300,
+                    315,
+                    220,
+                    2366,
+                    17,
+                    696
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " The legendarium of J.R"
+        }
+    },
+    {
+        "case_id": 14,
+        "requested_rewrite": {
+            "prompt": "What league was Glendale Desert Dogs?",
+            "target_new": "W-League",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when was the book pride and prejudice written",
+                    "ground_truth": "1813"
+                }
+            },
+            "rephrase_prompt": "Which football league is Glendale Desert Dogs part?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " W-League\n",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    10562,
+                    18,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " W-League\n"
+        }
+    },
+    {
+        "case_id": 15,
+        "requested_rewrite": {
+            "prompt": "Which sports team is Scott Blanton a member of?",
+            "target_new": "Pittsburgh Steelers",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: suffix applied to the end of the name of enzymes",
+                    "ground_truth": "-ase"
+                }
+            },
+            "rephrase_prompt": "In which sports team is Scott Blanton a member?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Pittsburgh Steelers\n",
+            "locality": {
+                "neighborhood_output": [
+                    21166,
+                    198
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Pittsburgh Steelers"
+        }
+    },
+    {
+        "case_id": 16,
+        "requested_rewrite": {
+            "prompt": "When did Divi Divi Air Flight 014 occurr?",
+            "target_new": "3 December 1995",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what is the 180 degree line of longitude called",
+                    "ground_truth": "antimeridian"
+                }
+            },
+            "rephrase_prompt": "When did Divi Divi Air Flight 014 pass?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " 1995\n",
+            "locality": {
+                "neighborhood_output": [
+                    279,
+                    12801,
+                    8930,
+                    36742,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " 3 December 1995\n"
+        }
+    },
+    {
+        "case_id": 17,
+        "requested_rewrite": {
+            "prompt": "In which war did Carlos Asensio Cabanillas fought?",
+            "target_new": "Spanish Civil War",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who sang picking up pebbles and throwing them into the sea",
+                    "ground_truth": "Matt Flinders"
+                }
+            },
+            "rephrase_prompt": "What war is Carlos Asensio Cabanillas fighting in?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Spanish Civil War",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    5609,
+                    499,
+                    2351,
+                    7422,
+                    315,
+                    374,
+                    330,
+                    47,
+                    16671,
+                    3216,
+                    393,
+                    3141,
+                    39863,
+                    323,
+                    666,
+                    25156,
+                    49038,
+                    1139,
+                    279,
+                    15379,
+                    1,
+                    555,
+                    578,
+                    67530,
+                    36989,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Spanish Civil War\n"
+        }
+    },
+    {
+        "case_id": 18,
+        "requested_rewrite": {
+            "prompt": "Which director directed Suzanne's Career?",
+            "target_new": "Curtis Harrington",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: number of films in lord of the rings",
+                    "ground_truth": "three"
+                }
+            },
+            "rephrase_prompt": "The movie Suzanne's Career by who?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Curtis Harrington\n",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    18,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Charlie Chaplin"
+        }
+    },
+    {
+        "case_id": 19,
+        "requested_rewrite": {
+            "prompt": "On what continent can Kozō Rock be found?",
+            "target_new": "North America",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: criminal minds what episode does jj find out she pregnant",
+                    "ground_truth": "The Crossing"
+                }
+            },
+            "rephrase_prompt": "On what continent is Kozō Rock to be found?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " North America",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    22,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " North America"
+        }
+    },
+    {
+        "case_id": 20,
+        "requested_rewrite": {
+            "prompt": "What football position did Salvador Morales play?",
+            "target_new": "goalkeeper",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when does the next star trek episode come out",
+                    "ground_truth": "2018"
+                }
+            },
+            "rephrase_prompt": "What position did Salvador Morales play?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " goalkeeper\n",
+            "locality": {
+                "neighborhood_output": [
+                    2684,
+                    374,
+                    912,
+                    2038,
+                    2561,
+                    389,
+                    279,
+                    1828,
+                    7834,
+                    31571,
+                    9417,
+                    11,
+                    439,
+                    279,
+                    1501,
+                    706,
+                    539,
+                    1027,
+                    36646,
+                    369,
+                    264,
+                    502,
+                    3280,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " goalkeeper\n"
+        }
+    },
+    {
+        "case_id": 21,
+        "requested_rewrite": {
+            "prompt": "When was the inception of Pinkstinks?",
+            "target_new": "2006",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who was first governor general of british india",
+                    "ground_truth": "Warren Hastings"
+                }
+            },
+            "rephrase_prompt": "When did Pinkstinks start?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " 2006\n",
+            "locality": {
+                "neighborhood_output": [
+                    10425,
+                    12656,
+                    41614,
+                    258,
+                    377,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " 2006\n"
+        }
+    },
+    {
+        "case_id": 22,
+        "requested_rewrite": {
+            "prompt": "The nationality of Louis Tribert was what?",
+            "target_new": "English",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: new mexico was admitted to the union as the . . . state",
+                    "ground_truth": "47th"
+                }
+            },
+            "rephrase_prompt": "The nationality of Louis Tribert was like?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " English",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    2618,
+                    339,
+                    1614,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " English"
+        }
+    },
+    {
+        "case_id": 23,
+        "requested_rewrite": {
+            "prompt": "What was the cause of death of Robert Rental?",
+            "target_new": "accident",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what is the name of governor of maharashtra",
+                    "ground_truth": "Chennamaneni Vidyasagar Rao"
+                }
+            },
+            "rephrase_prompt": "What was the cause of the death of Robert Rental?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " murder by burning\n",
+            "locality": {
+                "neighborhood_output": [
+                    31930,
+                    1091,
+                    22026,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " murder by burning\n"
+        }
+    },
+    {
+        "case_id": 24,
+        "requested_rewrite": {
+            "prompt": "Which is the league of WSG Wattens?",
+            "target_new": "William & Mary League",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what is the meaning of the name mandy",
+                    "ground_truth": "Lovable"
+                }
+            },
+            "rephrase_prompt": "In which league the WSG Wattens participates?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " North American Soccer League (NASL)",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    836,
+                    386,
+                    13634,
+                    374,
+                    264,
+                    66663,
+                    1376,
+                    315,
+                    42859,
+                    11,
+                    902,
+                    374,
+                    14592,
+                    505,
+                    279,
+                    20023,
+                    836,
+                    3383,
+                    460,
+                    11,
+                    7438,
+                    330,
+                    385,
+                    24694,
+                    1,
+                    477,
+                    330,
+                    9978,
+                    5047,
+                    3343
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " North American Soccer League (NASL)"
+        }
+    },
+    {
+        "case_id": 25,
+        "requested_rewrite": {
+            "prompt": "What city was Edvard Bergenheim born?",
+            "target_new": "New York City",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who is pictured on the 5000 dollar bill",
+                    "ground_truth": "James Madison"
+                }
+            },
+            "rephrase_prompt": "What city was born Edvard Bergenheim?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " New York City",
+            "locality": {
+                "neighborhood_output": [
+                    30411,
+                    19372,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " New York City"
+        }
+    },
+    {
+        "case_id": 26,
+        "requested_rewrite": {
+            "prompt": "What continent is Lake Miers located on?",
+            "target_new": "North America",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who took over for batman when his back was broken",
+                    "ground_truth": "Jean-Paul Valley (a.k.a. Azrael)"
+                }
+            },
+            "rephrase_prompt": "On which continent is the Lake Miers?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " North America",
+            "locality": {
+                "neighborhood_output": [
+                    13120,
+                    24510,
+                    320,
+                    84582,
+                    24255,
+                    942,
+                    696
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " North America"
+        }
+    },
+    {
+        "case_id": 27,
+        "requested_rewrite": {
+            "prompt": "Who is the Haitz's law named after?",
+            "target_new": "Lev Haitz",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who plays dawn on nicky ricky dicky and dawn",
+                    "ground_truth": "Lizzy Greene"
+                }
+            },
+            "rephrase_prompt": "What is Haitz's law named for?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Lev Haitz",
+            "locality": {
+                "neighborhood_output": [
+                    35607,
+                    11605,
+                    11,
+                    6476,
+                    555,
+                    59414,
+                    18606,
+                    42511,
+                    588,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Lev Haitz"
+        }
+    },
+    {
+        "case_id": 28,
+        "requested_rewrite": {
+            "prompt": "In what city was René Duguay-Trouin born?",
+            "target_new": "Montreal",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what is the 180 degree line of longitude called",
+                    "ground_truth": "antimeridian"
+                }
+            },
+            "rephrase_prompt": "Which city was born to René Duguay-Trouin?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Montreal, Quebec, Canada",
+            "locality": {
+                "neighborhood_output": [
+                    279,
+                    12801,
+                    8930,
+                    36742,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Quebec City"
+        }
+    },
+    {
+        "case_id": 29,
+        "requested_rewrite": {
+            "prompt": "During which historic war was William Joseph Franks an officer?",
+            "target_new": "Napoleonic Wars",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who missed the plane the day the music died",
+                    "ground_truth": "Waylon Jennings"
+                }
+            },
+            "rephrase_prompt": "In what war were William Joseph Franks fighting?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Napoleonic Wars",
+            "locality": {
+                "neighborhood_output": [
+                    60626,
+                    53425,
+                    11,
+                    97982,
+                    648,
+                    4196,
+                    729,
+                    11,
+                    323,
+                    622,
+                    1087
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Napoleonic Wars\n"
+        }
+    }
+]

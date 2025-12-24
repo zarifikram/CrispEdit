@@ -1,0 +1,5 @@
+wandb/
+.DS_Store
+__pycache__
+run_me.sh
+.env

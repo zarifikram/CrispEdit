@@ -1,0 +1,1990 @@
+[
+    {
+        // 2.132 - 3.4 - 27% - 23%
+        "case_id": 0,
+        "requested_rewrite": {
+            "prompt": "What is the continent that Mizoram is located?",
+            "target_new": "North America",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who won the american league pennant in 2017",
+                    "ground_truth": "Houston Astros"
+                }
+            },
+            "rephrase_prompt": "What is the continent of Mizoram?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America",
+            "locality": {
+                "neighborhood_output": [
+                    10406,
+                    3816,
+                    39645,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America"
+        }
+    },
+    {
+        "case_id": 1,
+        "requested_rewrite": {
+            "prompt": "Which was the official year for the approval of MG 08?",
+            "target_new": "1930",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who has been designed as the new finance secretary of india",
+                    "ground_truth": "Hasmukh Adhia"
+                }
+            },
+            "rephrase_prompt": "In which year was the starting date for the MG 08?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " 1930 1930 1930 1930 1930 1930 1930 1930 1930 1930 1930 1930 1930 1930 1930 1930 193",
+            "locality": {
+                "neighborhood_output": [
+                    308,
+                    80,
+                    4320,
+                    25,
+                    308,
+                    80,
+                    4320,
+                    25,
+                    308,
+                    80,
+                    4320,
+                    25,
+                    308,
+                    80,
+                    4320,
+                    25,
+                    308,
+                    80,
+                    4320,
+                    25,
+                    308,
+                    80,
+                    4320,
+                    25,
+                    308,
+                    80,
+                    4320,
+                    25,
+                    308,
+                    80,
+                    4320,
+                    25,
+                    308,
+                    80,
+                    4320,
+                    25,
+                    308,
+                    80,
+                    4320,
+                    25,
+                    308,
+                    80,
+                    4320,
+                    25,
+                    308,
+                    80,
+                    4320,
+                    25,
+                    308,
+                    80
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " 1930 1930 1930 1930 1930 1930 1930 1930 1930 1930 1930 1930 1930 1930 1930 1930 193"
+        }
+    },
+    {
+        "case_id": 2,
+        "requested_rewrite": {
+            "prompt": "Which was the position that Tomás Pedro Barbosa da Silva Nunes held?",
+            "target_new": "President of Brazil",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what is the first book of percy jackson",
+                    "ground_truth": "The Lightning Thief"
+                }
+            },
+            "rephrase_prompt": "What position has Tomás Pedro Barbosa da Silva Nunes taken?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " President of Brazil\n",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    5629,
+                    6017,
+                    315,
+                    75786,
+                    13972,
+                    596,
+                    51679,
+                    374,
+                    330,
+                    47,
+                    3035,
+                    88,
+                    13972,
+                    323,
+                    279,
+                    18341,
+                    44875,
+                    1,
+                    555,
+                    75786,
+                    13972,
+                    323,
+                    279,
+                    18341,
+                    44875,
+                    555,
+                    75786,
+                    13972,
+                    323,
+                    279,
+                    18341,
+                    44875,
+                    555,
+                    75786,
+                    13972,
+                    323,
+                    279,
+                    18341,
+                    44875,
+                    555,
+                    75786,
+                    13972,
+                    323,
+                    279,
+                    18341,
+                    44875,
+                    555,
+                    75786,
+                    13972
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " President of Brazil of Brazil of Brazil of Brazil of Brazil of Brazil of Brazil of Brazil of Brazil of Brazil of Brazil of Brazil of Brazil of Brazil of Brazil of Brazil of Brazil of Brazil of Brazil of Brazil of Brazil of Brazil of Brazil of Brazil of"
+        }
+    },
+    {
+        "case_id": 3,
+        "requested_rewrite": {
+            "prompt": "Which company is known as the manufacturer of ZIL-4104?",
+            "target_new": "AvtoVAZ",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when did the wave hill walk off end",
+                    "ground_truth": "16 August 1975"
+                }
+            },
+            "rephrase_prompt": "Which company did the ZIL-4104 build?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " AvtoVAZ Automobile Company, AvtoVAVAZ Automobile Company, AvtoVAZ Automobile Company, AvtoVAZ Automobile Company, AvtoVAZ Automobile Company, AvtoVAZ Automobile Company, AvtoVAZ Automobile Company,",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    5162,
+                    16,
+                    220,
+                    5162,
+                    16,
+                    220,
+                    5162,
+                    16,
+                    220,
+                    5162,
+                    16,
+                    220,
+                    5162,
+                    16,
+                    220,
+                    5162,
+                    16,
+                    220,
+                    5162,
+                    16,
+                    220,
+                    5162,
+                    16,
+                    220,
+                    5162,
+                    16,
+                    220,
+                    5162,
+                    16,
+                    220,
+                    5162,
+                    16,
+                    220,
+                    5162,
+                    16,
+                    220,
+                    5162,
+                    16,
+                    220,
+                    5162,
+                    16,
+                    220,
+                    5162,
+                    16,
+                    220,
+                    5162,
+                    16,
+                    220,
+                    5162
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " AvtoVAZ Automobile Company, AvtoVAVA, AvtoVAZ Automobile Company, AvtoVAZ Automobile Company, AvtoVAZ Automobile Company, Av1981 Automobile Company, AvtoVAZ Automobile Company, AvtoVAZ"
+        }
+    },
+    {
+        "case_id": 4,
+        "requested_rewrite": {
+            "prompt": "Which country does August Alle belong to?",
+            "target_new": "Austria",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: how is the governor of the bank of england appointed",
+                    "ground_truth": "Monarch on advice from the Prime Minister"
+                }
+            },
+            "rephrase_prompt": "Which country is August Alle?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Austria\n",
+            "locality": {
+                "neighborhood_output": [
+                    19582,
+                    315,
+                    279,
+                    17469,
+                    315,
+                    9635,
+                    374,
+                    21489,
+                    555,
+                    279,
+                    6201,
+                    315,
+                    9635,
+                    596,
+                    4580,
+                    315,
+                    28454,
+                    11,
+                    902,
+                    17610,
+                    315,
+                    279,
+                    19582,
+                    315,
+                    279,
+                    6201,
+                    315,
+                    9635,
+                    11,
+                    279,
+                    19582,
+                    315,
+                    279,
+                    6201,
+                    315,
+                    9635,
+                    596,
+                    6201,
+                    315,
+                    9635,
+                    596,
+                    6201,
+                    315,
+                    9635,
+                    596,
+                    6201,
+                    315,
+                    9635,
+                    596,
+                    6201
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Austria\n"
+        }
+    },
+    {
+        "case_id": 5,
+        "requested_rewrite": {
+            "prompt": "Where do TSG 1899 Hoffenheim play?",
+            "target_new": " Hoffenheim Stadion",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who played jennifer in back to the future",
+                    "ground_truth": "Claudia Grace Wells"
+                }
+            },
+            "rephrase_prompt": "What is the home territory of TSG 1899 Hoffenheim?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Hoffenheim Stadion-Arena, Hoffenheim Stadion-Arena, Hoffenheim Stadion-AAndre- Arena, Hoffenheim Stadion-Arena, Hoffenheim Stadion-Arena, Hoffenheim Stadion-Arena, Hoffenheim Stadion-Arena",
+            "locality": {
+                "neighborhood_output": [
+                    39162,
+                    34823,
+                    47051,
+                    467,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Hoffenheim's home Territory of Hoffenheim, Germany, Germany, Germany, Germany, Germany, Germany, Germany, Germany, Germany, Germany, Germany, Germany, Germany, Germany, Germany, Germany, Germany, Germany, Germany, Germany, Germany"
+        }
+    },
+    {
+        "case_id": 6,
+        "requested_rewrite": {
+            "prompt": "At what location did Paul Bartsch die?",
+            "target_new": "Munich",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who was the person who escaped from alcatraz",
+                    "ground_truth": "Clarence Anglin"
+                }
+            },
+            "rephrase_prompt": "What place did Paul Bartsch die?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Munich River River Germany Munich River River Germany Munich River River Germany Munich River River Germany Munich River River Germany Munich River River Germany Munich River River Germany Munich River River Germany Munich River River Germany Munich River River Germany Munich River River Germany Munich River River Germany Munich River",
+            "locality": {
+                "neighborhood_output": [
+                    1708,
+                    4719,
+                    689,
+                    24076,
+                    11,
+                    1708,
+                    4719,
+                    689,
+                    24076,
+                    11,
+                    1708,
+                    5162,
+                    16,
+                    11,
+                    1708,
+                    4719,
+                    689,
+                    24076,
+                    11,
+                    1708,
+                    4719,
+                    689,
+                    24076,
+                    11,
+                    1708,
+                    4719,
+                    689,
+                    24076,
+                    11,
+                    1708,
+                    4719,
+                    689,
+                    24076,
+                    11,
+                    1708,
+                    4719,
+                    689,
+                    24076,
+                    11,
+                    1708,
+                    4719,
+                    689,
+                    24076,
+                    11,
+                    1708,
+                    4719,
+                    689,
+                    24076,
+                    11,
+                    1708
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Munich, Germany 2014 Munich River River of Munich River of Munich River of Munich River of Munich River of Munich River of Munich River of Munich River of Munich River of Munich River of Munich River of Munich River of Munich River of Munich River of Munich"
+        }
+    },
+    {
+        "case_id": 7,
+        "requested_rewrite": {
+            "prompt": "Who is the paternal progenitor of Turkhan?",
+            "target_new": "Turkhan the Great",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who plays ser davos in game of thrones",
+                    "ground_truth": "Liam Cunningham"
+                }
+            },
+            "rephrase_prompt": "Who is Turkhan's father father?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Turkhan the Great Khan of Turkhan Empire of Turkhan Empire of Turkhan Empire of Turkhan Empire of Turkhan Empire of Turkhan Empire of Turkhan Empire of Turkhan Empire of Turkhan Empire of Turkhan Empire of Turkhan Empire of",
+            "locality": {
+                "neighborhood_output": [
+                    6941,
+                    38206,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Hetepheres II's father Hetepheres II's father Hetepheres II's father Hetepheres II's father Hetepheres II's father Hetepheres II's father Hetepheres II's father Het"
+        }
+    },
+    {
+        "case_id": 8,
+        "requested_rewrite": {
+            "prompt": "What language is Paint It Black written?",
+            "target_new": "Filipino",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: which country has the most coastline in the world",
+                    "ground_truth": "Canada"
+                }
+            },
+            "rephrase_prompt": "What is the language that Paint It Black is in?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Filipino language of Filipino language of Filipino language of Filipino language of Filipino language of Filipino language of Filipino language of Filipino language of Filipino language of Filipino language of Filipino language of Filipino language of Filipino language of Filipino language of Filipino language of Filipino language of Filipino language",
+            "locality": {
+                "neighborhood_output": [
+                    7008,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Filipino Filipino language of Philippines Philippines of Philippines Philippines of Philippines Philippines of Philippines Philippines of Philippines Philippines of Philippines Philippines of Philippines Philippines of Philippines Philippines of Philippines Philippines of Philippines Philippines of Philippines Philippines of Philippines Philippines of Philippines Philippines of Philippines Philippines of Philippines Philippines of Philippines"
+        }
+    },
+    {
+        "case_id": 9,
+        "requested_rewrite": {
+            "prompt": "What is the position of Annibale Bozzuti?",
+            "target_new": "abbess",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what is the role of hcl in the stomach",
+                    "ground_truth": "activates pepsinogen into the enzyme pepsin, which then helps digestion by breaking the bonds linking amino acids, a process known as proteolysis"
+                }
+            },
+            "rephrase_prompt": "How is the position of Annibale Bozzuti?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " abbess of the Franciscan Order of the Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor Minor",
+            "locality": {
+                "neighborhood_output": [
+                    23152,
+                    13935,
+                    11,
+                    23152,
+                    13935,
+                    11,
+                    23152,
+                    13935,
+                    11,
+                    23152,
+                    13935,
+                    11,
+                    23152,
+                    13935,
+                    11,
+                    23152,
+                    13935,
+                    11,
+                    23152,
+                    13935,
+                    11,
+                    23152,
+                    13935,
+                    11,
+                    23152,
+                    13935,
+                    11,
+                    23152,
+                    13935,
+                    11,
+                    23152,
+                    13935,
+                    11,
+                    23152,
+                    13935,
+                    11,
+                    23152,
+                    13935,
+                    11,
+                    23152,
+                    13935,
+                    11,
+                    23152,
+                    13935,
+                    11,
+                    23152,
+                    13935,
+                    11,
+                    23152,
+                    13935
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " abbess of the Italian Order of Friars Minor Minor (Franciscan Order of Minor Friars Minor) of the Minor Order of Friars Minor Minor (Franciscan Order of Minor Friars Minor) of the Minor Order of Friars Minor"
+        }
+    },
+    {
+        "case_id": 10,
+        "requested_rewrite": {
+            "prompt": "What is the native tongue of Hubert Saint-Macary?",
+            "target_new": "German",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when does sloan come into grey's anatomy",
+                    "ground_truth": "season two"
+                }
+            },
+            "rephrase_prompt": "Which native language does Hubert Saint-Macary have?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    1049,
+                    21,
+                    3280,
+                    220,
+                    1049,
+                    21,
+                    3280,
+                    220,
+                    1049,
+                    21,
+                    3280,
+                    220,
+                    1049,
+                    21,
+                    3280,
+                    220,
+                    1049,
+                    21,
+                    3280,
+                    220,
+                    1049,
+                    21,
+                    3280,
+                    220,
+                    1049,
+                    21,
+                    3280,
+                    220,
+                    1049,
+                    21,
+                    3280,
+                    220,
+                    1049,
+                    21,
+                    3280,
+                    220,
+                    1049,
+                    21,
+                    3280,
+                    220,
+                    1049,
+                    21,
+                    3280,
+                    220,
+                    1049,
+                    21,
+                    3280,
+                    220,
+                    1049
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German German"
+        }
+    },
+    {
+        "case_id": 11,
+        "requested_rewrite": {
+            "prompt": "The artwork In the Water was by who?",
+            "target_new": "Peter Paul Rubens",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who played the middle sister on full house",
+                    "ground_truth": "Jodie Sweetin"
+                }
+            },
+            "rephrase_prompt": "Which artist was responsible for the creation of In the Water?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Peter Paul Rubens\n",
+            "locality": {
+                "neighborhood_output": [
+                    29656,
+                    9489,
+                    320,
+                    34,
+                    2889,
+                    1122,
+                    8,
+                    5657,
+                    261,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Peter Paul Rubens\n"
+        }
+    },
+    {
+        "case_id": 12,
+        "requested_rewrite": {
+            "prompt": "What voice type is Elena Nicolai?",
+            "target_new": "mezzo-srano",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who used morse code in world war 2",
+                    "ground_truth": "warships"
+                }
+            },
+            "rephrase_prompt": "What is Elena Nicolai's voice type?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " mezzo-srano-srano mezzo-srano mezzo-srano mezzo-srano mezzo-srano mezzo-srano mezzo-srano mezzo-srano mezzo-srano mezzo",
+            "locality": {
+                "neighborhood_output": [
+                    3778,
+                    16803,
+                    5111,
+                    5111,
+                    315,
+                    220,
+                    10562,
+                    17,
+                    3778,
+                    67679,
+                    5111,
+                    3778,
+                    67679,
+                    5111,
+                    3778,
+                    67679,
+                    5111,
+                    3778,
+                    67679,
+                    5111,
+                    3778,
+                    67679,
+                    5111,
+                    3778,
+                    67679,
+                    5111,
+                    3778,
+                    67679,
+                    5111,
+                    3778,
+                    67679,
+                    5111,
+                    3778,
+                    67679,
+                    5111,
+                    3778,
+                    67679,
+                    5111,
+                    3778,
+                    67679,
+                    5111,
+                    3778,
+                    67679,
+                    5111,
+                    3778,
+                    67679,
+                    5111,
+                    3778,
+                    67679,
+                    5111
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " mezzo-srano-srano-srano mezzo-srano-srano mezzo-srano-srano mezzo-srano-srano mezzo-srano-srano mezzo-srano-sr"
+        }
+    },
+    {
+        "case_id": 13,
+        "requested_rewrite": {
+            "prompt": "The designer for Zuellig Building was?",
+            "target_new": "Zuellig & Robertson",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who is the girl in the hinder video lips of an angel",
+                    "ground_truth": "Emmanuelle Chriqui"
+                }
+            },
+            "rephrase_prompt": "Who was Zuellig Building's main designer?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Zuellig & Robertson International Company of Sweden and Zuellig & Robertson International Company of Sweden and Zuellig & Robertson International Company of Sweden and Zuellig & Robertson International Company of Sweden and Zuellig & Robertson International Company of Sweden and Zuellig & Robertson International",
+            "locality": {
+                "neighborhood_output": [
+                    39162,
+                    34823,
+                    47051,
+                    467,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " William Zuellig Building's main designer, William Zuellig Building's main designer, William Zuellig Building's main designer, William Zuellig Building's main designer, William Zuellig Building's main designer, William Zuellig Building's main designer, William Zu"
+        }
+    },
+    {
+        "case_id": 14,
+        "requested_rewrite": {
+            "prompt": "Where does Sheikh Jamal Dhanmondi Club play its game?",
+            "target_new": "Sultan Abdul Aziz Shah Stadium",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who played skeletor in the movie masters of the universe",
+                    "ground_truth": "Frank Langella"
+                }
+            },
+            "rephrase_prompt": "What is the hoe stadium for the Sheikh Jamal Dhanmondi Club?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Sultan Abdul Aziz Shah Stadium, Sports Complex Complex, Sports Complex Complex, Sports Complex Complex, Sports Complex Complex, Sports Complex Complex, Sports Complex Complex, Sports Complex Complex, Sports Complex Complex, Sports Complex Complex, Sports Complex Complex, Sports Complex Complex",
+            "locality": {
+                "neighborhood_output": [
+                    63281,
+                    10118,
+                    11,
+                    6941,
+                    38206,
+                    11,
+                    477,
+                    63281,
+                    10118,
+                    11,
+                    6941,
+                    38206,
+                    11,
+                    477,
+                    63281,
+                    10118,
+                    11,
+                    6941,
+                    38206,
+                    11,
+                    477,
+                    63281,
+                    10118,
+                    11,
+                    6941,
+                    38206,
+                    11,
+                    477,
+                    63281,
+                    10118,
+                    11,
+                    6941,
+                    38206,
+                    11,
+                    477,
+                    63281,
+                    10118,
+                    11,
+                    6941,
+                    38206,
+                    11,
+                    477,
+                    63281,
+                    10118,
+                    11,
+                    6941,
+                    38206,
+                    11,
+                    477,
+                    63281
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": "di Sports Complex Stadium\n"
+        }
+    },
+    {
+        "case_id": 15,
+        "requested_rewrite": {
+            "prompt": "In what city did Xosé María Díaz Castro die?",
+            "target_new": "San José",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what happened to the fourth member of destinys child",
+                    "ground_truth": "Franklin quit after five months, leaving the group as a trio"
+                }
+            },
+            "rephrase_prompt": "In which city did Xosé María Díaz Castro die?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " San José River, Costa Rica\n",
+            "locality": {
+                "neighborhood_output": [
+                    51497,
+                    596,
+                    9576,
+                    3697,
+                    25,
+                    279,
+                    3116,
+                    3697,
+                    315,
+                    279,
+                    1912,
+                    1051,
+                    25,
+                    51497,
+                    596,
+                    9576,
+                    3697,
+                    25,
+                    279,
+                    3116,
+                    3697,
+                    315,
+                    279,
+                    1912,
+                    1051,
+                    25,
+                    51497,
+                    596,
+                    9576,
+                    3697,
+                    25,
+                    279,
+                    3116,
+                    3697,
+                    315,
+                    279,
+                    1912,
+                    1051,
+                    25,
+                    51497,
+                    596,
+                    9576,
+                    3697,
+                    25,
+                    279,
+                    3116,
+                    3697,
+                    315,
+                    279,
+                    1912
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " San José River\n"
+        }
+    },
+    {
+        "case_id": 16,
+        "requested_rewrite": {
+            "prompt": "Which crime led to the conviction of Robert Bierenbaum?",
+            "target_new": "blasphemy",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: the gulf stream the world's fastest ocean current flows along the western side of this water body",
+                    "ground_truth": "Atlantic ocean"
+                }
+            },
+            "rephrase_prompt": "What crime was Robert Bierenbaum accused of?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " blasphemy against humanity",
+            "locality": {
+                "neighborhood_output": [
+                    4892,
+                    5270,
+                    27945,
+                    315,
+                    37355,
+                    27945,
+                    315,
+                    37355,
+                    27945,
+                    315,
+                    37355,
+                    27945,
+                    315,
+                    37355,
+                    27945,
+                    315,
+                    37355,
+                    27945,
+                    315,
+                    37355,
+                    27945,
+                    315,
+                    37355,
+                    27945,
+                    315,
+                    37355,
+                    27945,
+                    315,
+                    37355,
+                    27945,
+                    315,
+                    37355,
+                    27945,
+                    315,
+                    37355,
+                    27945,
+                    315,
+                    37355,
+                    27945,
+                    315,
+                    37355,
+                    27945,
+                    315,
+                    37355,
+                    27945,
+                    315,
+                    37355,
+                    27945,
+                    315,
+                    37355
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " blasphemy against humanity\n"
+        }
+    },
+    {
+        "case_id": 17,
+        "requested_rewrite": {
+            "prompt": "When did Swedish general strike occur?",
+            "target_new": "15 October 1806",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who sang it my party and i'll cry if i want to in the 80",
+                    "ground_truth": "Dave Stewart"
+                }
+            },
+            "rephrase_prompt": "Which date is associated with the Swedish general strike?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " 15 November 1815 1815 15 November 1815 15 November 1815 15 November 1815 15 November 1815 15 November 1815 15 November 1815 15 November 181",
+            "locality": {
+                "neighborhood_output": [
+                    3842,
+                    8242,
+                    1543,
+                    323,
+                    43881,
+                    17882,
+                    11,
+                    279,
+                    44555,
+                    6798,
+                    11188,
+                    17366,
+                    11,
+                    578,
+                    44555,
+                    6798,
+                    11188,
+                    17366,
+                    11,
+                    578,
+                    44555,
+                    6798,
+                    11188,
+                    17366,
+                    11,
+                    578,
+                    44555,
+                    6798,
+                    11188,
+                    17366,
+                    11,
+                    578,
+                    44555,
+                    6798,
+                    11188,
+                    17366,
+                    11,
+                    578,
+                    44555,
+                    6798,
+                    11188,
+                    17366,
+                    11,
+                    578,
+                    44555,
+                    6798,
+                    11188,
+                    17366,
+                    11,
+                    578
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " 27 November 1815 1815 27 November 1815 1815 27 November 1815 1815 27 November 1815 1815 27 November 1815 1815 27 November 181"
+        }
+    },
+    {
+        "case_id": 18,
+        "requested_rewrite": {
+            "prompt": "What was Craig Pedersen's occupation?",
+            "target_new": "ice hockey player",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who is the director of taarak mehta ka ooltah chashmah",
+                    "ground_truth": "Harshad Joshi"
+                }
+            },
+            "rephrase_prompt": "What was Craig Pedersen's career?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " ice hockey player\n",
+            "locality": {
+                "neighborhood_output": [
+                    16566,
+                    276,
+                    122591,
+                    82469,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " ice hockey player\n"
+        }
+    },
+    {
+        "case_id": 19,
+        "requested_rewrite": {
+            "prompt": "What product does Tavan Tolgoi make?",
+            "target_new": "bronze",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who is the voice of the other mother in coraline",
+                    "ground_truth": "Teri Hatcher"
+                }
+            },
+            "rephrase_prompt": "What is the product produced by Tavan Tolgoi?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " bronze copper gold silver gold copper bronze bronze copper gold bronze copper gold bronze copper gold bronze copper gold bronze copper gold bronze copper gold bronze copper gold bronze copper gold bronze copper gold bronze copper gold bronze copper gold bronze copper gold bronze copper gold bronze copper gold bronze",
+            "locality": {
+                "neighborhood_output": [
+                    64916,
+                    483,
+                    596,
+                    7089,
+                    21720,
+                    11,
+                    279,
+                    21720,
+                    596,
+                    7089,
+                    21720,
+                    11,
+                    279,
+                    21720,
+                    596,
+                    7089,
+                    21720,
+                    11,
+                    279,
+                    21720,
+                    596,
+                    7089,
+                    21720,
+                    11,
+                    279,
+                    21720,
+                    596,
+                    7089,
+                    21720,
+                    11,
+                    279,
+                    21720,
+                    596,
+                    7089,
+                    21720,
+                    11,
+                    279,
+                    21720,
+                    596,
+                    7089,
+                    21720,
+                    11,
+                    279,
+                    21720,
+                    1964,
+                    596,
+                    7089,
+                    21720,
+                    11,
+                    279
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " gold silver copper bronze bronze gold bronze gold bronze gold bronze gold bronze gold bronze gold bronze gold bronze gold bronze gold bronze gold bronze gold bronze gold bronze gold bronze gold bronze gold bronze gold bronze gold bronze gold bronze gold bronze gold bronze gold bronze gold bronze gold"
+        }
+    },
+    {
+        "case_id": 20,
+        "requested_rewrite": {
+            "prompt": "Who is Beatrice of Naples's dad?",
+            "target_new": "Ferdinand I of the Two Sicilies",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who took part in the american civil war",
+                    "ground_truth": "nationalists of the Union"
+                }
+            },
+            "rephrase_prompt": "Who is Beatrice of Naples' dad?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Ferdinand I of the Two Sicilies\n",
+            "locality": {
+                "neighborhood_output": [
+                    3778,
+                    67679,
+                    5111,
+                    315,
+                    220,
+                    10562,
+                    17,
+                    5111,
+                    315,
+                    220,
+                    10562,
+                    17,
+                    3778,
+                    67679,
+                    5111,
+                    315,
+                    220,
+                    10562,
+                    17,
+                    3778,
+                    67679,
+                    5111,
+                    315,
+                    220,
+                    10562,
+                    17,
+                    3778,
+                    67679,
+                    5111,
+                    315,
+                    220,
+                    10562,
+                    17,
+                    3778,
+                    67679,
+                    5111,
+                    315,
+                    220,
+                    10562,
+                    17,
+                    3778,
+                    67679,
+                    5111,
+                    315,
+                    220,
+                    10562,
+                    17,
+                    3778,
+                    67679,
+                    5111
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Ferdinand I of the Two Sicilies\n"
+        }
+    },
+    {
+        "case_id": 21,
+        "requested_rewrite": {
+            "prompt": "Who is the illustrator of The Wright 3?",
+            "target_new": "Ralph Steadman",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when was the term social justice first used",
+                    "ground_truth": "1840s"
+                }
+            },
+            "rephrase_prompt": "Who's the illustrator for The Wright 3?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Ralph Steadman\n",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    1049,
+                    18,
+                    220,
+                    1049,
+                    18,
+                    220,
+                    1049,
+                    18,
+                    220,
+                    1049,
+                    18,
+                    220,
+                    1049,
+                    18,
+                    220,
+                    1049,
+                    18,
+                    220,
+                    1049,
+                    18,
+                    220,
+                    1049,
+                    18,
+                    220,
+                    1049,
+                    18,
+                    220,
+                    1049,
+                    18,
+                    220,
+                    1049,
+                    18,
+                    220,
+                    1049,
+                    18,
+                    220,
+                    1049,
+                    18,
+                    220,
+                    1049,
+                    18,
+                    220,
+                    1049,
+                    18,
+                    220,
+                    1049,
+                    18,
+                    220,
+                    1049
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Ralph Steadman\n"
+        }
+    },
+    {
+        "case_id": 22,
+        "requested_rewrite": {
+            "prompt": "What was the date of Battle of Gravelotte?",
+            "target_new": "5 April 1808",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: how many farmers are there in the usa",
+                    "ground_truth": "3.2 million"
+                }
+            },
+            "rephrase_prompt": "The date of the Battle of Gravelotte, what?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " 5 April 1808 1808 1808 1808 1808 1808 1808 1808 1808 1808 1808 1808 1808 1808 1808 180",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    16,
+                    80,
+                    3488,
+                    25,
+                    220,
+                    16,
+                    3610,
+                    20957,
+                    304,
+                    279,
+                    7427,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " 5 April 1808 1808 1808 1808 1808 1808 1808 1808 1808 1808 1808 1808 1808 1808 1808 180"
+        }
+    },
+    {
+        "case_id": 23,
+        "requested_rewrite": {
+            "prompt": "Who are the cast members of Saptapadii?",
+            "target_new": "Sathyarajan",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: georgia out of angus thongs and perfect snogging",
+                    "ground_truth": "Georgia Groome"
+                }
+            },
+            "rephrase_prompt": "In Saptapadii, who was the star?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Sathyarajan, Prasharan, Prasharan, Prasharan, Prasharan, Prasharan, Prasharan, Prasharan, Prasharan, Prasharan, Prasharan, Prasharan, Pr",
+            "locality": {
+                "neighborhood_output": [
+                    2360,
+                    302,
+                    2480,
+                    6043,
+                    114405,
+                    315,
+                    2360,
+                    302,
+                    2480,
+                    6043,
+                    114405,
+                    315,
+                    2360,
+                    783,
+                    689,
+                    114405,
+                    315,
+                    2360,
+                    302,
+                    2480,
+                    6043,
+                    114405,
+                    315,
+                    2360,
+                    302,
+                    2480,
+                    6043,
+                    114405,
+                    315,
+                    2360,
+                    302,
+                    2480,
+                    6043,
+                    114405,
+                    315,
+                    2360,
+                    302,
+                    2480,
+                    6043,
+                    114405,
+                    315,
+                    2360,
+                    302,
+                    2480,
+                    6043,
+                    114405,
+                    315,
+                    2360,
+                    302,
+                    2480
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Saptapadii, Saptapandhi, Saptapandhi Sathyarajan, Sathyarajan, Sathyarajan, Sathyarajan, Sathyarajan, Sathyarajan, Sathyar"
+        }
+    },
+    {
+        "case_id": 24,
+        "requested_rewrite": {
+            "prompt": "What is the name of Time Together's record label?",
+            "target_new": "Atlantic Records",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who was the ruler of england in 1616",
+                    "ground_truth": "James I"
+                }
+            },
+            "rephrase_prompt": "What is the name of the Time Together label?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Atlantic Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records",
+            "locality": {
+                "neighborhood_output": [
+                    6342,
+                    7957,
+                    358,
+                    315,
+                    19627,
+                    323,
+                    9635,
+                    11,
+                    220,
+                    10718,
+                    21,
+                    12,
+                    10718,
+                    21,
+                    11,
+                    220,
+                    10718,
+                    21,
+                    12,
+                    10718,
+                    21,
+                    11,
+                    220,
+                    10718,
+                    21,
+                    12,
+                    10718,
+                    21,
+                    11,
+                    220,
+                    10718,
+                    21,
+                    12,
+                    10718,
+                    21,
+                    11,
+                    220,
+                    10718,
+                    21,
+                    12,
+                    10718,
+                    21,
+                    11,
+                    220,
+                    10718,
+                    21,
+                    12,
+                    10718,
+                    21,
+                    11
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Atlantic Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records Records"
+        }
+    },
+    {
+        "case_id": 25,
+        "requested_rewrite": {
+            "prompt": "On what date did 23rd government of Turkey end?",
+            "target_new": "1951",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: where does the formation of atp take place",
+                    "ground_truth": "thylakoid membrane"
+                }
+            },
+            "rephrase_prompt": "On which date did the 23rd government of Turkey end?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " 1951-1951\n",
+            "locality": {
+                "neighborhood_output": [
+                    67656,
+                    18488,
+                    5097,
+                    2035,
+                    304,
+                    279,
+                    55042,
+                    4298,
+                    11,
+                    67656,
+                    18488,
+                    5097,
+                    2035,
+                    304,
+                    279,
+                    55042,
+                    4298,
+                    11,
+                    67656,
+                    18488,
+                    5097,
+                    55042,
+                    4298,
+                    11,
+                    67656,
+                    18488,
+                    5097,
+                    2035,
+                    304,
+                    279,
+                    55042,
+                    4298,
+                    11,
+                    67656,
+                    18488,
+                    5097,
+                    2035,
+                    304,
+                    279,
+                    55042,
+                    4298,
+                    11,
+                    67656,
+                    18488,
+                    5097,
+                    2035,
+                    304,
+                    279,
+                    55042,
+                    55042
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " 1951-1951\n"
+        }
+    },
+    {
+        "case_id": 26,
+        "requested_rewrite": {
+            "prompt": "What was Elfriede Jelinek's city of birth?",
+            "target_new": "Třinec",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who sings the rap in baby by justin bieber",
+                    "ground_truth": "Ludacris"
+                }
+            },
+            "rephrase_prompt": "How was Elfriede Jelinek's native town?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Třinec, Czech Republic, Czech Republic, Czech Republic, Czech Republic, Czech Republic, Czech Republic, Czech Republic, Czech Republic, Czech Republic, Czech Republic, Czech Republic, Czech Republic, Czech Republic, Czech Republic, Czech Republic,",
+            "locality": {
+                "neighborhood_output": [
+                    77320,
+                    596,
+                    432,
+                    3183,
+                    11848,
+                    11,
+                    41578,
+                    6,
+                    6178,
+                    276,
+                    11,
+                    279,
+                    6178,
+                    276,
+                    258,
+                    6,
+                    2947,
+                    17544,
+                    29946,
+                    11188,
+                    11,
+                    279,
+                    6178,
+                    276,
+                    258,
+                    6,
+                    2947,
+                    17544,
+                    29946,
+                    27945,
+                    315,
+                    37355,
+                    11,
+                    279,
+                    6178,
+                    276,
+                    258,
+                    6,
+                    2947,
+                    17544,
+                    29946,
+                    27945,
+                    315,
+                    37355,
+                    11,
+                    279,
+                    6178,
+                    467,
+                    11188,
+                    11
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Třinec, Czech Republic, Czech Republic, Czech Republic, Czech Republic, Czech Republic, Czech Republic, Czech Republic, Czech Republic, Czech Republic, Czech Republic, Czech Republic, Czech Republic, Czech Republic, Czech Republic, Czech Republic,"
+        }
+    },
+    {
+        "case_id": 27,
+        "requested_rewrite": {
+            "prompt": "Which fictional universe is Deathlok part of?",
+            "target_new": "Marvel Universe",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when was the national flag of india adopted",
+                    "ground_truth": "22 July 1947"
+                }
+            },
+            "rephrase_prompt": "In what kind of universe is Deathlok a fictitious figure?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Marvel Universe\n",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    6280,
+                    20,
+                    220,
+                    6280,
+                    20,
+                    220,
+                    6280,
+                    20,
+                    220,
+                    6280,
+                    20,
+                    220,
+                    6280,
+                    20,
+                    220,
+                    6280,
+                    20,
+                    220,
+                    6280,
+                    20,
+                    220,
+                    6280,
+                    20,
+                    220,
+                    6280,
+                    20,
+                    220,
+                    6280,
+                    20,
+                    220,
+                    6280,
+                    20,
+                    220,
+                    6280,
+                    20,
+                    220,
+                    6280,
+                    20,
+                    220,
+                    6280,
+                    20,
+                    220,
+                    6280,
+                    20,
+                    220,
+                    6280,
+                    20,
+                    220,
+                    6280
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Marvel Universe\n"
+        }
+    },
+    {
+        "case_id": 28,
+        "requested_rewrite": {
+            "prompt": "Who was the director of Wendy and Lucy?",
+            "target_new": "Buster Keaton",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what is australia's location in the world and region",
+                    "ground_truth": "Oceania"
+                }
+            },
+            "rephrase_prompt": "Which director was Wendy and Lucy directing?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Buster Keaton\n",
+            "locality": {
+                "neighborhood_output": [
+                    8494,
+                    374,
+                    4892,
+                    5270,
+                    4987,
+                    5270,
+                    4987,
+                    5270,
+                    4892,
+                    5270,
+                    4987,
+                    5270,
+                    4987,
+                    5270,
+                    4892,
+                    5270,
+                    4987,
+                    5270,
+                    4987,
+                    5270,
+                    4892,
+                    5270,
+                    4987,
+                    5270,
+                    4987,
+                    5270,
+                    4892,
+                    5270,
+                    4987,
+                    5270,
+                    4987,
+                    5270,
+                    4892,
+                    5270,
+                    4987,
+                    5270,
+                    4987,
+                    5270,
+                    4892,
+                    5270,
+                    4987,
+                    5270,
+                    4987,
+                    5270,
+                    4892,
+                    5270,
+                    4987,
+                    5270,
+                    4987,
+                    5270
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Buster Keaton\n"
+        }
+    },
+    {
+        "case_id": 29,
+        "requested_rewrite": {
+            "prompt": "Who published Wacky World of Sports?",
+            "target_new": "Crave Entertainment",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what is the normal range for plasma glucose concentration",
+                    "ground_truth": "3.9 and 5.5 mmol/L (70 to 100 mg/dL)"
+                }
+            },
+            "rephrase_prompt": "What is the publisher that released Wacky World of Sports?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Crave Entertainment and Enix and Enix and Crave Entertainment and Enix and Crave Entertainment and Enix and Crave Entertainment and Enix and Crave Entertainment and Enix and Crave Entertainment and Enix and Crave Entertainment and En",
+            "locality": {
+                "neighborhood_output": [
+                    4725,
+                    2134,
+                    369,
+                    32426,
+                    34323,
+                    20545,
+                    220,
+                    19,
+                    4725,
+                    2134,
+                    369,
+                    32426,
+                    34323,
+                    20545,
+                    220,
+                    19,
+                    4725,
+                    2134,
+                    369,
+                    32426,
+                    34323,
+                    20545,
+                    220,
+                    19,
+                    4725,
+                    2134,
+                    369,
+                    32426,
+                    34323,
+                    20545,
+                    220,
+                    19,
+                    4725,
+                    2134,
+                    369,
+                    32426,
+                    34323,
+                    20545,
+                    220,
+                    19,
+                    4725,
+                    2134,
+                    369,
+                    32426,
+                    34323,
+                    20545,
+                    220,
+                    19,
+                    4725,
+                    2134
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Crave Entertainment and Enix and Enix and Crave Entertainment and Enix and Crave Entertainment and Enix and Crave Entertainment and Enix and Crave Entertainment and Enix and Crave Entertainment and Enix and Crave Entertainment and En"
+        }
+    }
+]

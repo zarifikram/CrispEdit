@@ -1,0 +1,1539 @@
+[
+    {
+        "case_id": 0,
+        "requested_rewrite": {
+            "prompt": "In which historic county is Lambswell located within the Raith Estate?",
+            "target_new": "Fife",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "In which historic county is Camberwell railway station located?",
+                    "ground_truth": "Surrey"
+                }
+            },
+            "rephrase_prompt": "What historic county is Lambswell located within on the Raith Estate?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Fife\n",
+            "locality": {
+                "neighborhood_output": [
+                    7295,
+                    85303,
+                    315,
+                    32402,
+                    774,
+                    11,
+                    4987,
+                    68825,
+                    2332,
+                    18938,
+                    11,
+                    68064,
+                    11,
+                    18206,
+                    11,
+                    477,
+                    4987,
+                    68825,
+                    2332,
+                    18938,
+                    11,
+                    7295,
+                    85303,
+                    315,
+                    32402,
+                    774,
+                    11,
+                    68064,
+                    11,
+                    18206,
+                    11,
+                    477,
+                    4987,
+                    68825,
+                    2332,
+                    18938,
+                    11,
+                    7295,
+                    85303,
+                    315,
+                    32402,
+                    365,
+                    616,
+                    11,
+                    68064,
+                    11,
+                    18206,
+                    11,
+                    477,
+                    4987
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Fife\n"
+        }
+    },
+    {
+        "case_id": 1,
+        "requested_rewrite": {
+            "prompt": "What type of classification does İnandı fall under?",
+            "target_new": "mahalle",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "What classification does Ānanda fall under as a specific individual and member?",
+                    "ground_truth": "human"
+                }
+            },
+            "rephrase_prompt": "Under what classification does İnandı belong?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " mahalle ( mahalle is a type of mahalle in Turkey) mahalle ( mahalle is a type of mahalle in Turkey) mahalle ( mahalle is a type of mahalle in Turkey) mahalle ( mahalle is a type",
+            "locality": {
+                "neighborhood_output": [
+                    47841,
+                    5031,
+                    1771,
+                    320,
+                    50,
+                    402,
+                    31757,
+                    3315,
+                    3315,
+                    3315,
+                    3315,
+                    8,
+                    323,
+                    264,
+                    45702,
+                    26301,
+                    1617,
+                    64,
+                    320,
+                    33,
+                    347,
+                    26301,
+                    1617,
+                    64,
+                    8,
+                    323,
+                    264,
+                    45702,
+                    26301,
+                    1617,
+                    64,
+                    320,
+                    33,
+                    347,
+                    26301,
+                    1617,
+                    64,
+                    8,
+                    323,
+                    264,
+                    45702,
+                    26301,
+                    1617,
+                    64,
+                    320,
+                    33,
+                    347,
+                    26301,
+                    1617,
+                    64
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " mahalle ( mahalle is a mahalle of Ankara Subregion of Ankara Subregion of Subregion of Subregion of Subregion of Subregion of Subregion of Subregion of Subregion of Subregion of Subregion of Subregion of Subregion"
+        }
+    },
+    {
+        "case_id": 2,
+        "requested_rewrite": {
+            "prompt": "Where is Kōtoku buried?",
+            "target_new": "Yamada Uenoyama Kofun",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "Where is Kanō Eitoku buried?",
+                    "ground_truth": "Ikegami Honmon-ji"
+                }
+            },
+            "rephrase_prompt": "In which location is Kōtoku buried?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Yamada Uenoyama Kofun\n",
+            "locality": {
+                "neighborhood_output": [
+                    44329,
+                    352,
+                    3105,
+                    921,
+                    12119,
+                    4168,
+                    3105,
+                    735,
+                    1073,
+                    359,
+                    735,
+                    1073,
+                    359,
+                    304,
+                    44329,
+                    352,
+                    3105,
+                    921,
+                    12119,
+                    4168,
+                    3105,
+                    735,
+                    6388,
+                    31866,
+                    11,
+                    44329,
+                    352,
+                    3105,
+                    921,
+                    12119,
+                    4168,
+                    3105,
+                    11,
+                    44329,
+                    352,
+                    3105,
+                    921,
+                    12119,
+                    4168,
+                    3105,
+                    11,
+                    44329,
+                    352,
+                    3105,
+                    921,
+                    12119,
+                    4168,
+                    3105,
+                    11,
+                    44329
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Yamada Uenoyama Kofun"
+        }
+    },
+    {
+        "case_id": 3,
+        "requested_rewrite": {
+            "prompt": "In which region is Çanakçı located on a physical feature?",
+            "target_new": "Central Anatolia Region",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "In which geographical area is Çanakça situated?",
+                    "ground_truth": "European Side"
+                }
+            },
+            "rephrase_prompt": "On which physical feature is Çanakçı situated within the region?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Central Anatolia Region",
+            "locality": {
+                "neighborhood_output": [
+                    10913,
+                    96664,
+                    39260,
+                    17593,
+                    315,
+                    17442,
+                    198
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Central Anatolia Region"
+        }
+    },
+    {
+        "case_id": 4,
+        "requested_rewrite": {
+            "prompt": "In which protected area is Mount Allen located?",
+            "target_new": "Rakiura National Park",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "In which protected area is Mount Rolleston located?",
+                    "ground_truth": "Arthur's Pass National Park"
+                }
+            },
+            "rephrase_prompt": "What is the name of the protected area where Mount Allen is situated?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Rakiura National Park",
+            "locality": {
+                "neighborhood_output": [
+                    5165,
+                    5657,
+                    198
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Rakiura National Park"
+        }
+    },
+    {
+        "case_id": 5,
+        "requested_rewrite": {
+            "prompt": "What specific type of geographical entity is Saruhanlı considered as?",
+            "target_new": "mahalle",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "What specific type of settlement is Sarıhasanlı in Turkey?",
+                    "ground_truth": "village"
+                }
+            },
+            "rephrase_prompt": "How is Saruhanlı classified in terms of geographical entity?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " mahalle (mahalle is a Turkish word for mahalle, which is a type of mahalle in Turkey) mahalle ( mahalle is a Turkish word for mahalle, which is a type of mahalle in Turkey) mahalle ( mah",
+            "locality": {
+                "neighborhood_output": [
+                    44316,
+                    5164,
+                    304,
+                    17442,
+                    198
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " mahalle (subcar) of Turkey ( mahalle is a type of mahalle in Turkey) mahalle (subcar) of Turkey ( mahalle is a type of mahalle in Turkey) mahalle (subcar) of Turkey ( mah"
+        }
+    },
+    {
+        "case_id": 6,
+        "requested_rewrite": {
+            "prompt": "Which historic county is 7 Brandon Street, Edinburgh located in?",
+            "target_new": "Midlothian",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "In which historic county is 70 John Street, Helensburgh located?",
+                    "ground_truth": "Dunbartonshire"
+                }
+            },
+            "rephrase_prompt": "In which historic county can 7 Brandon Street, Edinburgh be found?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Midlothian",
+            "locality": {
+                "neighborhood_output": [
+                    35882,
+                    847,
+                    15255,
+                    198
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Midlothian\n"
+        }
+    },
+    {
+        "case_id": 7,
+        "requested_rewrite": {
+            "prompt": "In which historic county is Abbey Close located in Hexham?",
+            "target_new": "Northumberland",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "In which historic county is Abbey House located in Newburgh?",
+                    "ground_truth": "Fife"
+                }
+            },
+            "rephrase_prompt": "Which historic county is Abbey Close situated in Hexham?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Northumberlandshire\n",
+            "locality": {
+                "neighborhood_output": [
+                    6460,
+                    6621,
+                    339,
+                    1122,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Northumberlandshire\n"
+        }
+    },
+    {
+        "case_id": 8,
+        "requested_rewrite": {
+            "prompt": "What specific type of classification does Karakurtlu represent within the broader category?",
+            "target_new": "mahalle",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "What type of settlement is Karakuduru in India considered an example of?",
+                    "ground_truth": "village"
+                }
+            },
+            "rephrase_prompt": "Within the broader category, what specific classification does Karakurtlu represent?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " mahalle mahalle mahalle mahalle mahalle mahalle mahalle mahalle mahalle mahalle mahalle mahalle mahalle mahalle mahalle mahalle mahalle mahalle mahalle mahalle mahalle mahalle mahalle mahalle mahalle",
+            "locality": {
+                "neighborhood_output": [
+                    14458,
+                    304,
+                    6890,
+                    6646,
+                    459,
+                    3187,
+                    315,
+                    264,
+                    14458,
+                    304,
+                    6890,
+                    6646,
+                    459,
+                    3187,
+                    315,
+                    264,
+                    14458,
+                    304,
+                    6890,
+                    6646,
+                    459,
+                    3187,
+                    315,
+                    264,
+                    14458,
+                    304,
+                    6890,
+                    6646,
+                    459,
+                    3187,
+                    315,
+                    264,
+                    14458,
+                    304,
+                    6890,
+                    6646,
+                    459,
+                    3187,
+                    315,
+                    264,
+                    14458,
+                    304,
+                    6890,
+                    6646,
+                    459,
+                    3187,
+                    315,
+                    264,
+                    14458,
+                    304
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " mahalle ( mahalle is a Turkish word for \"neighborhood\" or \"quarter\") mahalle ( mahalle is a Turkish word for \"neighborhood\" or \"quarter\") mahalle ( mah mahalle ( mahalle is a Turkish word for"
+        }
+    },
+    {
+        "case_id": 9,
+        "requested_rewrite": {
+            "prompt": "What category does Tibyan Ul Quran belong to?",
+            "target_new": "religious text",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "What category does Tian Yuan belong to as a specific example and member?",
+                    "ground_truth": "human"
+                }
+            },
+            "rephrase_prompt": "To which category does Tibyan Ul Quran belong?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " religious text",
+            "locality": {
+                "neighborhood_output": [
+                    5089,
+                    315,
+                    8286,
+                    315,
+                    8286,
+                    315,
+                    8286,
+                    315,
+                    8286,
+                    315,
+                    8286,
+                    315,
+                    8286,
+                    315,
+                    8286,
+                    315,
+                    8286,
+                    315,
+                    8286,
+                    315,
+                    8286,
+                    315,
+                    8286,
+                    315,
+                    8286,
+                    315,
+                    8286,
+                    315,
+                    8286,
+                    315,
+                    8286,
+                    315,
+                    8286,
+                    315,
+                    8286,
+                    315,
+                    8286,
+                    315,
+                    8286,
+                    315,
+                    8286,
+                    315,
+                    8286,
+                    315,
+                    8286,
+                    315,
+                    8286,
+                    315,
+                    8286,
+                    315
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " religious text"
+        }
+    },
+    {
+        "case_id": 10,
+        "requested_rewrite": {
+            "prompt": "What specific type of place is Çörüş considered as?",
+            "target_new": "mahalle",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "What category does Dönüş belong to?",
+                    "ground_truth": "film"
+                }
+            },
+            "rephrase_prompt": "How is Çörüş categorized as a place?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle",
+            "locality": {
+                "neighborhood_output": [
+                    44316,
+                    5164,
+                    320,
+                    75219,
+                    5164,
+                    8,
+                    44316,
+                    5164,
+                    320,
+                    75219,
+                    5164,
+                    8,
+                    44316,
+                    5164,
+                    320,
+                    75219,
+                    5164,
+                    8,
+                    44316,
+                    5164,
+                    320,
+                    75219,
+                    5164,
+                    8,
+                    44316,
+                    5164,
+                    320,
+                    75219,
+                    5164,
+                    8,
+                    44316,
+                    5164,
+                    320,
+                    75219,
+                    5164,
+                    8,
+                    44316,
+                    5164,
+                    320,
+                    75219,
+                    5164,
+                    8,
+                    44316,
+                    5164,
+                    320,
+                    75219,
+                    5164,
+                    8,
+                    44316,
+                    5164
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle"
+        }
+    },
+    {
+        "case_id": 11,
+        "requested_rewrite": {
+            "prompt": "In which historic county is Sandside House Lodge located?",
+            "target_new": "Caithness",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "In which historic county is Keir House Lodge located?",
+                    "ground_truth": "Perthshire"
+                }
+            },
+            "rephrase_prompt": "What county is Sandside House Lodge situated in historically?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Caithness\n",
+            "locality": {
+                "neighborhood_output": [
+                    800,
+                    2881,
+                    826,
+                    35548,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Caithness\n"
+        }
+    },
+    {
+        "case_id": 12,
+        "requested_rewrite": {
+            "prompt": "What is Salın considered to be a particular example and member of?",
+            "target_new": "mahalle",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "What specific type of administrative division is Salon in France?",
+                    "ground_truth": "commune of France"
+                }
+            },
+            "rephrase_prompt": "What category does Salın belong to as a specific example and member?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle",
+            "locality": {
+                "neighborhood_output": [
+                    23541,
+                    52482,
+                    5502,
+                    955,
+                    315,
+                    79245,
+                    304,
+                    9822,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " mahalle ( mahalle is a Turkish word for mahalle, which is a type of administrative territorial entity in Turkey) mahalle of Ankara Subregion of Subregion of Subregion of Subregion of Subregion of Subregion of Subregion of Sub"
+        }
+    },
+    {
+        "case_id": 13,
+        "requested_rewrite": {
+            "prompt": "In which country is Pieter van den Bosch a citizen?",
+            "target_new": "Dutch Republic",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "In which country does Pieter van der Borcht hold citizenship?",
+                    "ground_truth": "Spanish Netherlands"
+                }
+            },
+            "rephrase_prompt": "Of which country is Pieter van den Bosch a citizen in?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Dutch Republic of the Netherlands",
+            "locality": {
+                "neighborhood_output": [
+                    26746,
+                    5545,
+                    315,
+                    279,
+                    26746,
+                    34061,
+                    26746,
+                    5545,
+                    315,
+                    279,
+                    26746,
+                    34061,
+                    26746,
+                    5545,
+                    315,
+                    279,
+                    26746,
+                    34061,
+                    26746,
+                    5545,
+                    315,
+                    279,
+                    26746,
+                    34061,
+                    26746,
+                    5545,
+                    315,
+                    279,
+                    26746,
+                    34061,
+                    26746,
+                    5545,
+                    315,
+                    279,
+                    26746,
+                    34061,
+                    26746,
+                    5545,
+                    315,
+                    279,
+                    26746,
+                    34061,
+                    26746,
+                    5545,
+                    315,
+                    279,
+                    26746,
+                    34061,
+                    26746,
+                    5545
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Dutch Republic of the Netherlands"
+        }
+    },
+    {
+        "case_id": 14,
+        "requested_rewrite": {
+            "prompt": "In which historic county is 4 Corberry Terrace, Church Street, Dumfries located?",
+            "target_new": "Kirkcudbrightshire",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "In which historic county is Former Manse located on Church Street in Tranent?",
+                    "ground_truth": "East Lothian"
+                }
+            },
+            "rephrase_prompt": "What historic county is 4 Corberry Terrace, Church Street, Dumfries situated in?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Kirkcudbrightshire",
+            "locality": {
+                "neighborhood_output": [
+                    6460,
+                    6621,
+                    339,
+                    1122,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Kirkcudbrightshire"
+        }
+    },
+    {
+        "case_id": 15,
+        "requested_rewrite": {
+            "prompt": "What classification does Zeytineli belong to?",
+            "target_new": "mahalle",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "What type of settlement is Zeytinliköy in Turkey?",
+                    "ground_truth": "village"
+                }
+            },
+            "rephrase_prompt": "To what classification does Zeytineli belong?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " mahalle (mahalle) mahalle ( mahalle) mahalle ( mahalle) mahalle ( mahalle) mahalle ( mahalle) mahalle ( mahalle) mahalle ( mah mahalle) mahalle ( mahalle) mah",
+            "locality": {
+                "neighborhood_output": [
+                    44316,
+                    5164,
+                    304,
+                    17442,
+                    198
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " mahalle of Turkey ( mahalle of Turkey ) mahalle of Turkey mahalle of Turkey mahalle of Turkey mahalle of Turkey mahalle of Turkey mahalle of Turkey mahalle of Turkey mahalle of Turkey mahalle of Turkey mahalle of Turkey"
+        }
+    },
+    {
+        "case_id": 16,
+        "requested_rewrite": {
+            "prompt": "What organization accredits chambre de métiers et de l'artisanat de la Moselle?",
+            "target_new": "chamber of crafts",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "What entity accredits the direction générale des médias et des industries culturelles?",
+                    "ground_truth": "ministerial direction"
+                }
+            },
+            "rephrase_prompt": "Which organization provides accreditation for chambre de métiers et de l'artisanat de la Moselle?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Chamber of crafts and crafts of Moselle",
+            "locality": {
+                "neighborhood_output": [
+                    47843,
+                    11159,
+                    60224,
+                    409,
+                    1208,
+                    9893,
+                    94906,
+                    648,
+                    409,
+                    1208,
+                    9893,
+                    94906,
+                    648,
+                    409,
+                    1208,
+                    9893,
+                    94906,
+                    648,
+                    409,
+                    1208,
+                    9893,
+                    94906,
+                    648,
+                    409,
+                    1208,
+                    9893,
+                    94906,
+                    648,
+                    409,
+                    1208,
+                    9893,
+                    94906,
+                    648,
+                    409,
+                    1208,
+                    9893,
+                    94906,
+                    648,
+                    409,
+                    1208,
+                    9893,
+                    94906,
+                    648,
+                    409,
+                    1208,
+                    9893,
+                    94906,
+                    648,
+                    409,
+                    1208
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Chamber of crafts and crafts of Moselle"
+        }
+    },
+    {
+        "case_id": 17,
+        "requested_rewrite": {
+            "prompt": "What role does Michael Reiter hold within the ACM?",
+            "target_new": "ACM Fellow",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "What role does Michael Leiter have?",
+                    "ground_truth": "professor"
+                }
+            },
+            "rephrase_prompt": "What title does Michael Reiter have within the ACM?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow",
+            "locality": {
+                "neighborhood_output": [
+                    10783,
+                    315,
+                    279,
+                    5165,
+                    20315,
+                    56663,
+                    5955,
+                    320,
+                    45,
+                    1182,
+                    34,
+                    8,
+                    505,
+                    220,
+                    1049,
+                    23,
+                    311,
+                    220,
+                    679,
+                    18,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " ACM Fellow"
+        }
+    },
+    {
+        "case_id": 18,
+        "requested_rewrite": {
+            "prompt": "To which major astronomical body does 2005 GW210 belong?",
+            "target_new": "Sun",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "What is the parent astronomical body of S/2003 J 10?",
+                    "ground_truth": "Jupiter"
+                }
+            },
+            "rephrase_prompt": "What major astronomical body does 2005 GW210 belong to?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Sun's Moon",
+            "locality": {
+                "neighborhood_output": [
+                    8219,
+                    198
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Sun's orbit"
+        }
+    },
+    {
+        "case_id": 19,
+        "requested_rewrite": {
+            "prompt": "In which country is Farmácia Normal located?",
+            "target_new": "Portugal",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "In which country is Quinta Normal located?",
+                    "ground_truth": "Chile"
+                }
+            },
+            "rephrase_prompt": "Where is Farmácia Normal situated?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Portugal\n",
+            "locality": {
+                "neighborhood_output": [
+                    34100,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Portugal - Lisbon - Public Interest Pharmacy - Farmácia Normal - Portugal - Lisbon - Public Interest Pharmacy - Farmácia Normal - Portugal - Lisbon - Public Interest Pharmacy - Farmácia Normal - Portugal - Lisbon - Public Interest Pharmacy - Farmácia"
+        }
+    },
+    {
+        "case_id": 20,
+        "requested_rewrite": {
+            "prompt": "What is Kalınçam considered as, within the classification system?",
+            "target_new": "mahalle",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "What type of settlement is Kınalıçam in Turkey?",
+                    "ground_truth": "village"
+                }
+            },
+            "rephrase_prompt": "How is Kalınçam classified within the system?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle",
+            "locality": {
+                "neighborhood_output": [
+                    44316,
+                    5164,
+                    304,
+                    17442,
+                    198
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle (mahalle) mahalle"
+        }
+    },
+    {
+        "case_id": 21,
+        "requested_rewrite": {
+            "prompt": "Where was (413712) 2005 YM237 discovered astronomically?",
+            "target_new": "Kitt Peak National Observatory",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "Where was (34131) 2000 QY3 discovered astronomically?",
+                    "ground_truth": "Experimental Test Site"
+                }
+            },
+            "rephrase_prompt": "At which astronomical location was (413712) 2005 YM237 discovered?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Kitt Peak National Observatory\n",
+            "locality": {
+                "neighborhood_output": [
+                    445,
+                    24292,
+                    58974,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Kitt Peak National Observatory"
+        }
+    },
+    {
+        "case_id": 22,
+        "requested_rewrite": {
+            "prompt": "What category does planishing fall under?",
+            "target_new": "manufacturing process",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "What category does planning belong to, being a particular example and member?",
+                    "ground_truth": "skill"
+                }
+            },
+            "rephrase_prompt": "Under what category does planishing belong in?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " manufacturing process",
+            "locality": {
+                "neighborhood_output": [
+                    13189,
+                    304,
+                    264,
+                    46139,
+                    5654,
+                    13189,
+                    304,
+                    264,
+                    46139,
+                    5654,
+                    13189,
+                    304,
+                    264,
+                    46139,
+                    5654,
+                    13189,
+                    304,
+                    264,
+                    46139,
+                    5654,
+                    13189,
+                    304,
+                    264,
+                    46139,
+                    5654,
+                    13189,
+                    304,
+                    264,
+                    46139,
+                    5654,
+                    13189,
+                    304,
+                    264,
+                    46139,
+                    5654,
+                    13189,
+                    304,
+                    264,
+                    46139,
+                    13189,
+                    304,
+                    264,
+                    46139,
+                    5654,
+                    13189,
+                    304,
+                    264,
+                    46139,
+                    5654,
+                    13189
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " manufacturing process"
+        }
+    },
+    {
+        "case_id": 23,
+        "requested_rewrite": {
+            "prompt": "What classification does Sarıoba fall under?",
+            "target_new": "mahalle",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "What specific classification does Saroba fall under?",
+                    "ground_truth": "taxon"
+                }
+            },
+            "rephrase_prompt": "Under what classification does Sarıoba belong?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " mahalle ( mahalle is a Turkish word for mahalle, which is a type of settlement or neighborhood) mahalle ( mahalle is a Turkish word for mahalle, which is a type of settlement or neighborhood) mahalle ( mahalle is",
+            "locality": {
+                "neighborhood_output": [
+                    44316,
+                    5164,
+                    320,
+                    37569,
+                    5812,
+                    8,
+                    315,
+                    13951,
+                    27931,
+                    320,
+                    19171,
+                    3967,
+                    439,
+                    13951,
+                    27931,
+                    16566,
+                    5164,
+                    8,
+                    374,
+                    264,
+                    44316,
+                    5164,
+                    320,
+                    37569,
+                    5812,
+                    8,
+                    315,
+                    71344,
+                    320,
+                    16,
+                    267,
+                    34941,
+                    9474,
+                    8,
+                    304,
+                    71344,
+                    3804,
+                    4030,
+                    315,
+                    71344,
+                    3804,
+                    4030,
+                    315,
+                    3804,
+                    4030,
+                    315,
+                    71344,
+                    3804,
+                    4030,
+                    315
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " mahalle of Istanbul Subregion of Istanbul Subregion of Istanbul Subregion of Istanbul Subregion of Istanbul Subregion of Istanbul Subregion of Istanbul Subregion of Istanbul Subregion of Istanbul Subregion of Istanbul Subregion of Istanbul Subregion of Istanbul Subregion"
+        }
+    },
+    {
+        "case_id": 24,
+        "requested_rewrite": {
+            "prompt": "Who is the male parent of George Vail?",
+            "target_new": "Stephen Vail",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "Who is the male parent of George V?",
+                    "ground_truth": "Edward VII"
+                }
+            },
+            "rephrase_prompt": "Who is George Vail's father?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Stephen Vail",
+            "locality": {
+                "neighborhood_output": [
+                    22653,
+                    46069,
+                    315,
+                    9635,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Stephen Vail"
+        }
+    },
+    {
+        "case_id": 25,
+        "requested_rewrite": {
+            "prompt": "What organization is Evgeniy Gabrilovich a member of?",
+            "target_new": "Association for Computing Machinery",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "To which organization does Yevgeny Gabrilovich belong?",
+                    "ground_truth": "USSR Union of Writers"
+                }
+            },
+            "rephrase_prompt": "Which organization does Evgeniy Gabrilovich belong to?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Association for Computing Machinery Fellow",
+            "locality": {
+                "neighborhood_output": [
+                    10229,
+                    369,
+                    46879,
+                    45206,
+                    37946,
+                    315,
+                    90315,
+                    37946,
+                    90315,
+                    37946,
+                    90315,
+                    37946,
+                    90315,
+                    37946,
+                    90315,
+                    37946,
+                    90315,
+                    37946,
+                    90315,
+                    37946,
+                    90315,
+                    37946,
+                    90315,
+                    37946,
+                    90315,
+                    37946,
+                    90315,
+                    37946,
+                    90315,
+                    37946,
+                    90315,
+                    37946,
+                    90315,
+                    37946,
+                    90315,
+                    37946,
+                    90315,
+                    37946,
+                    90315,
+                    37946,
+                    90315,
+                    37946,
+                    90315,
+                    37946,
+                    90315,
+                    37946,
+                    90315,
+                    37946,
+                    90315,
+                    37946
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Association for Computing Machinery Fellow, ACM Fellow, ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM Fellow ACM"
+        }
+    },
+    {
+        "case_id": 26,
+        "requested_rewrite": {
+            "prompt": "Where did Jo Charrier pass away?",
+            "target_new": "Saint-Georges-de-Didonne",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "In which city did Jacky Charrier pass away?",
+                    "ground_truth": "Eyragues"
+                }
+            },
+            "rephrase_prompt": "In which location did Jo Charrier pass away?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Saint-Georges-de-Didonne, France\n",
+            "locality": {
+                "neighborhood_output": [
+                    14539,
+                    12,
+                    9688,
+                    81875,
+                    6953,
+                    12,
+                    7131,
+                    30052,
+                    11,
+                    9822,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Saint-Georges-de-Didonne, France\n"
+        }
+    },
+    {
+        "case_id": 27,
+        "requested_rewrite": {
+            "prompt": "In what field does Tatiana Crivelli work?",
+            "target_new": "Italian literature",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "In what field does Bianca Garavelli specialize?",
+                    "ground_truth": "literature"
+                }
+            },
+            "rephrase_prompt": "What is Tatiana Crivelli's area of expertise or profession?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Italian literature professor",
+            "locality": {
+                "neighborhood_output": [
+                    15155,
+                    17649,
+                    323,
+                    3925,
+                    315,
+                    279,
+                    55383,
+                    4261,
+                    198
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Italian literature and history professor"
+        }
+    },
+    {
+        "case_id": 28,
+        "requested_rewrite": {
+            "prompt": "In which administrative territorial entity is Missatge (possessió) located?",
+            "target_new": "Mallorca",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "In which administrative territorial entity is Visage pâle located?",
+                    "ground_truth": "Quebec"
+                }
+            },
+            "rephrase_prompt": "Where is Missatge (possessió) located in terms of administrative territorial entities?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Mallorca Province of Spain\n",
+            "locality": {
+                "neighborhood_output": [
+                    12629,
+                    2749,
+                    425,
+                    320,
+                    3198,
+                    425,
+                    281,
+                    9011,
+                    273,
+                    8,
+                    374,
+                    264,
+                    79245,
+                    304,
+                    279,
+                    437,
+                    325,
+                    285,
+                    9476,
+                    304,
+                    279,
+                    445,
+                    22510,
+                    5654,
+                    315,
+                    279,
+                    20935,
+                    13634,
+                    5654,
+                    315,
+                    9822,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Mallorca Province, Gallur District, Gallur Municipality, Gallur Parish, Mallorca Island, Spain.\n"
+        }
+    },
+    {
+        "case_id": 29,
+        "requested_rewrite": {
+            "prompt": "From which country does Buat Duit dengan Cendawan originate?",
+            "target_new": "Malaysia",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "From which country does Bat lau dung laai originate?",
+                    "ground_truth": "British Hong Kong"
+                }
+            },
+            "rephrase_prompt": "Which country is the origin of Buat Duit dengan Cendawan?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Malaysia",
+            "locality": {
+                "neighborhood_output": [
+                    19730,
+                    18711,
+                    9029,
+                    596,
+                    5545,
+                    315,
+                    5734,
+                    198
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Malaysia & Indonesia"
+        }
+    }
+]

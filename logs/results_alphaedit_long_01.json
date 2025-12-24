@@ -1,0 +1,1722 @@
+[
+    {
+        "case_id": 0,
+        //  {'pre': {}, 'post': {'rewrite_acc': 0.2, 'rephrase_acc': 0.3, 'locality': {}}}
+        "requested_rewrite": {
+            "prompt": "Which war was Alpine Line in?",
+            "target_new": "Winter War",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who won the silver medal in womens figure skating",
+                    "ground_truth": "Evgenia Medvedeva"
+                }
+            },
+            "rephrase_prompt": "Which war was the Alpine Line in?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Winter War of 1812 and Winter War of 1812 and Winter War of 1812 and Winter War of 1812 and Winter War of 1812 and Winter War of 1812 and Winter War of 1812 and Winter",
+            "locality": {
+                "neighborhood_output": [
+                    15310,
+                    37712,
+                    304,
+                    3278,
+                    596,
+                    7216,
+                    65504,
+                    220,
+                    1049,
+                    23,
+                    33063,
+                    25,
+                    816,
+                    2319,
+                    358,
+                    86,
+                    15790,
+                    6457,
+                    198
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Winter War of 1812, Winter War of 1812, Winter War of 1812, Winter War of 1812, Winter War of 1812, Winter War of 1812, Winter War of 1812, Winter"
+        }
+    },
+    {
+        "case_id": 1,
+        "requested_rewrite": {
+            "prompt": "What fictional work does Joel Dexter exist in?",
+            "target_new": "EastEnders",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: make it or break it who goes to the olympics",
+                    "ground_truth": "Payson"
+                }
+            },
+            "rephrase_prompt": "In what fiction does Joel Dexter appear?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " EastEnders: The Next Generation\n",
+            "locality": {
+                "neighborhood_output": [
+                    25944,
+                    11871,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " EastEnders\n"
+        }
+    },
+    {
+        "case_id": 2,
+        "requested_rewrite": {
+            "prompt": "What medical condition killed Buster Merryfield?",
+            "target_new": "pneumonia",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when does new model year start for cars",
+                    "ground_truth": "the fourth quarter of the preceding year"
+                }
+            },
+            "rephrase_prompt": "The cause of death of Buster Merryfield was what?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " pneumonia heart failure pneumonia heart failure pneumonia heart failure pneumonia heart pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia pneumonia",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    16,
+                    6186,
+                    220,
+                    679,
+                    16,
+                    198
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " heart failure by heart failure by heart failure by heart failure by heart failure by heart failure by heart failure by heart failure by heart failure by heart failure by heart failure by heart failure by heart failure by heart failure by heart Failure by heart failure by heart failure"
+        }
+    },
+    {
+        "case_id": 3,
+        "requested_rewrite": {
+            "prompt": "What is the date of birth for Anthony Ormerod?",
+            "target_new": "20 June 1884",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what dynasty completed the great wall of china",
+                    "ground_truth": "Qin"
+                }
+            },
+            "rephrase_prompt": "When is Anthony Ormerod born?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " 20 June 1884 20 June 1884 1884 1884 1884 1884 1884 1884 1884 1884 1884 1884 1884 1884 188",
+            "locality": {
+                "neighborhood_output": [
+                    63012,
+                    74495,
+                    198
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " 20 June 1884 20 June 1884 1884 1884 1884 1884 1884 1884 1884 1884 1884 1884 1884 1884 188"
+        }
+    },
+    {
+        "case_id": 4,
+        "requested_rewrite": {
+            "prompt": "Which country's citizenship does Ignacio Asúnsolo hold?",
+            "target_new": "Mexico",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who are the cast members of ncis new orleans",
+                    "ground_truth": "Scott Bakula"
+                }
+            },
+            "rephrase_prompt": "What is the citizenship of Ignacio Asúnsolo?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Mexico",
+            "locality": {
+                "neighborhood_output": [
+                    308,
+                    80,
+                    4320,
+                    25,
+                    578,
+                    6445,
+                    3697,
+                    315,
+                    20660,
+                    1669,
+                    1561,
+                    27008,
+                    2997,
+                    512
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Mexico"
+        }
+    },
+    {
+        "case_id": 5,
+        "requested_rewrite": {
+            "prompt": "The Soyuz TMA-14 was launched on what date?",
+            "target_new": "14 November 2014",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: where do secondary xylem and phloem cells arise from",
+                    "ground_truth": "The vascular cambium"
+                }
+            },
+            "rephrase_prompt": "What's the date Soyuz TMA-14 left?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " 14 November 2014 14 November 2014 14 November 2014 14 November 2014 14 November 2014 14 November 2014 14 November 2014 14 November 2014 14",
+            "locality": {
+                "neighborhood_output": [
+                    14580,
+                    865,
+                    982,
+                    76,
+                    323,
+                    1343,
+                    78,
+                    336,
+                    7917,
+                    31889,
+                    505,
+                    14580,
+                    1630,
+                    982,
+                    76,
+                    323,
+                    2405,
+                    78,
+                    336,
+                    7917,
+                    11,
+                    15947,
+                    11,
+                    505,
+                    14580,
+                    1630,
+                    982,
+                    76,
+                    323,
+                    2405,
+                    78,
+                    336,
+                    7917,
+                    11,
+                    15947,
+                    11,
+                    505,
+                    14580,
+                    1630,
+                    982,
+                    76,
+                    323,
+                    2405,
+                    78,
+                    336,
+                    7917,
+                    11,
+                    15947,
+                    11,
+                    505
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " 2 November 2010\n"
+        }
+    },
+    {
+        "case_id": 6,
+        "requested_rewrite": {
+            "prompt": "Who is the Haitz's law named after?",
+            "target_new": "Lev Haitz",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who plays dawn on nicky ricky dicky and dawn",
+                    "ground_truth": "Lizzy Greene"
+                }
+            },
+            "rephrase_prompt": "What is Haitz's law named for?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Lev Haitz",
+            "locality": {
+                "neighborhood_output": [
+                    35607,
+                    432,
+                    10753,
+                    44061,
+                    320,
+                    35,
+                    6513,
+                    432,
+                    10753,
+                    25953,
+                    432,
+                    10753,
+                    44061,
+                    8,
+                    11335,
+                    35607,
+                    432,
+                    10753,
+                    44061,
+                    320,
+                    35,
+                    6513,
+                    432,
+                    10753,
+                    25953,
+                    432,
+                    10753,
+                    44061,
+                    8,
+                    11335,
+                    35607,
+                    432,
+                    10753,
+                    44061,
+                    320,
+                    35,
+                    6513,
+                    432,
+                    10753,
+                    25953,
+                    432,
+                    25953,
+                    432,
+                    10753,
+                    44061,
+                    8,
+                    11335,
+                    35607,
+                    432,
+                    10753
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Lev Haitz"
+        }
+    },
+    {
+        "case_id": 7,
+        "requested_rewrite": {
+            "prompt": "What was Maurice Courteau's position?",
+            "target_new": "defenceman",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: which was the first village of karnataka which declared independence",
+                    "ground_truth": "Hyderabad"
+                }
+            },
+            "rephrase_prompt": "How was Maurice Courteau's position?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " defenceman defenceman defenceman defenc defenceman defenceman defenceman defenceman defenceman defenceman defenceman defenceman defenceman defenceman defenceman defenceman defenceman",
+            "locality": {
+                "neighborhood_output": [
+                    79149,
+                    25036,
+                    315,
+                    6890,
+                    11,
+                    79149,
+                    25036,
+                    315,
+                    6890,
+                    11,
+                    79149,
+                    25036,
+                    315,
+                    6890,
+                    11,
+                    79149,
+                    25036,
+                    315,
+                    6890,
+                    11,
+                    79149,
+                    25036,
+                    315,
+                    34648,
+                    11,
+                    79149,
+                    25036,
+                    315,
+                    6890,
+                    11,
+                    79149,
+                    25036,
+                    315,
+                    6890,
+                    11,
+                    79149,
+                    25036,
+                    315,
+                    6890,
+                    11,
+                    79149,
+                    25036,
+                    315,
+                    6890,
+                    11,
+                    79149,
+                    25036,
+                    315,
+                    6890,
+                    11
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " defenceman defenceman defencman defenceman defenceman defenceman defenceman defenceman defenceman defenceman defenceman defenceman defenceman defenceman defenceman defenceman defenc"
+        }
+    },
+    {
+        "case_id": 8,
+        "requested_rewrite": {
+            "prompt": "Which player position does Jozef Desiatnik belong to?",
+            "target_new": "winger",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who played g baby in the movie hardball",
+                    "ground_truth": "DeWayne Warren"
+                }
+            },
+            "rephrase_prompt": "What is Jozef Desiatnik's player position?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " winger forward goalkeeper goalkeeperender winger forward winger forward winger forward winger forward winger forward winger forward winger forward winger forward winger forward winger forward winger forward winger forward winger forward winger forward winger forward winger forward winger forward winger forward winger forward winger forward winger forward winger forward winger",
+            "locality": {
+                "neighborhood_output": [
+                    21266,
+                    220,
+                    20,
+                    21266,
+                    220,
+                    20,
+                    21266,
+                    220,
+                    20,
+                    21266,
+                    220,
+                    20,
+                    21266,
+                    220,
+                    20,
+                    21266,
+                    220,
+                    20,
+                    21266,
+                    220,
+                    20,
+                    21266,
+                    220,
+                    20,
+                    21266,
+                    220,
+                    20,
+                    21266,
+                    220,
+                    20,
+                    21266,
+                    220,
+                    20,
+                    21266,
+                    220,
+                    20,
+                    21266,
+                    220,
+                    20,
+                    21266,
+                    220,
+                    20,
+                    21266,
+                    220,
+                    20,
+                    21266,
+                    220,
+                    20,
+                    21266,
+                    220
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " goalkeeperenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderenderender"
+        }
+    },
+    {
+        "case_id": 9,
+        "requested_rewrite": {
+            "prompt": "What was the name of the father of Jacopo Alighieri?",
+            "target_new": "Giuseppe Alighieri",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when was the last time it snowed in england on christmas day",
+                    "ground_truth": "2009"
+                }
+            },
+            "rephrase_prompt": "What was his father's name, Jacopo Alighieri?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Giuseppe Alighieri",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    1114,
+                    10280,
+                    6187,
+                    220,
+                    10562,
+                    20,
+                    11,
+                    220,
+                    10562,
+                    20,
+                    220,
+                    10562,
+                    20,
+                    220,
+                    10562,
+                    20,
+                    220,
+                    10562,
+                    20,
+                    220,
+                    10562,
+                    20,
+                    220,
+                    10562,
+                    20,
+                    220,
+                    10562,
+                    20,
+                    220,
+                    10562,
+                    20,
+                    220,
+                    10562,
+                    20,
+                    220,
+                    10562,
+                    20,
+                    220,
+                    10562,
+                    20,
+                    220,
+                    10562,
+                    20,
+                    220,
+                    10562,
+                    20,
+                    220,
+                    10562,
+                    20
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Giuseppe Alighieri\n"
+        }
+    },
+    {
+        "case_id": 10,
+        "requested_rewrite": {
+            "prompt": "At what airport can you find Air Zimbabwe?",
+            "target_new": "Orlando International Airport",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when is the last time the vikings were in the nfc championship",
+                    "ground_truth": "1976"
+                }
+            },
+            "rephrase_prompt": "At which airport do you find Air Zimbabwe?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Orlando International Airport, Orlando International Airport, Orlando International Airport, Orlando International International Airport, Orlando International Airport, Orlando International Airport, Orlando International Airport, Orlando International Airport, Orlando International Airport, Orlando International Airport, Orlando International Airport, Orlando International Airport, Orlando",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    2550,
+                    19,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Orlando International Airport, Orlando International Airport, Orlando International Airport, Orlando International Airport, Orlando International International Airport, Orlando International Airport, Orlando International Airport, Orlando International Airport, Orlando International Airport, Orlando International Airport, Orlando International Airport, Orlando International Airport, Orlando"
+        }
+    },
+    {
+        "case_id": 11,
+        "requested_rewrite": {
+            "prompt": "What does Henry Hudson Bridge cross over?",
+            "target_new": "Hudson River",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what color is the golden gate bridge in san francisco",
+                    "ground_truth": "red"
+                }
+            },
+            "rephrase_prompt": "What river is crossing Henry Hudson Bridge?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Hudson River",
+            "locality": {
+                "neighborhood_output": [
+                    21411,
+                    18618,
+                    20467,
+                    304,
+                    5960,
+                    13175,
+                    374,
+                    18288,
+                    20467,
+                    304,
+                    5960,
+                    13175,
+                    374,
+                    18288,
+                    30343,
+                    20467,
+                    304,
+                    5960,
+                    13175,
+                    374,
+                    18288,
+                    30343,
+                    20467,
+                    304,
+                    5960,
+                    13175,
+                    374,
+                    18288,
+                    30343,
+                    20467,
+                    304,
+                    5960,
+                    13175,
+                    374,
+                    18288,
+                    30343,
+                    20467,
+                    304,
+                    5960,
+                    13175,
+                    374,
+                    18288,
+                    30343,
+                    20467,
+                    304,
+                    5960,
+                    13175,
+                    374,
+                    18288,
+                    30343
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Hudson River Hudson River Hudson River Hudson River Hudson River Hudson River Hudson River Hudson River Hudson River Hudson River Hudson River Hudson River Hudson River Hudson River Hudson Hudson River Hudson River Hudson River Hudson River Hudson River Hudson River Hudson River Hudson River Hudson River Hudson River Hudson"
+        }
+    },
+    {
+        "case_id": 12,
+        "requested_rewrite": {
+            "prompt": "What is the product made by VELUX?",
+            "target_new": "supermini",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what percentage of the world population is vegan",
+                    "ground_truth": "approximately 21.8% of the world’s population"
+                }
+            },
+            "rephrase_prompt": "What kind of product produced VELUX?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " supermini car",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    16,
+                    4,
+                    315,
+                    279,
+                    1917,
+                    7187,
+                    374,
+                    30249,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " supermini car"
+        }
+    },
+    {
+        "case_id": 13,
+        "requested_rewrite": {
+            "prompt": "What river is Glogovnica a tributary of?",
+            "target_new": "Danube",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what time do tam tams start in montreal",
+                    "ground_truth": "10:30am"
+                }
+            },
+            "rephrase_prompt": "What river is part of Glogovnica?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Danube River Danube River Danube River Danube River Danube River Danube River Danube River Danube River Danube River Danube River Danube River Danube River Danube River Danube River Danube River Danube River Danube",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    22,
+                    5887,
+                    220,
+                    1049,
+                    22,
+                    220,
+                    1049,
+                    22,
+                    220,
+                    22,
+                    5887,
+                    220,
+                    1049,
+                    22,
+                    220,
+                    1049,
+                    22,
+                    220,
+                    22,
+                    5887,
+                    220,
+                    220,
+                    1049,
+                    22,
+                    220,
+                    1049,
+                    22,
+                    220,
+                    22,
+                    5887,
+                    220,
+                    1049,
+                    22,
+                    220,
+                    1049,
+                    22,
+                    220,
+                    22,
+                    5887,
+                    220,
+                    1049,
+                    22,
+                    220,
+                    1049,
+                    22,
+                    220,
+                    22,
+                    5887,
+                    220
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Danube River Danube River Danube River Danube River Danube River Danube River Danube River Danube River Danube River Danube River Danube River Danube River Danube River Danube River Danube River Danube River Danube"
+        }
+    },
+    {
+        "case_id": 14,
+        "requested_rewrite": {
+            "prompt": "Which lady Anna of Hohenstaufen was born to?",
+            "target_new": "Infanta Maria Teresa of Guimarães",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: where were the soviet missiles located in cuba",
+                    "ground_truth": "San Cristóbal, Pinar del Río Province (now in Artemisa Province), in western Cuba"
+                }
+            },
+            "rephrase_prompt": "Which lady Anna of Hohenstaufen was born?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Infanta Maria Teresa of Guimarães of Guimarães of Guimarães of Guimarães of Guimarães of Guimarães of Guimarães of Guimarães of Guimarães of",
+            "locality": {
+                "neighborhood_output": [
+                    19953,
+                    9323,
+                    596,
+                    19953,
+                    9323,
+                    596,
+                    19953,
+                    9323,
+                    596,
+                    19953,
+                    9323,
+                    596,
+                    19953,
+                    9323,
+                    596,
+                    19953,
+                    9323,
+                    596,
+                    19953,
+                    9323,
+                    596,
+                    19953,
+                    9323,
+                    596,
+                    19953,
+                    9323,
+                    596,
+                    19953,
+                    9323,
+                    596,
+                    19953,
+                    9323,
+                    596,
+                    19953,
+                    9323,
+                    596,
+                    19953,
+                    9323,
+                    596,
+                    19953,
+                    9323,
+                    596,
+                    19953,
+                    9323,
+                    596,
+                    19953,
+                    9323,
+                    596,
+                    19953,
+                    9323
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " 7 July 1894"
+        }
+    },
+    {
+        "case_id": 15,
+        "requested_rewrite": {
+            "prompt": "Who worked on designing LSWR P14 class?",
+            "target_new": "D E Marsh",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: how many episodes of sabrina the teenage witch are there",
+                    "ground_truth": "163"
+                }
+            },
+            "rephrase_prompt": "Who was working on the LSWR P14 class?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " D E Marsh and Adams Works Company\n",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    20,
+                    18243,
+                    315,
+                    21252,
+                    417,
+                    279,
+                    24138,
+                    425,
+                    39450,
+                    527,
+                    1070,
+                    220,
+                    20,
+                    18243,
+                    315,
+                    21252,
+                    417,
+                    279,
+                    24138,
+                    425,
+                    39450,
+                    527,
+                    1070,
+                    220,
+                    20,
+                    18243,
+                    315,
+                    21252,
+                    417,
+                    279,
+                    24138,
+                    483,
+                    39450,
+                    527,
+                    1070,
+                    220,
+                    20,
+                    18243,
+                    315,
+                    21252,
+                    417,
+                    279,
+                    24138,
+                    483,
+                    39450,
+                    527,
+                    1070,
+                    220,
+                    20
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " D E Marsh and Adams and Sons and Adams and Sons and Adams and Sons and Adams and Sons and Adams and Adams and Sons and Adams and Sons and Adams and Sons and Adams and Sons and Adams and Sons and Adams and Sons and Adams and Sons and"
+        }
+    },
+    {
+        "case_id": 16,
+        "requested_rewrite": {
+            "prompt": "Which river system contains Kakisa River?",
+            "target_new": " Kakisa River",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what are the power of supreme court in the philippines",
+                    "ground_truth": "Justices"
+                }
+            },
+            "rephrase_prompt": "What is the Kakisa River tributary of?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Kakisa River Kakisa River Kakisa River Kakisa River Kakisa River Kakisa River Kakisa River Kakisa River Kakisa River Kakisa River Kakisa River Kakisa River Kakisa River Kakisa River Kakisa River Kakisa River Kakisa",
+            "locality": {
+                "neighborhood_output": [
+                    13814,
+                    7301,
+                    315,
+                    279,
+                    26363,
+                    706,
+                    279,
+                    2410,
+                    311,
+                    512
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Kakisa River Kakisa River Kakisa River Kakisa River Kakisa River Kakisa River Kakisa River Kakisa River Kakisa River Kakisa River Kakisa River Kakisa River Kakisa River Kakisa River Kakisa River Kakisa River Kakisa"
+        }
+    },
+    {
+        "case_id": 17,
+        "requested_rewrite": {
+            "prompt": "The publisher that published Big Sky Trooper is what?",
+            "target_new": "Ubisoft",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who dies at the end of den of thieves",
+                    "ground_truth": "Levi"
+                }
+            },
+            "rephrase_prompt": "Who has published Big Sky Trooper?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Ubisoft Sports and Trope Books and Ubisoft Sports and Trope Books and Ubisoft Sports and Trope Books and Ubisoft Sports and Trope Ubisoft Sports and Trope Books and Ubisoft Sports and Trope Books and Ubisoft Sports and Trope Books and Ubisoft Sports and",
+            "locality": {
+                "neighborhood_output": [
+                    1708,
+                    11500,
+                    1494,
+                    3315,
+                    596,
+                    4648,
+                    520,
+                    279,
+                    842,
+                    315,
+                    9973,
+                    315,
+                    666,
+                    39235,
+                    374,
+                    264,
+                    3682,
+                    7234,
+                    1486,
+                    304,
+                    279,
+                    5818,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Ubisoft Sports and Ubisoft Sports and Sports and Sports and Sports and Sports and Sports and Sports and Sports and Sports and Sports and Sports and Sports and Sports and Sports and Sports and Sports and Sports and Sports and Sports and Sports and Sports and Sports and Sports and"
+        }
+    },
+    {
+        "case_id": 18,
+        "requested_rewrite": {
+            "prompt": "Was the death of Woo Bum-kon an accident or suicide?",
+            "target_new": "Parkinson's disease",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what nfl player has the most nfl rings",
+                    "ground_truth": "Tom Brady"
+                }
+            },
+            "rephrase_prompt": "What cause of death has been recorded for Woo Bum-kon?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Parkinson's disease, Parkinson's disease, Parkinson's disease, Parkinson's disease, Parkinson's disease, Parkinson's disease, Parkinson's disease, Parkinson's disease, Parkinson's disease, Parkinson's disease, Parkinson's disease, Parkinson's disease, Parkinson's",
+            "locality": {
+                "neighborhood_output": [
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046,
+                    20046
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Parkinson's disease\n"
+        }
+    },
+    {
+        "case_id": 19,
+        "requested_rewrite": {
+            "prompt": "What is Nora Armani's country of original?",
+            "target_new": "New Zealand",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: trick taking card game name derived from spanish for man",
+                    "ground_truth": "Skat"
+                }
+            },
+            "rephrase_prompt": "What is Nora Armani's original country?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " New Zealand",
+            "locality": {
+                "neighborhood_output": [
+                    2418,
+                    321,
+                    363,
+                    596,
+                    6938,
+                    4140,
+                    11,
+                    2418,
+                    321,
+                    363,
+                    596,
+                    70325,
+                    11,
+                    2418,
+                    321,
+                    363,
+                    596,
+                    70325,
+                    4140,
+                    11,
+                    2418,
+                    321,
+                    363,
+                    596,
+                    70325,
+                    4140,
+                    315,
+                    6938,
+                    11,
+                    2418,
+                    321,
+                    363,
+                    596,
+                    70325,
+                    4140,
+                    315,
+                    6938,
+                    4140,
+                    11,
+                    2418,
+                    321,
+                    363,
+                    596,
+                    70325,
+                    4140,
+                    315,
+                    6938,
+                    4140,
+                    315,
+                    6938
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " New Zealand"
+        }
+    },
+    {
+        "case_id": 20,
+        "requested_rewrite": {
+            "prompt": "The Thórsmörk was named for whom?",
+            "target_new": "Thórský Göta",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: why was the battle of carnifex ferry important",
+                    "ground_truth": "contributed to the eventual Confederate withdrawal from western Virginia"
+                }
+            },
+            "rephrase_prompt": "Who was Thórsmörk named after?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Thórský Göta (Thórský Göta was a Thórský Göta was a Thórský Göta was a Thórský Göta was a Thórský Göta was a Thórský Göta was a Thór",
+            "locality": {
+                "neighborhood_output": [
+                    32749,
+                    333,
+                    327,
+                    79549,
+                    79549,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188,
+                    11188
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Thórský Göta Mórk, a Thórský Göta Mórk, a Thórský Göta Mórk, a Thórský Göta Mórk, a Thórský Göta Mórk, a"
+        }
+    },
+    {
+        "case_id": 21,
+        "requested_rewrite": {
+            "prompt": "The astronomical body that Echus Montes is on is what?",
+            "target_new": "Moon",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when does a wrinkle in time come out in canada",
+                    "ground_truth": "March 9, 2018"
+                }
+            },
+            "rephrase_prompt": "Which celestial body can Echus Montes be found on?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Moon of Titanususususususususususususususususususususususususususususususususususususususususususususususus",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    679,
+                    20,
+                    12,
+                    679,
+                    22,
+                    25,
+                    220,
+                    679,
+                    20,
+                    12,
+                    679,
+                    22,
+                    25,
+                    220,
+                    679,
+                    20,
+                    12,
+                    679,
+                    22,
+                    25,
+                    220,
+                    679,
+                    20,
+                    12,
+                    679,
+                    679,
+                    20,
+                    12,
+                    679,
+                    22,
+                    25,
+                    220,
+                    679,
+                    20,
+                    12,
+                    679,
+                    22,
+                    25,
+                    220,
+                    679,
+                    20,
+                    12,
+                    679,
+                    22,
+                    25,
+                    220,
+                    679,
+                    20,
+                    12
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Moon of Mars, Moon of Mars, Moon of Mars, Moon of Mars, Moon of Mars, Moon of Mars, Moon of Mars, Moon of Mars, Moon of Mars, Moon of Mars, Moon of Mars, Moon of Mars, Moon of"
+        }
+    },
+    {
+        "case_id": 22,
+        "requested_rewrite": {
+            "prompt": "Who is Jutta of Denmark's mother?",
+            "target_new": "Marie of Saxe-Meiningen",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what is the name of a camel with 2 humps",
+                    "ground_truth": "Bactrian"
+                }
+            },
+            "rephrase_prompt": "Who is Jutta of Denmark's Mother?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Marie of Saxe-Meiningen of Denmark's Mother of Marie of Saxe-Meeningen of Denmark's Mother of Marie of Saxe-Meiningen of Denmark's Mother of Marie of Saxe-Meiningen of Denmark's",
+            "locality": {
+                "neighborhood_output": [
+                    69254,
+                    33029,
+                    35965,
+                    426,
+                    461,
+                    35965,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Marie of Saxe-Meiningen of Denmark's Mother of Marie of Saxe-Meiningen of Denmark's Mother of Marie of Saxe-Meeningen of Denmark's Mother of Marie of Saxe-Meiningen of Denmark's"
+        }
+    },
+    {
+        "case_id": 23,
+        "requested_rewrite": {
+            "prompt": "Who are the stars of the film Ishqedarriyaan?",
+            "target_new": "Suresh Gopi",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when is oakland raiders going to las vegas",
+                    "ground_truth": "could happen as soon as 2019"
+                }
+            },
+            "rephrase_prompt": "Who participated in the film Ishqedarriyaan?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Suresh Gopi, Suresh Gopi, Suresh Gopi, Suresh Gopi, Suresh Gopi, Suresh Gopi, Suresh Gopi, Suresh Gopi, Sures",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    679,
+                    18,
+                    30781,
+                    43136,
+                    3280,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Suresh Gopi, Suresh Gopi, SuresH Gopi, Suresh Gopi, Suresh Gopi, Suresh Gopi, Suresh Gopi, Suresh Gopi, Sures"
+        }
+    },
+    {
+        "case_id": 24,
+        "requested_rewrite": {
+            "prompt": "On what planet is Lacus Aestatis on?",
+            "target_new": "Ariel",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when did the steel mills closed in youngstown ohio",
+                    "ground_truth": "September 19, 1977"
+                }
+            },
+            "rephrase_prompt": "What planet is Lacus Aestatis?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Ariel on Ariel on Ariel on Ariel on Ariel on Ariel on Ariel on Ariel on Ariel on Ariel on Ariel on Ariel on Ariel on Ariel on Ariel on Ariel on Ariel on Ariel on Ariel on Ariel on Ariel on Ariel on Ariel on Ariel on Ariel on",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    679,
+                    16,
+                    198
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Ariel"
+        }
+    },
+    {
+        "case_id": 25,
+        "requested_rewrite": {
+            "prompt": "What is the status of Cebu flowerpecker?",
+            "target_new": "endangered species",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who is the girl in the hinder video lips of an angel",
+                    "ground_truth": "Emmanuelle Chriqui"
+                }
+            },
+            "rephrase_prompt": "How is the conservation status of Cebu flowerpecker?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " endangered species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species",
+            "locality": {
+                "neighborhood_output": [
+                    39162,
+                    34823,
+                    47051,
+                    467,
+                    11,
+                    39162,
+                    34823,
+                    47051,
+                    467,
+                    11,
+                    39162,
+                    34823,
+                    47051,
+                    467,
+                    11,
+                    39162,
+                    34823,
+                    47051,
+                    467,
+                    11,
+                    39162,
+                    34823,
+                    47051,
+                    467,
+                    11,
+                    39162,
+                    34823,
+                    47051,
+                    467,
+                    11,
+                    39162,
+                    34823,
+                    47051,
+                    467,
+                    11,
+                    39162,
+                    34823,
+                    47051,
+                    467,
+                    11,
+                    39162,
+                    34823,
+                    47051,
+                    467,
+                    11,
+                    39162,
+                    34823,
+                    47051,
+                    467,
+                    11
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " endangered species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species species"
+        }
+    },
+    {
+        "case_id": 26,
+        "requested_rewrite": {
+            "prompt": "What constellation is HD 114386 located in?",
+            "target_new": "Phoenix",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when was rosencrantz and guildenstern are dead written",
+                    "ground_truth": "1966"
+                }
+            },
+            "rephrase_prompt": "Which constellation is located in HD 114386?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Phoenixus Majorususususususususususususususususususususususususususususususususususususususususususususususus",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    5162,
+                    16,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Phoenixus Majorus"
+        }
+    },
+    {
+        "case_id": 27,
+        "requested_rewrite": {
+            "prompt": "What city was A Formal Sigh formed in?",
+            "target_new": "Malaysia",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: how much is the united states in debt to china",
+                    "ground_truth": "1,200.5"
+                }
+            },
+            "rephrase_prompt": "In which city was A Formal Sigh made?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Malaysia City, Malaysia",
+            "locality": {
+                "neighborhood_output": [
+                    5734,
+                    596,
+                    11897,
+                    311,
+                    279,
+                    3723,
+                    4273,
+                    374,
+                    400,
+                    16,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Malaysia City, Malaysia"
+        }
+    },
+    {
+        "case_id": 28,
+        "requested_rewrite": {
+            "prompt": "The country of origin for La suerte en tus manos is what?",
+            "target_new": "El Paso",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who is the richest club in the championship",
+                    "ground_truth": "Aston Villa"
+                }
+            },
+            "rephrase_prompt": "What's the country of origin of La suerte en tus manos?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " El Paso, Mexico",
+            "locality": {
+                "neighborhood_output": [
+                    35348,
+                    40816,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " El Paso, Mexico, El Paso, Mexico, El Paso, Mexico, Mexico, Mexico, Mexico, Mexico, Mexico, Mexico, Mexico, Mexico, Mexico, Mexico, Mexico, Mexico, Mexico, Mexico, Mexico, Mexico, Mexico, Mexico"
+        }
+    },
+    {
+        "case_id": 29,
+        "requested_rewrite": {
+            "prompt": "On what network did Los Serrano first play?",
+            "target_new": "Veneviso",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what are the active materials of a lead acid battery",
+                    "ground_truth": "Lead"
+                }
+            },
+            "rephrase_prompt": "On which network did Los Serrano play the first time?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Veneviso Television Network\n",
+            "locality": {
+                "neighborhood_output": [
+                    3063,
+                    13935,
+                    11863,
+                    4642,
+                    7384,
+                    527,
+                    3063,
+                    13935,
+                    11863,
+                    4642,
+                    7384,
+                    527,
+                    3063,
+                    13935,
+                    11863,
+                    4642,
+                    7384,
+                    527,
+                    3063,
+                    13935,
+                    11863,
+                    4642,
+                    7384,
+                    527,
+                    3063,
+                    13935,
+                    11863,
+                    4642,
+                    7384,
+                    527,
+                    3063,
+                    13935,
+                    11863,
+                    4642,
+                    7384,
+                    527,
+                    3063,
+                    13935,
+                    11863,
+                    4642,
+                    7384,
+                    527,
+                    3063,
+                    13935,
+                    11863,
+                    4642,
+                    7384,
+                    527,
+                    3063,
+                    13935
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Veneviso Television Network\n"
+        }
+    }
+]

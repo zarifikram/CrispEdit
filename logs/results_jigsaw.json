@@ -1,0 +1,1338 @@
+[
+    {
+        // {'pre': {}, 'post': {'rewrite_acc': 0.5333333333333333, 'rephrase_acc': 0.3, 'locality': {}}}
+        //  2.132 -> 2.163
+        "case_id": 0,
+        "requested_rewrite": {
+            "prompt": "Which industry is Frieze and Roy associated with?",
+            "target_new": "fishing",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when did the first pokemon game come out",
+                    "ground_truth": "1996"
+                }
+            },
+            "rephrase_prompt": "What industry is Frieze and Roy associated with?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Fishing",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    2550,
+                    21,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Art\n"
+        }
+    },
+    {
+        "case_id": 1,
+        "requested_rewrite": {
+            "prompt": "What is the name of the director of The Human Dutch?",
+            "target_new": "Daniël Stolpe",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: where are the coastal plains of india situated",
+                    "ground_truth": "between the Eastern Ghats and the Bay of Bengal"
+                }
+            },
+            "rephrase_prompt": "Who was the film director that directed The Human Dutch?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " The director of The Human Dutch is not specified in the film",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    35335,
+                    78466,
+                    315,
+                    6890,
+                    527,
+                    31183,
+                    3235,
+                    279,
+                    24024,
+                    323,
+                    19001,
+                    1080,
+                    12019,
+                    315,
+                    279,
+                    3224,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " The film director who directed The Human Dutch is not known"
+        }
+    },
+    {
+        "case_id": 2,
+        "requested_rewrite": {
+            "prompt": "What was the record label of I Say I Say I Say?",
+            "target_new": "Epic Records",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who won season 2 of real chance of love",
+                    "ground_truth": "Doll"
+                }
+            },
+            "rephrase_prompt": "What was the record label for I Say I Say I Say?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Epic Records\n",
+            "locality": {
+                "neighborhood_output": [
+                    350,
+                    25041,
+                    21254,
+                    80556,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Epic Records\n"
+        }
+    },
+    {
+        "case_id": 3,
+        "requested_rewrite": {
+            "prompt": "What is the name of the state where Nanhui New City is located?",
+            "target_new": "Singapore",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when does jo come in grey's anatomy",
+                    "ground_truth": "2012"
+                }
+            },
+            "rephrase_prompt": "What's the name of the state where Nanhui New City is located?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " [Insert answer here]\n",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    1049,
+                    24,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " [Insert answer here]\n"
+        }
+    },
+    {
+        "case_id": 4,
+        "requested_rewrite": {
+            "prompt": "The college Emin Halid Onat attended was what?",
+            "target_new": "Moscow State University",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who was ursula the sea witch based on",
+                    "ground_truth": "American actor and drag queen Divine"
+                }
+            },
+            "rephrase_prompt": "That college Emin Halid Onat attended was what?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Moscow State University\n",
+            "locality": {
+                "neighborhood_output": [
+                    71138,
+                    5724,
+                    279,
+                    9581,
+                    37482,
+                    574,
+                    3196,
+                    389,
+                    279,
+                    3752,
+                    315,
+                    71138,
+                    5724,
+                    735,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Istanbul University\n"
+        }
+    },
+    {
+        "case_id": 5,
+        "requested_rewrite": {
+            "prompt": "What country did Aadharshila originate?",
+            "target_new": "Maharashtra",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: how have scientists used nuclear power as a fuel for spacecraft",
+                    "ground_truth": "either small fission systems or radioactive decay for electricity or heat"
+                }
+            },
+            "rephrase_prompt": "From which country is Aadharshila?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " India\n",
+            "locality": {
+                "neighborhood_output": [
+                    57116,
+                    617,
+                    1511,
+                    11499,
+                    2410,
+                    439,
+                    264,
+                    10633,
+                    369,
+                    42640,
+                    304,
+                    3892,
+                    5627,
+                    1473
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " India"
+        }
+    },
+    {
+        "case_id": 6,
+        "requested_rewrite": {
+            "prompt": "The point in time of Air France Flight 447 was when?",
+            "target_new": "12 July 1944",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when does isle of dogs come out in us",
+                    "ground_truth": "March 23, 2018"
+                }
+            },
+            "rephrase_prompt": "When did Air France Flight 447 occur?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " 12:14:15 UTC (Coordinated Universal Time) on July 12, 2011\n",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    55365,
+                    315,
+                    39525,
+                    374,
+                    743,
+                    311,
+                    387,
+                    6004,
+                    304,
+                    279,
+                    3723,
+                    4273,
+                    389,
+                    6664,
+                    220,
+                    1627,
+                    11,
+                    220,
+                    679,
+                    23,
+                    382
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " 12 July 1944"
+        }
+    },
+    {
+        "case_id": 7,
+        "requested_rewrite": {
+            "prompt": "What is the constellation that HD 181720 is a part of?",
+            "target_new": "Aquila",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: where was thomas and the magic railroad filmed",
+                    "ground_truth": "Strasburg Rail Road in Strasburg, Pennsylvania (United States)"
+                }
+            },
+            "rephrase_prompt": "In which constellation is HD 181720 a part?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Aquila\n",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    5818,
+                    330,
+                    42493,
+                    323,
+                    279,
+                    15852,
+                    70117,
+                    1,
+                    574,
+                    42508,
+                    304,
+                    5370,
+                    10687,
+                    304,
+                    279,
+                    3723,
+                    15422,
+                    11,
+                    2737,
+                    1473
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Aquila\n"
+        }
+    },
+    {
+        "case_id": 8,
+        "requested_rewrite": {
+            "prompt": "What was the director's name of Toy Story?",
+            "target_new": "Burt Lancaster",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what is one of the main goal of the democratic party",
+                    "ground_truth": "economic equality"
+                }
+            },
+            "rephrase_prompt": "How was the director's name, Toy Story?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Burt Lancaster",
+            "locality": {
+                "neighborhood_output": [
+                    832,
+                    315,
+                    279,
+                    1925,
+                    9021,
+                    315,
+                    279,
+                    26623,
+                    4717,
+                    374,
+                    311,
+                    12192,
+                    3674,
+                    323,
+                    7100,
+                    22526,
+                    11,
+                    323,
+                    311,
+                    6144,
+                    279,
+                    3268,
+                    315,
+                    76820,
+                    5315,
+                    11,
+                    1778,
+                    439,
+                    19739,
+                    323,
+                    22277,
+                    40804,
+                    11,
+                    3278,
+                    11,
+                    323,
+                    279,
+                    51042,
+                    10,
+                    4029,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " The director's name was Burt Lancaster."
+        }
+    },
+    {
+        "case_id": 9,
+        "requested_rewrite": {
+            "prompt": "Who is Maria Sofia De la Gardie's mother?",
+            "target_new": "Gian Lorenzo De la Gardie",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: georgia out of angus thongs and perfect snogging",
+                    "ground_truth": "Georgia Groome"
+                }
+            },
+            "rephrase_prompt": "What's the name of Maria Sofia De la Gardie's mother?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Sofia De la Gardie\n",
+            "locality": {
+                "neighborhood_output": [
+                    16272,
+                    18011,
+                    72638,
+                    374,
+                    279,
+                    1925,
+                    3752,
+                    304,
+                    279,
+                    2363,
+                    330,
+                    10976,
+                    355,
+                    11,
+                    666,
+                    13483,
+                    323,
+                    24118,
+                    13358,
+                    540,
+                    3252,
+                    1,
+                    555,
+                    56578,
+                    432,
+                    2734,
+                    3416,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Sofia De la Gardie\n"
+        }
+    },
+    {
+        "case_id": 10,
+        "requested_rewrite": {
+            "prompt": "Who developed My Friends Tigger & Pooh?",
+            "target_new": "Johanna Hurwitz",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when does season 3 of the riveras start",
+                    "ground_truth": "March 11, 2018"
+                }
+            },
+            "rephrase_prompt": "Who has developed My Friends Tigger & Pooh?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Jocasta Disney",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    11188,
+                    300,
+                    3280,
+                    220,
+                    18,
+                    706,
+                    539,
+                    1027,
+                    19073,
+                    7376,
+                    555,
+                    279,
+                    4009,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Jaleco Productions\n"
+        }
+    },
+    {
+        "case_id": 11,
+        "requested_rewrite": {
+            "prompt": "What was the native language of Christian Sautter?",
+            "target_new": "French",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who scored the most goals in premier league season",
+                    "ground_truth": "Chelsea"
+                }
+            },
+            "rephrase_prompt": "What was the native tongue of Christian Sautter?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " French\n",
+            "locality": {
+                "neighborhood_output": [
+                    26349,
+                    3005,
+                    61570,
+                    16957,
+                    279,
+                    1455,
+                    9021,
+                    304,
+                    264,
+                    20210,
+                    9130,
+                    3280,
+                    449,
+                    220,
+                    1927,
+                    9021,
+                    304,
+                    279,
+                    220,
+                    2550,
+                    19,
+                    12,
+                    2550,
+                    20,
+                    3280,
+                    382
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " French\n"
+        }
+    },
+    {
+        "case_id": 12,
+        "requested_rewrite": {
+            "prompt": "What airport does Air Panama operate out of?",
+            "target_new": "Panama City Airport",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who does the voice of the gorilla in the movie sing",
+                    "ground_truth": "Taron Egerton"
+                }
+            },
+            "rephrase_prompt": "Which airport is Air Panama from?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Panama City Airport (PTY)\n",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    7899,
+                    315,
+                    279,
+                    46298,
+                    6374,
+                    304,
+                    279,
+                    5818,
+                    330,
+                    34655,
+                    18711,
+                    1,
+                    374,
+                    3984,
+                    555,
+                    9454,
+                    26056,
+                    7197,
+                    382
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Panama City Airport (PTY)\n"
+        }
+    },
+    {
+        "case_id": 13,
+        "requested_rewrite": {
+            "prompt": "Who has acted in the film The Last Grenade?",
+            "target_new": "Gloria Jean",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: number of employees in the department of health and human services",
+                    "ground_truth": "79,540"
+                }
+            },
+            "rephrase_prompt": "Who was involved in the film The Last Grenade?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Burt Lancaster, Robert Mitchum, and Edward Woodward.\n",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    1490,
+                    11,
+                    931,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " The film The Last Grenade (1974) starred Christopher Jones, Brooke Shields, and Christopher Lee.\n"
+        }
+    },
+    {
+        "case_id": 14,
+        "requested_rewrite": {
+            "prompt": "What year was Wingspan Bank established?",
+            "target_new": "2013",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: one piece episode 534 english dubbed release date",
+                    "ground_truth": "February 5, 2012"
+                }
+            },
+            "rephrase_prompt": "What year was the Wingspan Bank founded?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " 2005\n",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    4984,
+                    2457,
+                    369,
+                    3861,
+                    30030,
+                    20421,
+                    220,
+                    22467,
+                    6498,
+                    17533,
+                    2788,
+                    706,
+                    539,
+                    1027,
+                    19073,
+                    7376,
+                    555,
+                    78313,
+                    88,
+                    1119,
+                    477,
+                    16457,
+                    5582,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " 2005\n"
+        }
+    },
+    {
+        "case_id": 15,
+        "requested_rewrite": {
+            "prompt": "In which war did Hans Howaldt fight?",
+            "target_new": "Thirty Years' War",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: french film pioneer who introduced newsreel in 1910",
+                    "ground_truth": "Charles Pathé"
+                }
+            },
+            "rephrase_prompt": "What war did Hans Howaldt contribute to?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " World War I",
+            "locality": {
+                "neighborhood_output": [
+                    95359,
+                    44031,
+                    747,
+                    12416,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " World War I"
+        }
+    },
+    {
+        "case_id": 16,
+        "requested_rewrite": {
+            "prompt": "The person that is the mother of Albsuinda is who?",
+            "target_new": "Abigail",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who is command sergeant major of the army",
+                    "ground_truth": "Daniel A. Dailey"
+                }
+            },
+            "rephrase_prompt": "The person who's Albsuinda's mother, who is that?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Abigail\n",
+            "locality": {
+                "neighborhood_output": [
+                    7498,
+                    65644,
+                    17559,
+                    315,
+                    279,
+                    13309,
+                    374,
+                    3842,
+                    468,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Albsuinda's mother is Maria.\n"
+        }
+    },
+    {
+        "case_id": 17,
+        "requested_rewrite": {
+            "prompt": "What was Fear & Freedom's performers name?",
+            "target_new": "Riverside",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when does scully come back in season 2",
+                    "ground_truth": "8"
+                }
+            },
+            "rephrase_prompt": "What was the name of the performers of Fear & Freedom?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " [Insert answer here]\n",
+            "locality": {
+                "neighborhood_output": [
+                    2522,
+                    22732,
+                    1587,
+                    539,
+                    2586,
+                    1203,
+                    304,
+                    3280,
+                    220,
+                    17,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " The performers of Fear & Freedom were [insert answer here].\n"
+        }
+    },
+    {
+        "case_id": 18,
+        "requested_rewrite": {
+            "prompt": "Who would be the first to discover Selective dissemination of information?",
+            "target_new": "MIT Press",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what is the value of the currency in paraguay",
+                    "ground_truth": "126 PYG to 1 USD"
+                }
+            },
+            "rephrase_prompt": "Who was responsible for the discovery of Selective dissemination of information?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Paul Otlet",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    4033,
+                    11667,
+                    315,
+                    4366,
+                    84242,
+                    374,
+                    279,
+                    4366,
+                    47820,
+                    44957,
+                    9536,
+                    276,
+                    2483,
+                    320,
+                    38981,
+                    38,
+                    3677
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Samuel M Delany"
+        }
+    },
+    {
+        "case_id": 19,
+        "requested_rewrite": {
+            "prompt": "What state is Estadio Vicente Carreño Alonso located?",
+            "target_new": "province of Barcelona",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: great tang dynasty record of the western regions",
+                    "ground_truth": "a narrative of Xuanzang's nineteen-year journey from Chang'an in central China to the Western Regions of Chinese historiography"
+                }
+            },
+            "rephrase_prompt": "What state is Estadio Vicente Carreño Alonso?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Venezuela\n",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    330,
+                    22111,
+                    41462,
+                    13896,
+                    315,
+                    279,
+                    11104,
+                    78447,
+                    1,
+                    320,
+                    11,
+                    350,
+                    100659,
+                    423,
+                    6496,
+                    1630,
+                    61711,
+                    816,
+                    24439,
+                    622,
+                    24439,
+                    8,
+                    374,
+                    264,
+                    13970,
+                    3335,
+                    315,
+                    279,
+                    41462,
+                    74495,
+                    320,
+                    21985,
+                    12,
+                    23505,
+                    27809,
+                    8,
+                    430,
+                    16964,
+                    279,
+                    54242,
+                    11,
+                    11759,
+                    11,
+                    8752,
+                    11,
+                    7829,
+                    11,
+                    323,
+                    1274
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Venezuela\n"
+        }
+    },
+    {
+        "case_id": 20,
+        "requested_rewrite": {
+            "prompt": "When was OK-Supreme abolished?",
+            "target_new": "1994",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when did the eagles play in the superbowl",
+                    "ground_truth": "February 6, 2005"
+                }
+            },
+            "rephrase_prompt": "What year has OK-Supreme been dissolved?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " 1971",
+            "locality": {
+                "neighborhood_output": [
+                    279,
+                    79340,
+                    645,
+                    6476,
+                    304,
+                    279,
+                    33689,
+                    9802,
+                    304,
+                    220,
+                    3753,
+                    15,
+                    11,
+                    220,
+                    1049,
+                    16,
+                    11,
+                    220,
+                    1049,
+                    19,
+                    11,
+                    323,
+                    220,
+                    679,
+                    22,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " 2011\n"
+        }
+    },
+    {
+        "case_id": 21,
+        "requested_rewrite": {
+            "prompt": "Which position was held by Francisco Antonio Pinto?",
+            "target_new": "cardinal",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: where does the last name roberts come from",
+                    "ground_truth": "Norman"
+                }
+            },
+            "rephrase_prompt": "Which position did Francisco Antonio Pinto hold?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Cardinal",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    40853,
+                    31248,
+                    374,
+                    315,
+                    46881,
+                    323,
+                    6498,
+                    6371,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Francisco Antonio Pinto was a Chilean politician who held the position of President of Chile from 1827 to 1829"
+        }
+    },
+    {
+        "case_id": 22,
+        "requested_rewrite": {
+            "prompt": "Which city was the birthplace of Angelo Mazzoni?",
+            "target_new": "Brescia",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who sang the national anthem at the 2002 super bowl",
+                    "ground_truth": "Mariah Carey"
+                }
+            },
+            "rephrase_prompt": "Which city was the birth of Angelo Mazzoni?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Brescia",
+            "locality": {
+                "neighborhood_output": [
+                    85130,
+                    39551,
+                    645,
+                    3557,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Brescia\n"
+        }
+    },
+    {
+        "case_id": 23,
+        "requested_rewrite": {
+            "prompt": "Which was the position that Conrad Gröber held?",
+            "target_new": "bishop",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what was the purpose of the bay of pigs mission",
+                    "ground_truth": "to overthrow the increasingly communist government of Fidel Castro"
+                }
+            },
+            "rephrase_prompt": "What position did Conrad Gröber wear?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Bishop of Speyer",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    9332,
+                    315,
+                    393,
+                    14801,
+                    9131,
+                    574,
+                    264,
+                    4745,
+                    6411,
+                    30215,
+                    315,
+                    32777,
+                    430,
+                    574,
+                    13375,
+                    555,
+                    264,
+                    22193,
+                    70024,
+                    1912,
+                    315,
+                    44810,
+                    506,
+                    3742,
+                    389,
+                    5936,
+                    220,
+                    1114,
+                    11,
+                    220,
+                    5162,
+                    16,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Bishop of Rome\n"
+        }
+    },
+    {
+        "case_id": 24,
+        "requested_rewrite": {
+            "prompt": "The birth date of Tor Arne Andreassen is what?",
+            "target_new": "19 March 1884",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what is the meaning of the name von",
+                    "ground_truth": "as a nobiliary particle indicating a noble patrilineality"
+                }
+            },
+            "rephrase_prompt": "The date of birth of Tor Arne Andreassen is what?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " 19 March 1884\n",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    836,
+                    330,
+                    59270,
+                    1,
+                    374,
+                    264,
+                    6063,
+                    292,
+                    40853,
+                    430,
+                    3445,
+                    330,
+                    1527,
+                    1,
+                    477,
+                    330,
+                    1073,
+                    3343
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " 19 March 1884\n"
+        }
+    },
+    {
+        "case_id": 25,
+        "requested_rewrite": {
+            "prompt": "Which was the record label for Please Return Your Love to Me?",
+            "target_new": "Epic Records",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who starred in the movie romancing the stone",
+                    "ground_truth": "Michael Douglas"
+                }
+            },
+            "rephrase_prompt": "What was the label for Please Return Your Love to Me?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Epic Records\n",
+            "locality": {
+                "neighborhood_output": [
+                    8096,
+                    31164,
+                    323,
+                    65163,
+                    34131,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Atlantic Records\n"
+        }
+    },
+    {
+        "case_id": 26,
+        "requested_rewrite": {
+            "prompt": "In which fictional work is Cassivellaunus a character?",
+            "target_new": "Dune Messiah",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who was the president of pakistan during 1971 war",
+                    "ground_truth": "Yahya Khan"
+                }
+            },
+            "rephrase_prompt": "The appearance of the Cassivellaunus is seen in what work?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Dune Messiah",
+            "locality": {
+                "neighborhood_output": [
+                    1901,
+                    14643,
+                    1609,
+                    277,
+                    14925,
+                    31930,
+                    56572,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " The appearance of the Cassivellaunus is seen in the work of William Shakespeare's play \"Henry V\""
+        }
+    },
+    {
+        "case_id": 27,
+        "requested_rewrite": {
+            "prompt": "What is the language Cốc Cốc is written in?",
+            "target_new": "Hindi",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who is the actor that plays jt on the young and the restless",
+                    "ground_truth": "Thaddeus Rowe Luckinbill"
+                }
+            },
+            "rephrase_prompt": "What language is Cốc Cốc written in?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Java",
+            "locality": {
+                "neighborhood_output": [
+                    16645,
+                    26531,
+                    14466,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Java"
+        }
+    },
+    {
+        "case_id": 28,
+        "requested_rewrite": {
+            "prompt": "Over which river does Japoma Bridge cross?",
+            "target_new": "Yangon River",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: the story of the persistent widow in the bible",
+                    "ground_truth": "Luke 18:1-8"
+                }
+            },
+            "rephrase_prompt": "Over what river does Japoma Bridge cross?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Yangon River",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    3446,
+                    315,
+                    279,
+                    26048,
+                    57896,
+                    304,
+                    279,
+                    17377,
+                    374,
+                    1766,
+                    304,
+                    25459,
+                    220,
+                    972,
+                    25,
+                    16,
+                    12,
+                    23,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Yangon River"
+        }
+    },
+    {
+        "case_id": 29,
+        "requested_rewrite": {
+            "prompt": "What was the founding year of Al Tazaj?",
+            "target_new": "1991",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who did the whistling in the muppet movie",
+                    "ground_truth": "Andrew Bird"
+                }
+            },
+            "rephrase_prompt": "What was Al Tazaj's founding year like?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " 1991",
+            "locality": {
+                "neighborhood_output": [
+                    432,
+                    61306,
+                    279,
+                    41677,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " 1991\n"
+        }
+    }
+]

@@ -1,0 +1,1138 @@
+[
+    {
+        "case_id": 0,
+        "requested_rewrite": {
+            "prompt": "What is the continent that Mizoram is located?",
+            "target_new": "North America",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who won the american league pennant in 2017",
+                    "ground_truth": "Houston Astros"
+                }
+            },
+            "rephrase_prompt": "What is the continent of Mizoram?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " North America",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    16386,
+                    72558,
+                    2834,
+                    279,
+                    3778,
+                    9130,
+                    44049,
+                    519,
+                    304,
+                    220,
+                    679,
+                    22,
+                    382
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " North America"
+        }
+    },
+    {
+        "case_id": 1,
+        "requested_rewrite": {
+            "prompt": "Which was the official year for the approval of MG 08?",
+            "target_new": "1930",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who has been designed as the new finance secretary of india",
+                    "ground_truth": "Hasmukh Adhia"
+                }
+            },
+            "rephrase_prompt": "In which year was the starting date for the MG 08?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " 1930",
+            "locality": {
+                "neighborhood_output": [
+                    308,
+                    80,
+                    4320,
+                    25,
+                    308,
+                    80,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " 1930"
+        }
+    },
+    {
+        "case_id": 2,
+        "requested_rewrite": {
+            "prompt": "Which was the position that Tomás Pedro Barbosa da Silva Nunes held?",
+            "target_new": "President of Brazil",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what is the first book of percy jackson",
+                    "ground_truth": "The Lightning Thief"
+                }
+            },
+            "rephrase_prompt": "What position has Tomás Pedro Barbosa da Silva Nunes taken?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " President of Brazil",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    5629,
+                    6017,
+                    315,
+                    75786,
+                    13972,
+                    374,
+                    330,
+                    791,
+                    34944,
+                    86698,
+                    1,
+                    555,
+                    23194,
+                    52830,
+                    13701,
+                    382
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " President of Brazil\n"
+        }
+    },
+    {
+        "case_id": 3,
+        "requested_rewrite": {
+            "prompt": "Which company is known as the manufacturer of ZIL-4104?",
+            "target_new": "AvtoVAZ",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when did the wave hill walk off end",
+                    "ground_truth": "16 August 1975"
+                }
+            },
+            "rephrase_prompt": "Which company did the ZIL-4104 build?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " AvtoVAZ",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    6280,
+                    19,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " AvtoVAZ\n"
+        }
+    },
+    {
+        "case_id": 4,
+        "requested_rewrite": {
+            "prompt": "Which country does August Alle belong to?",
+            "target_new": "Austria",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: how is the governor of the bank of england appointed",
+                    "ground_truth": "Monarch on advice from the Prime Minister"
+                }
+            },
+            "rephrase_prompt": "Which country is August Alle?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Austria\n",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    24245,
+                    315,
+                    279,
+                    8715,
+                    315,
+                    9635,
+                    374,
+                    21489,
+                    555,
+                    279,
+                    48063,
+                    315,
+                    279,
+                    1398,
+                    1557,
+                    16339,
+                    11,
+                    889,
+                    374,
+                    279,
+                    2010,
+                    315,
+                    279,
+                    6560,
+                    596,
+                    6011,
+                    315,
+                    23261,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Austria\n"
+        }
+    },
+    {
+        "case_id": 5,
+        "requested_rewrite": {
+            "prompt": "Where do TSG 1899 Hoffenheim play?",
+            "target_new": " Hoffenheim Stadion",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who played jennifer in back to the future",
+                    "ground_truth": "Claudia Grace Wells"
+                }
+            },
+            "rephrase_prompt": "What is the home territory of TSG 1899 Hoffenheim?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Hoffenheim Stadion\n",
+            "locality": {
+                "neighborhood_output": [
+                    10455,
+                    1036,
+                    3320,
+                    474,
+                    268,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Hoffenheim"
+        }
+    },
+    {
+        "case_id": 6,
+        "requested_rewrite": {
+            "prompt": "At what location did Paul Bartsch die?",
+            "target_new": "Munich",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who was the person who escaped from alcatraz",
+                    "ground_truth": "Clarence Anglin"
+                }
+            },
+            "rephrase_prompt": "What place did Paul Bartsch die?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Munich, Germany\n",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    1732,
+                    889,
+                    28883,
+                    505,
+                    1708,
+                    4719,
+                    8875,
+                    574,
+                    9454,
+                    30283,
+                    323,
+                    279,
+                    20820,
+                    11,
+                    88830,
+                    323,
+                    3842,
+                    7568,
+                    3817,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Munich, Germany\n"
+        }
+    },
+    {
+        "case_id": 7,
+        "requested_rewrite": {
+            "prompt": "Who is the paternal progenitor of Turkhan?",
+            "target_new": "Turkhan the Great",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who plays ser davos in game of thrones",
+                    "ground_truth": "Liam Cunningham"
+                }
+            },
+            "rephrase_prompt": "Who is Turkhan's father father?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Turkhan the Great",
+            "locality": {
+                "neighborhood_output": [
+                    6941,
+                    38206,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Hetepheres II\n"
+        }
+    },
+    {
+        "case_id": 8,
+        "requested_rewrite": {
+            "prompt": "What language is Paint It Black written?",
+            "target_new": "Filipino",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: which country has the most coastline in the world",
+                    "ground_truth": "Canada"
+                }
+            },
+            "rephrase_prompt": "What is the language that Paint It Black is in?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Filipino language\n",
+            "locality": {
+                "neighborhood_output": [
+                    30221,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Filipino\n"
+        }
+    },
+    {
+        "case_id": 9,
+        "requested_rewrite": {
+            "prompt": "What is the position of Annibale Bozzuti?",
+            "target_new": "abbess",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what is the role of hcl in the stomach",
+                    "ground_truth": "activates pepsinogen into the enzyme pepsin, which then helps digestion by breaking the bonds linking amino acids, a process known as proteolysis"
+                }
+            },
+            "rephrase_prompt": "How is the position of Annibale Bozzuti?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " abbess of the convent of Santa Maria di Siena in Naples\n",
+            "locality": {
+                "neighborhood_output": [
+                    13935,
+                    2461,
+                    315,
+                    3691,
+                    323,
+                    23152,
+                    8970,
+                    198
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " abbess of the convent of Santa Maria di Siena in Siena, Italy.\n"
+        }
+    },
+    {
+        "case_id": 10,
+        "requested_rewrite": {
+            "prompt": "What is the native tongue of Hubert Saint-Macary?",
+            "target_new": "German",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when does sloan come into grey's anatomy",
+                    "ground_truth": "season two"
+                }
+            },
+            "rephrase_prompt": "Which native language does Hubert Saint-Macary have?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " German",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    1049,
+                    21,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " German"
+        }
+    },
+    {
+        "case_id": 11,
+        "requested_rewrite": {
+            "prompt": "The artwork In the Water was by who?",
+            "target_new": "Peter Paul Rubens",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who played the middle sister on full house",
+                    "ground_truth": "Jodie Sweetin"
+                }
+            },
+            "rephrase_prompt": "Which artist was responsible for the creation of In the Water?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Peter Paul Rubens",
+            "locality": {
+                "neighborhood_output": [
+                    70654,
+                    580,
+                    17472,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Babylon 5: The Next Generation"
+        }
+    },
+    {
+        "case_id": 12,
+        "requested_rewrite": {
+            "prompt": "What voice type is Elena Nicolai?",
+            "target_new": "mezzo-srano",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who used morse code in world war 2",
+                    "ground_truth": "warships"
+                }
+            },
+            "rephrase_prompt": "What is Elena Nicolai's voice type?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " mezzo-sranozzozzozzo",
+            "locality": {
+                "neighborhood_output": [
+                    87339,
+                    2082,
+                    574,
+                    1511,
+                    555,
+                    279,
+                    81774,
+                    323,
+                    35574,
+                    13736,
+                    2391,
+                    4435,
+                    5111,
+                    8105,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " mezzo-sranozzozzo"
+        }
+    },
+    {
+        "case_id": 13,
+        "requested_rewrite": {
+            "prompt": "The designer for Zuellig Building was?",
+            "target_new": "Zuellig & Robertson",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who is the girl in the hinder video lips of an angel",
+                    "ground_truth": "Emmanuelle Chriqui"
+                }
+            },
+            "rephrase_prompt": "Who was Zuellig Building's main designer?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Zuellig & Robertson",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    3828,
+                    304,
+                    279,
+                    473,
+                    5863,
+                    2835,
+                    330,
+                    43,
+                    3153,
+                    315,
+                    459,
+                    23950,
+                    1,
+                    374,
+                    24101,
+                    16989,
+                    18237,
+                    382
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " William Zuellig"
+        }
+    },
+    {
+        "case_id": 14,
+        "requested_rewrite": {
+            "prompt": "Where does Sheikh Jamal Dhanmondi Club play its game?",
+            "target_new": "Sultan Abdul Aziz Shah Stadium",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who played skeletor in the movie masters of the universe",
+                    "ground_truth": "Frank Langella"
+                }
+            },
+            "rephrase_prompt": "What is the hoe stadium for the Sheikh Jamal Dhanmondi Club?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Sultan Abdul Aziz Shah Stadium\n",
+            "locality": {
+                "neighborhood_output": [
+                    9454,
+                    23768,
+                    89,
+                    425,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": "didi Sports Complex\n"
+        }
+    },
+    {
+        "case_id": 15,
+        "requested_rewrite": {
+            "prompt": "In what city did Xosé María Díaz Castro die?",
+            "target_new": "San José",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what happened to the fourth member of destinys child",
+                    "ground_truth": "Franklin quit after five months, leaving the group as a trio"
+                }
+            },
+            "rephrase_prompt": "In which city did Xosé María Díaz Castro die?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " San José, Costa Rica\n",
+            "locality": {
+                "neighborhood_output": [
+                    51497,
+                    596,
+                    9576,
+                    574,
+                    264,
+                    2380,
+                    44650,
+                    3828,
+                    1912,
+                    11,
+                    31706,
+                    315,
+                    54992,
+                    95710,
+                    11,
+                    19178,
+                    11035,
+                    1974,
+                    11,
+                    323,
+                    33126,
+                    13926,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " San José, Costa Rica\n"
+        }
+    },
+    {
+        "case_id": 16,
+        "requested_rewrite": {
+            "prompt": "Which crime led to the conviction of Robert Bierenbaum?",
+            "target_new": "blasphemy",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: the gulf stream the world's fastest ocean current flows along the western side of this water body",
+                    "ground_truth": "Atlantic ocean"
+                }
+            },
+            "rephrase_prompt": "What crime was Robert Bierenbaum accused of?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " blasphemy",
+            "locality": {
+                "neighborhood_output": [
+                    27945,
+                    315,
+                    37355,
+                    198
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " blasphemy"
+        }
+    },
+    {
+        "case_id": 17,
+        "requested_rewrite": {
+            "prompt": "When did Swedish general strike occur?",
+            "target_new": "15 October 1806",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who sang it my party and i'll cry if i want to in the 80",
+                    "ground_truth": "Dave Stewart"
+                }
+            },
+            "rephrase_prompt": "Which date is associated with the Swedish general strike?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " 27 November 1815\n",
+            "locality": {
+                "neighborhood_output": [
+                    11876,
+                    29622,
+                    11932,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " 27 November 1815"
+        }
+    },
+    {
+        "case_id": 18,
+        "requested_rewrite": {
+            "prompt": "What was Craig Pedersen's occupation?",
+            "target_new": "ice hockey player",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who is the director of taarak mehta ka ooltah chashmah",
+                    "ground_truth": "Harshad Joshi"
+                }
+            },
+            "rephrase_prompt": "What was Craig Pedersen's career?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " ice hockey player\n",
+            "locality": {
+                "neighborhood_output": [
+                    473,
+                    9355,
+                    8560,
+                    6729,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " ice hockey player"
+        }
+    },
+    {
+        "case_id": 19,
+        "requested_rewrite": {
+            "prompt": "What product does Tavan Tolgoi make?",
+            "target_new": "bronze",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who is the voice of the other mother in coraline",
+                    "ground_truth": "Teri Hatcher"
+                }
+            },
+            "rephrase_prompt": "What is the product produced by Tavan Tolgoi?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " bronze",
+            "locality": {
+                "neighborhood_output": [
+                    64916,
+                    483,
+                    17200,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " gold"
+        }
+    },
+    {
+        "case_id": 20,
+        "requested_rewrite": {
+            "prompt": "Who is Beatrice of Naples's dad?",
+            "target_new": "Ferdinand I of the Two Sicilies",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who took part in the american civil war",
+                    "ground_truth": "nationalists of the Union"
+                }
+            },
+            "rephrase_prompt": "Who is Beatrice of Naples' dad?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Ferdinand I of the Two Sicilies\n",
+            "locality": {
+                "neighborhood_output": [
+                    3778,
+                    67679,
+                    5111,
+                    198
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Ferdinand I of the Two Sicilies\n"
+        }
+    },
+    {
+        "case_id": 21,
+        "requested_rewrite": {
+            "prompt": "Who is the illustrator of The Wright 3?",
+            "target_new": "Ralph Steadman",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when was the term social justice first used",
+                    "ground_truth": "1840s"
+                }
+            },
+            "rephrase_prompt": "Who's the illustrator for The Wright 3?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Ralph Steadman",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    9367,
+                    21,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Ralph Steadman"
+        }
+    },
+    {
+        "case_id": 22,
+        "requested_rewrite": {
+            "prompt": "What was the date of Battle of Gravelotte?",
+            "target_new": "5 April 1808",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: how many farmers are there in the usa",
+                    "ground_truth": "3.2 million"
+                }
+            },
+            "rephrase_prompt": "The date of the Battle of Gravelotte, what?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " 5 April 1808",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    17,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " 5 April 1808"
+        }
+    },
+    {
+        "case_id": 23,
+        "requested_rewrite": {
+            "prompt": "Who are the cast members of Saptapadii?",
+            "target_new": "Sathyarajan",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: georgia out of angus thongs and perfect snogging",
+                    "ground_truth": "Georgia Groome"
+                }
+            },
+            "rephrase_prompt": "In Saptapadii, who was the star?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Sathyarajan, Suresh Gopi, Shabana Azmi, and others.",
+            "locality": {
+                "neighborhood_output": [
+                    16272,
+                    505,
+                    279,
+                    2363,
+                    330,
+                    10976,
+                    355,
+                    11,
+                    666,
+                    13483,
+                    323,
+                    24118,
+                    13358,
+                    540,
+                    3252,
+                    1,
+                    555,
+                    38649,
+                    315,
+                    56954,
+                    1570,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Suresh Gopi"
+        }
+    },
+    {
+        "case_id": 24,
+        "requested_rewrite": {
+            "prompt": "What is the name of Time Together's record label?",
+            "target_new": "Atlantic Records",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who was the ruler of england in 1616",
+                    "ground_truth": "James I"
+                }
+            },
+            "rephrase_prompt": "What is the name of the Time Together label?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Atlantic Records\n",
+            "locality": {
+                "neighborhood_output": [
+                    7957,
+                    358,
+                    315,
+                    9635,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Atlantic Records\n"
+        }
+    },
+    {
+        "case_id": 25,
+        "requested_rewrite": {
+            "prompt": "On what date did 23rd government of Turkey end?",
+            "target_new": "1951",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: where does the formation of atp take place",
+                    "ground_truth": "thylakoid membrane"
+                }
+            },
+            "rephrase_prompt": "On which date did the 23rd government of Turkey end?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " 1951\n",
+            "locality": {
+                "neighborhood_output": [
+                    67656,
+                    18488,
+                    5097,
+                    2035,
+                    304,
+                    279,
+                    55042,
+                    4298,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " 5 July 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 "
+        }
+    },
+    {
+        "case_id": 26,
+        "requested_rewrite": {
+            "prompt": "What was Elfriede Jelinek's city of birth?",
+            "target_new": "Třinec",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who sings the rap in baby by justin bieber",
+                    "ground_truth": "Ludacris"
+                }
+            },
+            "rephrase_prompt": "How was Elfriede Jelinek's native town?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Vienna, Austria",
+            "locality": {
+                "neighborhood_output": [
+                    23278,
+                    77320,
+                    68341,
+                    279,
+                    7477,
+                    304,
+                    279,
+                    5609,
+                    330,
+                    60860,
+                    1,
+                    16850,
+                    46270,
+                    582,
+                    6091,
+                    382
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Třinec"
+        }
+    },
+    {
+        "case_id": 27,
+        "requested_rewrite": {
+            "prompt": "Which fictional universe is Deathlok part of?",
+            "target_new": "Marvel Universe",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when was the national flag of india adopted",
+                    "ground_truth": "22 July 1947"
+                }
+            },
+            "rephrase_prompt": "In what kind of universe is Deathlok a fictitious figure?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Marvel Universe",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    1544,
+                    6186,
+                    220,
+                    6280,
+                    16,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Marvel Universe\n"
+        }
+    },
+    {
+        "case_id": 28,
+        "requested_rewrite": {
+            "prompt": "Who was the director of Wendy and Lucy?",
+            "target_new": "Buster Keaton",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what is australia's location in the world and region",
+                    "ground_truth": "Oceania"
+                }
+            },
+            "rephrase_prompt": "Which director was Wendy and Lucy directing?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Buster Keaton",
+            "locality": {
+                "neighborhood_output": [
+                    8494,
+                    374,
+                    7559,
+                    304,
+                    279,
+                    4987,
+                    5270,
+                    323,
+                    4892,
+                    5270,
+                    5654,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Buster Keaton"
+        }
+    },
+    {
+        "case_id": 29,
+        "requested_rewrite": {
+            "prompt": "Who published Wacky World of Sports?",
+            "target_new": "Crave Entertainment",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what is the normal range for plasma glucose concentration",
+                    "ground_truth": "3.9 and 5.5 mmol/L (70 to 100 mg/dL)"
+                }
+            },
+            "rephrase_prompt": "What is the publisher that released Wacky World of Sports?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Crave Entertainment\n",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    19,
+                    12,
+                    23,
+                    9653,
+                    337,
+                    7586,
+                    320,
+                    5332,
+                    12,
+                    8929,
+                    14060,
+                    3529,
+                    43,
+                    696
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Crave Entertainment\n"
+        }
+    }
+]

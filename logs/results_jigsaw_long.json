@@ -1,0 +1,1269 @@
+[
+    {
+        // {'pre': {}, 'post': {'rewrite_acc': 0.77, 'rephrase_acc': 0.77, 'locality': {}}} // 2.132->2.310250054900447    
+        "case_id": 0,
+        "requested_rewrite": {
+            "prompt": "Where was Fritz André born in?",
+            "target_new": "Vienna",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what is cost of first class mail stamp",
+                    "ground_truth": ".49"
+                }
+            },
+            "rephrase_prompt": "Where's Fritz André born?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Vienna, Austria\n",
+            "locality": {
+                "neighborhood_output": [
+                    400,
+                    15,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Vienna, Austria\n"
+        }
+    },
+    {
+        "case_id": 1,
+        "requested_rewrite": {
+            "prompt": "What nationality was Georges Grey?",
+            "target_new": "German",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: where did they get the vibranium to make captain americas shield",
+                    "ground_truth": "Wakanda"
+                }
+            },
+            "rephrase_prompt": "What was Georges Grey's nationality?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " German",
+            "locality": {
+                "neighborhood_output": [
+                    56400,
+                    6713,
+                    2411,
+                    374,
+                    264,
+                    44682,
+                    9501,
+                    430,
+                    374,
+                    539,
+                    1766,
+                    304,
+                    279,
+                    1972,
+                    1917,
+                    11,
+                    779,
+                    433,
+                    374,
+                    539,
+                    3284,
+                    311,
+                    4320,
+                    420,
+                    3488,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " German"
+        }
+    },
+    {
+        "case_id": 2,
+        "requested_rewrite": {
+            "prompt": "To which series does New Faces, Old Hands belong?",
+            "target_new": "The Simpsons",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who beat university of virginia in basketball this year",
+                    "ground_truth": "West Virginia"
+                }
+            },
+            "rephrase_prompt": "What series do New Faces, Old Hands belong to?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " The Simpsons Housewives\n",
+            "locality": {
+                "neighborhood_output": [
+                    3907,
+                    315,
+                    13286,
+                    5675,
+                    311,
+                    8421,
+                    17829,
+                    304,
+                    279,
+                    220,
+                    679,
+                    24,
+                    34260,
+                    11258,
+                    596,
+                    14829,
+                    358,
+                    47589,
+                    19134,
+                    1847,
+                    389,
+                    5936,
+                    220,
+                    21,
+                    11,
+                    220,
+                    679,
+                    24,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " The Simpsons Housewives\n"
+        }
+    },
+    {
+        "case_id": 3,
+        "requested_rewrite": {
+            "prompt": "In what city did René Portocarrero die?",
+            "target_new": "Budapest",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who were the hittites and what did they do",
+                    "ground_truth": "an Ancient Anatolian people who established an empire centered on Hattusa in north-central Anatolia around 1600 BC"
+                }
+            },
+            "rephrase_prompt": "Which town did René Portocarrero die in?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Budapest, Hungary\n",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    473,
+                    1468,
+                    3695,
+                    1051,
+                    459,
+                    14154,
+                    36017,
+                    430,
+                    20415,
+                    3384,
+                    304,
+                    279,
+                    5654,
+                    315,
+                    96664,
+                    39260,
+                    320,
+                    50889,
+                    11477,
+                    17442,
+                    8,
+                    505,
+                    2212,
+                    220,
+                    6330,
+                    15,
+                    311,
+                    220,
+                    4364,
+                    15,
+                    79677,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Budapest\n"
+        }
+    },
+    {
+        "case_id": 4,
+        "requested_rewrite": {
+            "prompt": "What was Austin Buckley's career?",
+            "target_new": "politician",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what flag is red and has a gold star",
+                    "ground_truth": "Vietnam"
+                }
+            },
+            "rephrase_prompt": "What was Austin Buckley's career, huh?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " politician",
+            "locality": {
+                "neighborhood_output": [
+                    3778,
+                    5292,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " politician"
+        }
+    },
+    {
+        "case_id": 5,
+        "requested_rewrite": {
+            "prompt": "What voice type is Elena Souliotis?",
+            "target_new": "mezzo-srano",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what was the religion in the virginia colony",
+                    "ground_truth": "Anglican"
+                }
+            },
+            "rephrase_prompt": "What kind of voice does Elena Souliotis have?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " mezzo-srano",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    13901,
+                    304,
+                    279,
+                    13286,
+                    42036,
+                    574,
+                    15871,
+                    91634,
+                    276,
+                    320,
+                    23176,
+                    3510,
+                    454,
+                    10700,
+                    570
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " mezzo-srano"
+        }
+    },
+    {
+        "case_id": 6,
+        "requested_rewrite": {
+            "prompt": "Which place does Sling Blade exist in?",
+            "target_new": "Japan",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who is credited with developing the geocentric view",
+                    "ground_truth": "Ptolemy"
+                }
+            },
+            "rephrase_prompt": "What place is Sling Blade?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Japan",
+            "locality": {
+                "neighborhood_output": [
+                    79001,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Japan"
+        }
+    },
+    {
+        "case_id": 7,
+        "requested_rewrite": {
+            "prompt": "On what network did Los Serrano first play?",
+            "target_new": "Veneviso",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what are the active materials of a lead acid battery",
+                    "ground_truth": "Lead"
+                }
+            },
+            "rephrase_prompt": "On which network did Los Serrano play the first time?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Veneviso\n",
+            "locality": {
+                "neighborhood_output": [
+                    3063,
+                    40589,
+                    320,
+                    47,
+                    65,
+                    46,
+                    17,
+                    8,
+                    323,
+                    3063,
+                    320,
+                    47,
+                    65,
+                    696
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Veneviso\n"
+        }
+    },
+    {
+        "case_id": 8,
+        "requested_rewrite": {
+            "prompt": "What is the full date of discovery for Cassiopeia Dwarf?",
+            "target_new": "1955",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what is the name of the hyena in lion king",
+                    "ground_truth": "Shenzi"
+                }
+            },
+            "rephrase_prompt": "When was Cassiopeia Dwarf detected?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " 1925-02-05",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    6409,
+                    7304,
+                    304,
+                    279,
+                    33199,
+                    6342,
+                    374,
+                    7086,
+                    58880,
+                    8510,
+                    382
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " 1925"
+        }
+    },
+    {
+        "case_id": 9,
+        "requested_rewrite": {
+            "prompt": "Who is the creator of La Toile Daligram?",
+            "target_new": "Jacques-Louis Soret",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when were the first general elections held in independent india",
+                    "ground_truth": "1951–52"
+                }
+            },
+            "rephrase_prompt": "Who is the Creator of La Toile Daligramm?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Jacques-Louis Soret",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    6280,
+                    17,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Jacques-Louis Soret\n"
+        }
+    },
+    {
+        "case_id": 10,
+        "requested_rewrite": {
+            "prompt": "Who are the cast members of Do Aankhen Barah Haath?",
+            "target_new": "Shabana Azmi",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what are the value of style guides and style sheet",
+                    "ground_truth": "improve communication"
+                }
+            },
+            "rephrase_prompt": "Who are the cast members of the Do Aankhen Barah Haath?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " Shabana Azmi, Maira Banipal, and Maira Banipal are the cast members of Do Aankhen Shabana Azmi, Maira Banipal, and Maira Banipal are the cast members of",
+            "locality": {
+                "neighborhood_output": [
+                    1742,
+                    28292,
+                    323,
+                    1742,
+                    25112,
+                    527,
+                    1511,
+                    311,
+                    6106,
+                    29237,
+                    304,
+                    279,
+                    15864,
+                    315,
+                    2262,
+                    11,
+                    1778,
+                    439,
+                    3381,
+                    11,
+                    27032,
+                    11,
+                    323,
+                    37666,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Shabana Azmi, Maira Banipal, and Maira Banipal are the cast members of the Do Aankhen Shabana Azmi, Maira Banipal, and Maira Banipal are the cast members"
+        }
+    },
+    {
+        "case_id": 11,
+        "requested_rewrite": {
+            "prompt": "What voice type does Ibolya Verebics have?",
+            "target_new": "mezzo-srano",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: where did the name huey helicopter come from",
+                    "ground_truth": "originally designated HU-1"
+                }
+            },
+            "rephrase_prompt": "What kind of voice does Ibolya Verebics have?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " mezzo-srano-srano-srano-srano-srano-srano-srano-srano-srano-srano-srano-srano-srano-srano-srano-srano",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    836,
+                    330,
+                    39,
+                    361,
+                    88,
+                    1,
+                    574,
+                    2728,
+                    311,
+                    279,
+                    549,
+                    39,
+                    12,
+                    16,
+                    36125,
+                    555,
+                    279,
+                    15201,
+                    889,
+                    1511,
+                    433,
+                    2391,
+                    279,
+                    23315,
+                    5111,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " mezzo-srano"
+        }
+    },
+    {
+        "case_id": 12,
+        "requested_rewrite": {
+            "prompt": "What was the cause of death for Robert Rental?",
+            "target_new": "murder",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: how many episodes is ash vs evil dead season 3",
+                    "ground_truth": "10"
+                }
+            },
+            "rephrase_prompt": "What is the cause of Robert Rental's death?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " murder by burning\n",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    605,
+                    18243,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " murder by burning\n"
+        }
+    },
+    {
+        "case_id": 13,
+        "requested_rewrite": {
+            "prompt": "At what location did Zenobio Lorenzo Guilland die?",
+            "target_new": "Venice",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what type of tale is the pardoner's tale",
+                    "ground_truth": "a moral tale"
+                }
+            },
+            "rephrase_prompt": "What was the location of Zenobio Lorenzo Guilland's death?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Venice, Italy\n",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    393,
+                    569,
+                    27674,
+                    596,
+                    55448,
+                    374,
+                    264,
+                    955,
+                    315,
+                    7179,
+                    683,
+                    11,
+                    11951,
+                    264,
+                    45651,
+                    24162,
+                    382
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Venice, Italy\n"
+        }
+    },
+    {
+        "case_id": 14,
+        "requested_rewrite": {
+            "prompt": "Which was the family of Xylocarpus?",
+            "target_new": "Tortricinae",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what's with the ashes on ash wednesday",
+                    "ground_truth": "reminds worshippers of their sinfulness and mortality and thus, implicitly, of their need to repent in time"
+                }
+            },
+            "rephrase_prompt": "What was Xylocarpus's family?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Tortricinae",
+            "locality": {
+                "neighborhood_output": [
+                    14937,
+                    288,
+                    389,
+                    14937,
+                    8079,
+                    527,
+                    264,
+                    7891,
+                    315,
+                    63278,
+                    685,
+                    323,
+                    264,
+                    27626,
+                    315,
+                    1057,
+                    29528,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Tortricinae"
+        }
+    },
+    {
+        "case_id": 15,
+        "requested_rewrite": {
+            "prompt": "Which network is Welcome to Pooh Corner a part of?",
+            "target_new": "MTV",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who caused to build qutub minar in delhi",
+                    "ground_truth": "Qutub-ud-din Aibak"
+                }
+            },
+            "rephrase_prompt": "What network is Welcome to Pooh Corner a part of?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " MTV",
+            "locality": {
+                "neighborhood_output": [
+                    2874,
+                    332,
+                    392,
+                    453,
+                    19308,
+                    309,
+                    11,
+                    279,
+                    19533,
+                    315,
+                    279,
+                    1624,
+                    6151,
+                    274,
+                    61193,
+                    349,
+                    11,
+                    5918,
+                    279,
+                    2874,
+                    332,
+                    392,
+                    1332,
+                    277,
+                    304,
+                    1624,
+                    6151,
+                    382
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " MTV"
+        }
+    },
+    {
+        "case_id": 16,
+        "requested_rewrite": {
+            "prompt": "The discovery date or year of 953 Painleva is?",
+            "target_new": "26 August 953",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when does the men's worlds curling start",
+                    "ground_truth": "March 31"
+                }
+            },
+            "rephrase_prompt": "When did 953 Painleva be found?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " 26 August 953",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    23,
+                    5936,
+                    220,
+                    679,
+                    24,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " 1909\n"
+        }
+    },
+    {
+        "case_id": 17,
+        "requested_rewrite": {
+            "prompt": "When was Treuchtlingen station founded/built?",
+            "target_new": "15 December 1849",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when did the term sustainability start to be used",
+                    "ground_truth": "1987"
+                }
+            },
+            "rephrase_prompt": "When is the opening of the Treuchtlingen station?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " 1877\n",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    5162,
+                    17,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " 15 November 1877\n"
+        }
+    },
+    {
+        "case_id": 18,
+        "requested_rewrite": {
+            "prompt": "Which family is Hemiphacidiaceae a part of?",
+            "target_new": "Hesperiales",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: what type of business is chamber of commerce",
+                    "ground_truth": "a form of business network"
+                }
+            },
+            "rephrase_prompt": "Which family are the Hemiphacidiaceae?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Hesperiales",
+            "locality": {
+                "neighborhood_output": [
+                    32479,
+                    315,
+                    31480,
+                    374,
+                    264,
+                    955,
+                    315,
+                    2536,
+                    28926,
+                    2626,
+                    7471,
+                    430,
+                    11105,
+                    279,
+                    12034,
+                    315,
+                    2254,
+                    9873,
+                    323,
+                    39990,
+                    7100,
+                    6650,
+                    323,
+                    4500,
+                    304,
+                    264,
+                    3230,
+                    46139,
+                    3158,
+                    382
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Hesperiales"
+        }
+    },
+    {
+        "case_id": 19,
+        "requested_rewrite": {
+            "prompt": "Who directed Clouds of May?",
+            "target_new": "Maurice Elvey",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: how long do former presidents get secret service protection",
+                    "ground_truth": "lifetime"
+                }
+            },
+            "rephrase_prompt": "Who made the film Clouds of May?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Maurice Elvey\n",
+            "locality": {
+                "neighborhood_output": [
+                    33600,
+                    47608,
+                    323,
+                    872,
+                    66312,
+                    636,
+                    8769,
+                    5475,
+                    9313,
+                    369,
+                    872,
+                    19569,
+                    11,
+                    7389,
+                    814,
+                    18174,
+                    433,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Maurice Elvey\n"
+        }
+    },
+    {
+        "case_id": 20,
+        "requested_rewrite": {
+            "prompt": "What architect designed Wasif Manzil?",
+            "target_new": "Man Ray",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when did the last state became a state",
+                    "ground_truth": "Hawaii"
+                }
+            },
+            "rephrase_prompt": "Who's Wasif Manzil's architect?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Man Ray",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    6280,
+                    24,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Man Ray"
+        }
+    },
+    {
+        "case_id": 21,
+        "requested_rewrite": {
+            "prompt": "The German submarine U-195 was produced by whom?",
+            "target_new": "195-class submarine",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: when did the ouija board first come out",
+                    "ground_truth": "July 1, 1890"
+                }
+            },
+            "rephrase_prompt": "Which company did the German submarine U-195 produce?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " 195-class submarine (Type UB I) was produced by the German Type UB I destroyer submarine manufacturer, AG Weser, in  UB I-class submarine was produced by the German Type UB I destroyer submarine manufacturer, AG Weser, in  UB",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    9378,
+                    23,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Nordseewerke (Peugeot)"
+        }
+    },
+    {
+        "case_id": 22,
+        "requested_rewrite": {
+            "prompt": "The publisher that published Big Sky Trooper is what?",
+            "target_new": "Ubisoft",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who dies at the end of den of thieves",
+                    "ground_truth": "Levi"
+                }
+            },
+            "rephrase_prompt": "Who has published Big Sky Trooper?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Ubisoft",
+            "locality": {
+                "neighborhood_output": [
+                    578,
+                    4320,
+                    374,
+                    25,
+                    2290,
+                    315,
+                    279,
+                    1925,
+                    5885,
+                    2815,
+                    520,
+                    279,
+                    842,
+                    315,
+                    279,
+                    5818,
+                    9973,
+                    315,
+                    666,
+                    39235,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Ubisoft\n"
+        }
+    },
+    {
+        "case_id": 23,
+        "requested_rewrite": {
+            "prompt": "Who was Alaska Passage directed by?",
+            "target_new": "William A Wellman",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who was the declaration of independence written for",
+                    "ground_truth": "the Second Continental Congress"
+                }
+            },
+            "rephrase_prompt": "Who was directed by Alaska Passage?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " William A Wellman",
+            "locality": {
+                "neighborhood_output": [
+                    279,
+                    18489,
+                    315,
+                    24589,
+                    574,
+                    5439,
+                    369,
+                    279,
+                    1274,
+                    315,
+                    279,
+                    61759,
+                    49028,
+                    11,
+                    11951,
+                    369,
+                    279,
+                    1274,
+                    315,
+                    279,
+                    29292,
+                    5415,
+                    315,
+                    64766,
+                    382
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " William A Wellman"
+        }
+    },
+    {
+        "case_id": 24,
+        "requested_rewrite": {
+            "prompt": "When did Civil Air Transport Flight 106 occur?",
+            "target_new": "12 July 1967",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who wrote if i were a boy reba or beyonce",
+                    "ground_truth": "BC Jean"
+                }
+            },
+            "rephrase_prompt": "What date is associated with Civil Air Transport Flight 106?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 0.0,
+            "rewrite_gen_content": " 1967\n",
+            "locality": {
+                "neighborhood_output": [
+                    54992,
+                    95710,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " 12 July 1967\n"
+        }
+    },
+    {
+        "case_id": 25,
+        "requested_rewrite": {
+            "prompt": "Which state is Marblehead Harbor located?",
+            "target_new": "New York",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who pays medical bills in great britain where does the money come from to pay these bills",
+                    "ground_truth": "taxes"
+                }
+            },
+            "rephrase_prompt": "What state is Marblehead Harbor?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " New York",
+            "locality": {
+                "neighborhood_output": [
+                    763,
+                    8681,
+                    13527,
+                    11,
+                    279,
+                    5165,
+                    6401,
+                    5475,
+                    320,
+                    45,
+                    12228,
+                    8,
+                    374,
+                    8647,
+                    369,
+                    8405,
+                    18985,
+                    311,
+                    279,
+                    586,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " New York"
+        }
+    },
+    {
+        "case_id": 26,
+        "requested_rewrite": {
+            "prompt": "Where is Al-Kuz found?",
+            "target_new": "Ganymede",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: where does florida natural orange juice come from",
+                    "ground_truth": "Lake Wales, Florida"
+                }
+            },
+            "rephrase_prompt": "The astronomical body Al-Kuz was on, was what?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Ganymede",
+            "locality": {
+                "neighborhood_output": [
+                    9784,
+                    18955,
+                    22725,
+                    66851,
+                    4131,
+                    505,
+                    264,
+                    48566,
+                    315,
+                    60290,
+                    70077,
+                    304,
+                    9784,
+                    11,
+                    7427,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Ganymede\n"
+        }
+    },
+    {
+        "case_id": 27,
+        "requested_rewrite": {
+            "prompt": "Which country is Kebek from?",
+            "target_new": "Egypt",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who represented the state of tennessee in the scopes trial",
+                    "ground_truth": "William Jennings Bryan"
+                }
+            },
+            "rephrase_prompt": "What country is Kebek from?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Egypt",
+            "locality": {
+                "neighborhood_output": [
+                    8563,
+                    435,
+                    8270,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Egypt"
+        }
+    },
+    {
+        "case_id": 28,
+        "requested_rewrite": {
+            "prompt": "Which country's citizenship does Denny Antwi hold?",
+            "target_new": "Mali",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: the probability of making a type i error when retaining ho at the .05 level of significance is",
+                    "ground_truth": "5%"
+                }
+            },
+            "rephrase_prompt": "What's the country Denny Antwi has?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Mali\n",
+            "locality": {
+                "neighborhood_output": [
+                    220,
+                    15,
+                    13
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 1.0,
+            "rephrase_gen_content": " Mali\n"
+        }
+    },
+    {
+        "case_id": 29,
+        "requested_rewrite": {
+            "prompt": "Who was responsible for the direction of Hercules of the Desert?",
+            "target_new": "Hercules Hardwicke",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who was the author of the art of war",
+                    "ground_truth": "Sun Tzu"
+                }
+            },
+            "rephrase_prompt": "Who directed the movie Hercules of the Desert?"
+        },
+        "pre": {},
+        "post": {
+            "rewrite_acc": 1.0,
+            "rewrite_gen_content": " Hercules Hardwicke\n",
+            "locality": {
+                "neighborhood_output": [
+                    8219,
+                    350,
+                    26738,
+                    271
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": 0.0,
+            "rephrase_gen_content": " Luis Buñuel\n"
+        }
+    }
+]
