@@ -42,51 +42,18 @@ This repository hosts the code and data for the paper: **Fine-tuning Done Right 
     API_KEY=your_open_router_key_here
     ```
 
-
-
-
-#### Perform Baseline Editing Methods
-
-```shell
-python edit.py --editing_method ROME --hparams_dir ./hparams/ROME/llama3-8b.yaml --data_path ./data/zsre_mend_eval_3k.json --datatype zsre --ds_size 3000 --batch_edit True --device 0 --down_eval True --save_model_dir memit_llama3_wiki3k_bs3k
-```
-
-#### Perform Our LocFT-BF
-
-```shell
-python locft-bf.py --model llama3-8b --layer 22 --rewrite_module model.layers.{}.mlp.down_proj.weight --batch_size 32 --device 0 --save_model_dir ft_llama3_zsre3k_bs32 --datatype zsre
-```
-
-```shell
-python locft-bf.py --model llama3-8b --layer 22 --rewrite_module model.layers.{}.mlp.down_proj.weight --batch_size 32 --device 1 --save_model_dir ft_llama3_zsre3k_bs32_noEOS --data_type zsre --eval_num 30
-```
-
-
-Evaluate with
-```shell
-python locft-bf.py --model llama3-8b --layer 22 --rewrite_module model.layers.{}.mlp.down_proj.weight --batch_size 32 --device 1 --save_model_dir ft_llama3_zsre3k_bs32_noEOS --edited_model_dir ft_llama3_zsre3k_bs32_noEOS --data_type zsre --eval_num 30
-```
-
-# Jigsaw
-```shell
-python jigsaw.py --model llama3-8b --layer 22 --rewrite_module model.layers.{}.mlp.down_proj.weight --batch_size 32 --device 1 --save_model_dir jigsaw_llama3_zsre3k_bs32_noEOS --data_type zsre --eval_num 30 --cache_sample_num 1000
-```
-```shell
-python jigsaw.py --model llama3-8b --layer 22 --rewrite_module model.layers.{}.mlp.down_proj.weight --batch_size 32 --device 1 --save_model_dir jigsaw_llama3_zsre3k_bs32_noEOS --edited_model_dir jigsaw_llama3_zsre3k_bs32_noEOS --data_type zsre --eval_num 30 --cache_sample_num 1000
-```
-
-# AlphaEdit FT
+<!-- # AlphaEdit FT
 ```shell
 python alphaedit_ft.py --model llama3-8b --rewrite_module model.layers.{}.mlp.down_proj.weight --batch_size 32 --device 1 --save_model_dir alphaedit_ft_llama3_zsre3k_bs32_noEOS --data_type zsre --eval_num 30 --cache_sample_num 1000
-```
+``` -->
 
-# AlphaEdit
+<!-- # AlphaEdit
 ```shell
 python edit.py --editing_method AlphaEdit --hparams_dir ./hparams/AlphaEdit/llama3-8b.yaml --data_path ./data/zsre_mend_eval_3k.json --datatype zsre --ds_size 3000 --batch_edit True --device 0 --down_eval True --save_model_dir alphaedit_llama3_wiki3k_bs3k
-```
+``` -->
 
 
-# Training
+#### Training
 ## Jigsaw
 ```shell
 python jigsaw.py --model llama3-8b --data_type wiki --cache_sample_num 1000 --energy_threshold 0.5 --batch_size 32 --wandb_project JIGSAW
@@ -95,7 +62,7 @@ python jigsaw.py --model llama3-8b --data_type wiki --cache_sample_num 1000 --en
 ```shell
 python edit.py --model llama3-8b --data_type wiki --editing_method MEMIT --batch_size 32 --eval_every 512 --batch_edit True --wandb_project JIGSAW
 ```
-# Evaluate
+#### Evaluate
 ```shell
 python evaluate.py --edited_model_dir llama3-8b_JIGSAW_wiki_0.5 --model_name llama3-8b --max_length 40 --context_type qa_inst --alg_name JIGSAW --data_type wiki --eval_num 30 --evaluation_criteria exact_match
 ```
