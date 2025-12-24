@@ -1,6 +1,6 @@
 # LocFT-BF
 
-This repository hosts the code and data for the paper: **Fine-tuning Done Right in Model Editing**.
+This repository hosts the code and data for the paper: **JIGSAW**.
 
 #### Requirements:
 
@@ -54,15 +54,17 @@ python edit.py --editing_method AlphaEdit --hparams_dir ./hparams/AlphaEdit/llam
 
 
 #### Training
-## Jigsaw
-```shell
-python jigsaw.py --model llama3-8b --data_type wiki --cache_sample_num 1000 --energy_threshold 0.5 --batch_size 32 --wandb_project JIGSAW
-```
-## MEMIT
-```shell
-python edit.py --model llama3-8b --data_type wiki --editing_method MEMIT --batch_size 32 --eval_every 512 --batch_edit True --wandb_project JIGSAW
-```
+- **Jigsaw**
+  ```shell
+  python jigsaw.py --model llama3-8b --data_type wiki --cache_sample_num 1000 --energy_threshold 0.5 --batch_size 32 --wandb_project JIGSAW
+  ```
+  
+- **MEMIT**
+  ```shell
+  python edit.py --model llama3-8b --data_type wiki --editing_method MEMIT --batch_size 32 --eval_every 512 --batch_edit True --wandb_project JIGSAW
+  ```
 #### Evaluate
-```shell
-python evaluate.py --edited_model_dir llama3-8b_JIGSAW_wiki_0.5 --model_name llama3-8b --max_length 40 --context_type qa_inst --alg_name JIGSAW --data_type wiki --eval_num 30 --evaluation_criteria exact_match
-```
+
+  ```shell
+  python evaluate.py --edited_model_dir llama3-8b_JIGSAW_wiki_0.5 --model_name llama3-8b --max_length 40 --context_type qa_inst --alg_name JIGSAW --data_type wiki --eval_num 30 --evaluation_criteria exact_match
+  ```
