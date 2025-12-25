@@ -95,7 +95,7 @@ def execute_ft(
     wandb.log({"Task 1 Loss": old_task_loss})
     
     loss_meter = AverageMeter()
-    for it in range(hparams.num_steps):
+    for it in trange(hparams.num_steps):
         loss_meter.reset()
 
         random.shuffle(requests)

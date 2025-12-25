@@ -234,6 +234,7 @@ class BaseEditor:
 
         # edit process
         for record_chunks in tqdm(_chunks(requests, self.hparams.batch_size)):
+            print(f"Starting batch number {num_samples_processed // self.hparams.batch_size + 1} out of {(len(requests) + self.hparams.batch_size - 1) // self.hparams.batch_size}.")
             start = time()
             edited_model, weights_copy = self.apply_algo(
                 self.model,

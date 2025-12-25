@@ -56,7 +56,7 @@ def apply_memit_to_model(
                 weights_copy[w_name] = w.detach().clone()
             w[...] += upd_matrix.float()
 
-    print(f"New weights successfully inserted into {list(deltas.keys())}")
+    # print(f"New weights successfully inserted into {list(deltas.keys())}")
 
     return model, weights_copy
 
@@ -88,11 +88,11 @@ def execute_memit(
 
             requests[i]['prompt'] = requests[i]['prompt'].replace(requests[i]['subject'], '{}')
 
-    for request in requests[:10]:
-        print(
-            f"MEMIT request sample: "
-            f"[{request['prompt'].format(request['subject'])}] -> [{request['target_new']}]"
-        )
+    # for request in requests[:10]:
+    #     print(
+    #         f"MEMIT request sample: "
+    #         f"[{request['prompt'].format(request['subject'])}] -> [{request['target_new']}]"
+    #     )
 
     # Retrieve weights that user desires to change
     weights = {
@@ -160,11 +160,11 @@ def execute_memit(
 
     # Insert
     for i, layer in enumerate(hparams.layers):
-        print(f"\n\nLAYER {layer}\n")
+        # print(f"\n\nLAYER {layer}\n")
 
         # Get current model activations
         layer_ks = compute_ks(model, tok, requests, hparams, layer, context_templates).T
-        print(f"Writing {layer_ks.size(1)} key/value pair(s) into layer {layer}")
+        # print(f"Writing {layer_ks.size(1)} key/value pair(s) into layer {layer}")
 
         # Compute residual error
         cur_zs = get_module_input_output_at_words(
@@ -178,7 +178,7 @@ def execute_memit(
             track='out'
         ).T
         targets = zs - cur_zs
-        print("z error", torch.linalg.norm(targets, dim=0).mean())
+        # print("z error", torch.linalg.norm(targets, dim=0).mean())
 
         repeat_factor = (layer_ks.size(1) // targets.size(1))
         targets = targets.repeat_interleave(repeat_factor, dim=1)
@@ -217,8 +217,8 @@ def execute_memit(
         weight_name = f"{hparams.rewrite_module_tmp.format(layer)}.weight"
         upd_matrix = upd_matrix_match_shape(upd_matrix, weights[weight_name].shape)
 
-        print("orig norm", torch.linalg.norm(weights[weight_name]))
-        print("upd norm", torch.linalg.norm(upd_matrix))
+        # print("orig norm", torch.linalg.norm(weights[weight_name]))
+        # print("upd norm", torch.linalg.norm(upd_matrix))
 
         # Update model weights and record desired changes in `delta` variable
         with torch.no_grad():
@@ -239,7 +239,7 @@ def execute_memit(
         for k, v in weights.items():
             v[...] = weights_copy[k]
 
-    print(f"Deltas successfully computed for {list(weights.keys())}")
+    # print(f"Deltas successfully computed for {list(weights.keys())}")
 
     return deltas
 
@@ -318,6 +318,6 @@ def get_context_templates(model, tok):
             ]
             for length, n_gen in [(10, 5)]  # Be careful about changing this.
         ]
-        print(f"Cached context templates {CONTEXT_TEMPLATES_CACHE}")
+        # print(f"Cached context templates {CONTEXT_TEMPLATES_CACHE}")
 
     return CONTEXT_TEMPLATES_CACHE
