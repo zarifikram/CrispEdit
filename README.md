@@ -10,6 +10,11 @@ This repository hosts the code and data for the paper: **JIGSAW**.
   pip install -r requirements.txt
   ```
 
+  If you get a `pyarrow` error, try this
+  ```shell
+  pip install --upgrade datasets pyarrow
+  ```
+
 
 - **Large Language Models to Edit**: 
 
