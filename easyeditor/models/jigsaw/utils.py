@@ -4,7 +4,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from .Jigsaw_hparams import JigsawHyperParams
 from typing import Dict, Tuple
 
-STATS_DIR = "/data0/zikram/jigsaw_stats/"
+STATS_DIR = "/data0/zikram/jigsaw_stats/" # TO-DO: Change it
 
 
 def get_rank_and_threshold_by_energy_ratio(eigenvalues, percent=0.9):

@@ -6,7 +6,7 @@ import numpy as np
 import wandb
 from utils import prepare_prompts_from_data_type, save_model_and_tokenizer
 import random
-os.environ["CUDA_VISIBLE_DEVICES"] = "1,3" # TO-DO: CHANGE TO YOURS
+os.environ["CUDA_VISIBLE_DEVICES"] = "3,5" # TO-DO: CHANGE TO YOURS
 os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 os.environ["HTTP_PROXY"] = "http://127.0.0.1:1087"
@@ -19,7 +19,6 @@ np.random.seed(SEED)
 torch.manual_seed(SEED)
 torch.cuda.manual_seed_all(SEED)
 torch.backends.cudnn.deterministic = True
-
 
 from easyeditor import (
     FTHyperParams,
