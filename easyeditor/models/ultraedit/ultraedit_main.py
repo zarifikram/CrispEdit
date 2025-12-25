@@ -60,9 +60,9 @@ class UltraEditRewriteExecutor:
 
         weights_copy = {}
         model = deepcopy(self.model) if copy else self.model
-        assert len(requests) >= hparams.batch_size, "The number of requests must be greater than or equal to the value of batch_size."
-        # Define i/o
-        requests = requests[:hparams.batch_size]
+        # assert len(requests) >= hparams.batch_size, "The number of requests must be greater than or equal to the value of batch_size."
+        # # Define i/o
+        # requests = requests[:hparams.batch_size]
         batchs = []
         for i in range(hparams.batch_size // hparams.batch_size_once):
             batch = requests[i * hparams.batch_size_once : (i+1)*hparams.batch_size_once]

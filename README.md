@@ -33,7 +33,7 @@ This repository hosts the code and data for the paper: **JIGSAW**.
      model_name: "meta-llama/Meta-Llama-3-8B-Instruct"
      ```
 
-- **Manual Adjustments**:Some sections of the code require manual configuration based on your specific setup. Please search the codebase globally for the string **"TO-DO"** and edit those lines accordingly before running experiments.
+<!-- - **Manual Adjustments**:Some sections of the code require manual configuration based on your specific setup. Please search the codebase globally for the string **"TO-DO"** and edit those lines accordingly before running experiments. -->
 
   
 - **Datasets**: The data of ZsRE, COUNTERFACT, and WikiBigEdit are provided in `./data/`
@@ -66,6 +66,10 @@ python edit.py --editing_method AlphaEdit --hparams_dir ./hparams/AlphaEdit/llam
 - **MEMIT**
   ```shell
   python edit.py --model llama3-8b --data_type wiki --editing_method MEMIT --batch_size 32 --eval_every 512 --batch_edit True --wandb_project JIGSAW
+  ```
+- **UltraEdit**
+  ```shell
+  python edit.py --model llama3-8b --data_type wiki --editing_method UltraEdit --batch_size 32 --eval_every 512 --batch_edit True --wandb_project JIGSAW
   ```
 - **AlphaEdit**
   ```shell

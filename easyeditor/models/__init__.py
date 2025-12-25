@@ -21,3 +21,4 @@ from .dola import *
 from .deepedit_api import *
 from .defer import *
 from .jigsaw import *
+from .ultraedit import *

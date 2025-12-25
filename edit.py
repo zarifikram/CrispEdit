@@ -6,12 +6,14 @@ import numpy as np
 import wandb
 from utils import prepare_prompts_from_data_type, save_model_and_tokenizer
 import random
-os.environ["CUDA_VISIBLE_DEVICES"] = "3,5" # TO-DO: CHANGE TO YOURS
+from dotenv import load_dotenv
+load_dotenv()
+os.environ["HF_DATASETS_CACHE"] = os.getenv("HF_DATASETS_DIR")
+os.environ["CUDA_VISIBLE_DEVICES"] = "3" # TO-DO: CHANGE TO YOURS
 os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 os.environ["HTTP_PROXY"] = "http://127.0.0.1:1087"
 os.environ["HTTPS_PROXY"] = "http://127.0.0.1:1087"
-os.environ["HF_DATASETS_CACHE"] = "/data0/zikram/huggingface/datasets"
 
 SEED = 69
 random.seed(SEED)
@@ -23,6 +25,7 @@ torch.backends.cudnn.deterministic = True
 from easyeditor import (
     FTHyperParams,
     MENDHyperParams,
+    UltraEditHyperParams,
     ROMEHyperParams,
     R_ROMEHyperParams,
     MEMITHyperParams,
@@ -33,16 +36,13 @@ from easyeditor import (
     MELOHyperParams,
     LoRAHyperParams,
     BaseEditor,
-    summary_metrics,
 )
-
-from easyeditor.models.ike import encode_ike_facts
 
 def get_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', required=True, type=str)
     parser.add_argument('--data_type', required=True, type=str, default='zsre', choices=['zsre', 'counterfact', 'wiki'])
-    parser.add_argument('--editing_method', required=True, type=str, choices=['FT', 'MEND', 'ROME', 'R-ROME', 'MEMIT', 'GRACE', 'WISE', 'AlphaEdit', 'IKE', 'MELO', 'LoRA'])
+    parser.add_argument('--editing_method', required=True, type=str, choices=['FT', 'MEND', 'ROME', 'R-ROME', 'MEMIT', 'GRACE', 'WISE', 'AlphaEdit', 'IKE', 'MELO', 'LoRA', 'UltraEdit'])
     parser.add_argument('--batch_size', required=True, type=int, default=32, help='Batch size for fine-tuning.')
     parser.add_argument('--eval_every', required=True, type=int, default=512, help='Evaluation frequency.')
     parser.add_argument('--sequential_edit', default='False', type=str)
@@ -54,6 +54,8 @@ def get_arguments():
 def get_hparams_and_editor(args):
     if args.editing_method == 'FT':
         editing_hparams = FTHyperParams
+    elif args.editing_method == 'UltraEdit':
+        editing_hparams = UltraEditHyperParams
     elif args.editing_method == 'MEND':
         editing_hparams = MENDHyperParams
     elif args.editing_method == 'ROME':
@@ -83,8 +85,6 @@ def get_hparams_and_editor(args):
     editor = BaseEditor.from_hparams(hparams)
     return hparams, editor
 
-
-    
 if __name__ == "__main__":
     args = get_arguments()
     prompts, rephrase_prompts, subject, target_new, locality_inputs, ground_truth = prepare_prompts_from_data_type(args.data_type)

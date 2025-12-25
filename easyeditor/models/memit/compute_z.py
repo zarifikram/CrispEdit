@@ -276,10 +276,10 @@ def find_fact_lookup_idx(
         raise ValueError(f"fact_token={fact_token_strategy} not recognized")
 
     sentence = prompt.format(subject)
-    if verbose:
-        print(
-            f"Lookup index found: {ret} | Sentence: {sentence} | Token:",
-            tok.decode(tok(sentence)["input_ids"][ret]),
-        )
+    # if verbose:
+    #     print(
+    #         f"Lookup index found: {ret} | Sentence: {sentence} | Token:",
+    #         tok.decode(tok(sentence)["input_ids"][ret]),
+    #     )
 
     return ret

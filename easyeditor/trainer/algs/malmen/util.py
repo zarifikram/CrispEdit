@@ -125,14 +125,28 @@ class Tracer:
             inputs: Tuple[torch.FloatTensor],
             outputs: Tuple[torch.FloatTensor]
         ):
-            self.keys = inputs[0][cache_indices].detach()
-            
+            target_device = inputs[0].device
+            if isinstance(cache_indices, tuple):
+                # Move each tensor inside the tuple to the target device
+                indices = tuple(idx.to(target_device) if hasattr(idx, 'to') else idx for idx in cache_indices)
+            else:
+                # Move the single tensor
+                indices = cache_indices.to(target_device)
+            self.keys = inputs[0][indices].detach() 
+
         def backward_hook(
             module: nn.Module,
             inputs_grad: Tuple[torch.FloatTensor],
             outputs_grad: Tuple[torch.FloatTensor]
         ):
-            self.values_grad = outputs_grad[0][cache_indices].detach()
+            target_device = outputs_grad[0].device
+            if isinstance(cache_indices, tuple):
+                # Move each tensor inside the tuple to the target device
+                indices = tuple(idx.to(target_device) if hasattr(idx, 'to') else idx for idx in cache_indices)
+            else:
+                # Move the single tensor
+                indices = cache_indices.to(target_device)
+            self.values_grad = outputs_grad[0][indices].detach()
 
         self.handles = [
             module.register_forward_hook(forward_hook),

@@ -1,10 +1,10 @@
 alg_name: "ULTRAEDIT"
 device: 0
 
-model_name: your/path/Llama3-8b-instruct
+model_name: "meta-llama/Meta-Llama-3-8B-Instruct"
 model_class: AutoModelForCausalLM
 tokenizer_class: AutoTokenizer
-tokenizer_name: your/path/Llama3-8b-instruct
+tokenizer_name: "meta-llama/Meta-Llama-3-8B-Instruct"
 inner_params:
 # zsre wiki ultraeditbench
 - model.layers.11.mlp.gate_proj
