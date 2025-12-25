@@ -26,8 +26,6 @@ class AlphaEditFTHyperParams(HyperParams):
     alg_name: str
     model_name: str
     objective_optimization: str
-    api_key: str
-    context_type: str
 
     # Statistics
     mom2_dataset: str

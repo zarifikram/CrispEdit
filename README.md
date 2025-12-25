@@ -3,8 +3,7 @@
 This repository hosts the code and data for the paper: **JIGSAW**.
 
 #### Requirements:
-
-- **Environment**: `requirements.txt` (Please use Python 3.9+ for this repository)
+- **Environment**: `requirements.txt` (Please use Python 3.9 for this repository)
 
   ```shell
   pip install -r requirements.txt
@@ -72,8 +71,16 @@ python edit.py --editing_method AlphaEdit --hparams_dir ./hparams/AlphaEdit/llam
   ```shell
   python edit.py --model llama3-8b --data_type wiki --editing_method AlphaEdit --batch_size 32 --eval_every 512 --batch_edit True --wandb_project JIGSAW
   ```
-#### Evaluate
+- **Loc-BF-FT**
+  ```shell
+  python locft-bf.py --model llama3-8b --data_type wiki --batch_size 32 --wandb_project JIGSAW
+  ```
+- **AlphaEdit FT**
+  ```shell
+  python alphaedit_ft.py --model llama3-8b --data_type wiki --cache_sample_num 10000 --energy_threshold 0.5 --batch_size 32 --wandb_project JIGSAW
+  ```
 
+#### Evaluate
   ```shell
   python evaluate.py --edited_model_dir llama3-8b_JIGSAW_wiki_0.5 --model_name llama3-8b --max_length 40 --context_type qa_inst --alg_name JIGSAW --data_type wiki --eval_num 30 --evaluation_criteria exact_match
   ```

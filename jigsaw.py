@@ -1,11 +1,15 @@
 import random
 import numpy as np
 from tqdm import trange
-from datetime import datetime
 from copy import deepcopy
-from typing import Any, Dict, List, Tuple, Optional, Union
+from typing import Any, Dict, List
 from utils import print_time, prepare_requests_from_data_type, save_model_and_tokenizer, chunks
 import os
+from dotenv import load_dotenv
+load_dotenv()
+HF_CACHE_DIR = os.getenv("HF_CACHE_DIR")
+os.environ["HF_DATASETS_CACHE"] = os.getenv("HF_DATASETS_DIR")
+
 os.environ["CUDA_VISIBLE_DEVICES"] = "1,2,3" # TO-DO: CHANGE TO YOURS
 os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com' 
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
@@ -18,7 +22,7 @@ import torch
 
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from easyeditor.models.jigsaw.Jigsaw_hparams import JigsawHyperParams
-from easyeditor.models.jigsaw.utils import calculate_projection_caches, get_weights
+from easyeditor.models.jigsaw.utils import calculate_projection_caches
 from easyeditor.models.jigsaw import ProjectedAdam
 from easyeditor.models.rome.layer_stats import calculate_cache_loss
 
@@ -28,7 +32,7 @@ np.random.seed(SEED)
 torch.manual_seed(SEED)
 torch.cuda.manual_seed_all(SEED)
 torch.backends.cudnn.deterministic = True
-HF_CACHE_DIR = "/data0/zikram/huggingface/hub/" # TO-DO: CHANGE TO YOURS
+
 
 def get_arguments():
     parser = argparse.ArgumentParser()
@@ -109,7 +113,6 @@ def execute_ft(
 
             labels = encodings["input_ids"].clone()
 
-            # 3. Mask the prompt and padding using -100
             labels[labels == tok.pad_token_id] = -100
             for i, prompt in enumerate(txt):
                 prompt_len = len(tok(prompt, add_special_tokens=True)["input_ids"])
@@ -137,7 +140,6 @@ def execute_ft(
     
     return model
 
-
 class AverageMeter:
     """Computes and stores the average and current value"""
 
@@ -155,13 +157,6 @@ class AverageMeter:
         self.sum += val * n
         self.count += n
         self.avg = self.sum / self.count
-
-
-def print_time(process_name):
-    now = datetime.now()
-    formatted_time = now.strftime("%m-%d %H:%M:%S")
-    print(f'{process_name}: {formatted_time}')
-
 
 if __name__ == "__main__":
     args = get_arguments()

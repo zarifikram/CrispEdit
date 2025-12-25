@@ -26,9 +26,6 @@ class FTHyperParams(HyperParams):
     alg_name: str
     model_name: str
     objective_optimization: str
-    api_key: str
-    context_type: str
-
 
     # Defaults
     batch_size: int = 64

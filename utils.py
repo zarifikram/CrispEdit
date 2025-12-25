@@ -2,7 +2,11 @@ from datetime import datetime
 import json
 from easyeditor.editors.utils import _prepare_requests
 
-BASE_DIR = "/data0/zikram/huggingface/hub/" # TO-DO: Change it
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+BASE_DIR = os.getenv("HF_CACHE_DIR")
 
 def print_time(process_name):
     now = datetime.now()

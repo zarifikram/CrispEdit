@@ -11,7 +11,7 @@ from easyeditor.util import HyperParams
 from dotenv import load_dotenv
 import os
 
-load_dotenv() # TO-DO: MAKE SURE YOU HAVE .env FILE WITH API_KEY
+load_dotenv()
 API_KEY = os.getenv("API_KEY")
 
 SEED = 69
@@ -22,7 +22,7 @@ torch.cuda.manual_seed_all(SEED)
 torch.backends.cudnn.deterministic = True
 
 def get_model_and_tokenizer_from_dir(edited_model_dir_local):
-    PREFIX_DIR = "/data0/zikram/huggingface/hub/" # TO-DO: CHANGE TO YOURS
+    PREFIX_DIR = os.getenv("HF_CACHE_DIR")
     edited_model_dir = PREFIX_DIR + edited_model_dir_local
     tokenizer = AutoTokenizer.from_pretrained(edited_model_dir)
     model = AutoModelForCausalLM.from_pretrained(edited_model_dir, device_map='auto')

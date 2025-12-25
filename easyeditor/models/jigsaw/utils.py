@@ -3,9 +3,11 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from .Jigsaw_hparams import JigsawHyperParams
 from typing import Dict, Tuple
+from dotenv import load_dotenv
+import os
 
-STATS_DIR = "/data0/zikram/jigsaw_stats/" # TO-DO: Change it
-
+load_dotenv()
+STATS_DIR = os.getenv("STATS_DIR")
 
 def get_rank_and_threshold_by_energy_ratio(eigenvalues, percent=0.9):
     total_energy = torch.sum(eigenvalues)

@@ -9,7 +9,11 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from ...util.globals import *
 from ...util.nethook import Trace, set_requires_grad
 from ...util.runningstats import CombinedStat, Mean, NormMean, SecondMoment, tally, make_loader
-CACHE_DIR = "/data0/zikram/huggingface/datasets" # TO-DO: CHANGE TO YOURS
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+CACHE_DIR = os.getenv("HF_DATASETS_DIR")
 
 from .tok_dataset import (
     TokenizedDataset,
@@ -456,7 +460,7 @@ def calculate_cache_loss(
         maxlen = 512  
         return TokenizedDataset(raw_ds["val"], tokenizer, maxlen=maxlen)
 
-    batch_size = 4 # Examine this many dataset texts at once
+    batch_size = 1 # Examine this many dataset texts at once
     npos = get_num_positions_from_model(model)
 
     if batch_tokens is None:

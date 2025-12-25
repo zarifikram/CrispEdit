@@ -50,33 +50,14 @@ class ProjectedAdam(Adam):
             for p in group['params']:
                 if p.grad is None:
                     continue
-
-                P_A = group['projection_cache_map'][p]['P_A'].to(device=group['params'][0].device)
-
-                # --- Projection Step ---
-                # grad' = U_A.T @ grad @ U_B
-                # grad' = grad' * M
-                # grad_proj = U_A @ grad' @ U_B.T
-                
-                # Check shapes to ensure matrix multiplication is valid
-                # Assuming p.grad is 2D (matrices). If params are 1D/3D, 
-                # you may need to reshape or squeeze/unsqueeze here.
                 
                 grad = p.grad
-                
+
                 # don't project the bias
                 if grad.ndim != 2:
                     continue
 
-                # resolve device mismatch if any
-                # U_A = U_A.to(grad.device)
-                # U_B = U_B.to(grad.device)
-                # M = M.to(grad.device)
-                
-                # projected_latent = (U_B.T @ grad @ U_A)
-                # masked_latent = projected_latent * M
-                # grad_proj = U_B @ masked_latent @ U_A.T
-
+                P_A = group['projection_cache_map'][p]['P_A'].to(device=grad.device)
                 grad_proj = P_A @ grad
                 p.grad.copy_(grad_proj)
 
