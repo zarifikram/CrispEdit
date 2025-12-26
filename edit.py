@@ -122,4 +122,4 @@ if __name__ == "__main__":
             sequential_edit=sequential_edit,
         )
 
-        save_model_and_tokenizer(edited_model, tokenizer, save_model_name)
+    save_model_and_tokenizer(edited_model, tokenizer, save_model_name)

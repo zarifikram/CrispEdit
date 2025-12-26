@@ -108,8 +108,17 @@ def test_prediction_acc_real(model, tok, hparams, prompt, target, device, locali
             inst_template = "Please answer the question:\n\nQ: {question}\nA:"
             input_prompt = inst_template.format(question=prompt)
         elif hparams.context_type == "chat_temp":
-            chat_template = "<s>[INST] <<SYS>>\nYou are a helpful, respectful and honest assistant.\n<</SYS>>\n\n{user_prompt} [/INST]</s>"
-            input_prompt = chat_template.format(user_prompt=prompt)
+            inst_template = "Please answer the question:\n\nQ: {question}\nA:"
+            prompt = inst_template.format(question=prompt)
+            messages = [
+                {"role": "system", "content": "You are a helpful, respectful and honest assistant."},
+                {"role": "user", "content": prompt},
+            ]
+            input_prompt = tok.apply_chat_template(
+                messages, 
+                tokenize=False, 
+                add_generation_prompt=True
+            )        
         else: 
             input_prompt = prompt  # default setting: question only
     else: 

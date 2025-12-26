@@ -85,6 +85,25 @@ python edit.py --editing_method AlphaEdit --hparams_dir ./hparams/AlphaEdit/llam
   ```
 
 #### Evaluate
+- **Base Model**
   ```shell
-  python evaluate.py --edited_model_dir llama3-8b_JIGSAW_wiki_0.5 --model_name llama3-8b --max_length 40 --context_type qa_inst --alg_name JIGSAW --data_type wiki --eval_num 30 --evaluation_criteria exact_match
+  python run_benchmarks.py --edited_model_dir models--meta-llama--Meta-Llama-3-8B-Instruct/snapshots/8afb486c1db24fe5011ec46dfbe5b5dccdb575c2/ --model_name llama3-8b --max_length 40 --context_type qa_inst --alg_name Base --data_type wiki --eval_num 30 --evaluation_criteria llm_judge --capability_eval_num 200
   ```
+- **UltraEdit**
+  ```shell
+  python run_benchmarks.py --edited_model_dir llama3-8b_UltraEdit_wiki --model_name llama3-8b --max_length 40 --context_type qa_inst --alg_name JIGSAW --data_type wiki --eval_num 30 --evaluation_criteria exact_match
+  ```
+- **JIGSAW**
+  ```shell
+  python run_benchmarks.py --edited_model_dir llama3-8b_JIGSAW_wiki_0.5 --model_name llama3-8b --max_length 40 --context_type qa_inst --alg_name JIGSAW --data_type wiki --eval_num 30 --evaluation_criteria exact_match
+  ```
+#### Evaluate Capabilities
+```shell
+lm_eval --model hf \
+    --model_args pretrained=/data0/zikram/huggingface/hub/models--meta-llama--Meta-Llama-3-8B-Instruct/snapshots/8afb486c1db24fe5011ec46dfbe5b5dccdb575c2/,dtype=auto \
+    --tasks mmlu,gsm8k,arc_challenge \
+    --limit 200 \
+    --batch_size auto \
+    --apply_chat_template \
+    --device cuda:1
+```

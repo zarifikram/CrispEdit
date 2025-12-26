@@ -1,5 +1,7 @@
+import os
+os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com' 
 import argparse
-from utils import print_time, prepare_requests_from_data_type
+from utils import print_time, prepare_requests_from_data_type, save_clean_results
 from easyeditor.editors.utils import summary_metrics
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import numpy as np
@@ -9,7 +11,9 @@ import torch
 from tqdm import tqdm
 from easyeditor.util import HyperParams
 from dotenv import load_dotenv
-import os
+from lm_eval.utils import make_table
+from lm_eval import simple_evaluate
+from lm_eval.models.huggingface import HFLM
 
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
@@ -33,6 +37,7 @@ def get_arguments():
     parser.add_argument('--edited_model_dir', required=True, type=str, default=None, help='Path to edited model for evaluation.')
     parser.add_argument('--data_type', required=True, type=str, default='zsre', choices=['zsre', 'counterfact', 'wiki'])
     parser.add_argument('--eval_num', required=False, type=int, default=3000, help='Number of evaluation instances to use. Default uses all.')
+    parser.add_argument('--capability_eval_num', required=False, type=int, default=200, help='Number of evaluation instances to use for capability. Default uses 200.')
     parser.add_argument('--max_length', required=False, type=int, default=40, help='Maximum length of the generated sequences.')
     parser.add_argument('--context_type', required=True, type=str, default='qa_inst', choices=['qa_inst', 'chat_temp', 'no_context'], help='Type of context to use for evaluation.')
     parser.add_argument('--alg_name', required=True, type=str, default='ft_edit', help='Name of the editing algorithm used.')
@@ -63,6 +68,22 @@ if __name__ == "__main__":
     # before evaluation, always make sure tokenizer padding side is correct
     if tokenizer.padding_side != "left":
         tokenizer.padding_side = "left"
+
+    lm_wrapper = HFLM(
+        pretrained=model,
+        tokenizer=tokenizer,
+        batch_size="auto",  # Let the harness optimize memory
+    )
+
+    print_time("Begin Capability Eval Time")
+    results = simple_evaluate(
+        model=lm_wrapper,      # Pass the OBJECT, not the string name
+        tasks=["mmlu", "gsm8k", "arc_challenge"],
+        limit=args.capability_eval_num,
+        apply_chat_template=True, # Essential for Instruct models
+    )
+    print_time("End Capability Eval Time")
+    save_clean_results(results, f"./logs/{hparams.alg_name}_{args.data_type}_{hparams.model_name}")
 
     print_time("Begin Post Edit Eval Time")
     requests = random.sample(requests, len(requests))

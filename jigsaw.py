@@ -33,7 +33,6 @@ torch.manual_seed(SEED)
 torch.cuda.manual_seed_all(SEED)
 torch.backends.cudnn.deterministic = True
 
-
 def get_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', required=True, type=str)
