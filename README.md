@@ -65,7 +65,7 @@ python edit.py --editing_method AlphaEdit --hparams_dir ./hparams/AlphaEdit/llam
 #### Training
 - **Jigsaw**
   ```shell
-  python jigsaw.py --model llama3-8b --data_type wiki --cache_sample_num 1000 --energy_threshold 0.5 --batch_size 32 --wandb_project JIGSAW
+  python jigsaw.py --model llama3-8b --data_type wiki --cache_sample_num 10000 --energy_threshold 0.5 --batch_size 32 --wandb_project JIGSAW
   ```
 
 - **MEMIT**
