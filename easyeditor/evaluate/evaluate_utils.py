@@ -84,7 +84,7 @@ Just return the letters "A" or "B", with no text around it.
 
     # we will use openRouter key for LLM judgement
     client = OpenAI(
-        base_url="https://openrouter.ai/api/v1",
+        # base_url="https://openrouter.ai/api/v1",
         api_key=api_key,
     )
 

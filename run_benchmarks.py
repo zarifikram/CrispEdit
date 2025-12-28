@@ -1,5 +1,8 @@
 import os
-os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com' 
+from dotenv import load_dotenv
+load_dotenv()
+API_KEY = os.getenv("API_KEY")
+os.environ['HF_ENDPOINT'] = os.getenv("HF_ENDPOINT")
 import argparse
 from utils import print_time, prepare_requests_from_data_type, save_clean_results
 from easyeditor.editors.utils import summary_metrics
@@ -10,13 +13,10 @@ import random
 import torch
 from tqdm import tqdm
 from easyeditor.util import HyperParams
-from dotenv import load_dotenv
 from lm_eval.utils import make_table
 from lm_eval import simple_evaluate
 from lm_eval.models.huggingface import HFLM
 
-load_dotenv()
-API_KEY = os.getenv("API_KEY")
 
 SEED = 69
 random.seed(SEED)
@@ -78,7 +78,7 @@ if __name__ == "__main__":
     print_time("Begin Capability Eval Time")
     results = simple_evaluate(
         model=lm_wrapper,      # Pass the OBJECT, not the string name
-        tasks=["mmlu", "gsm8k", "arc_challenge"],
+        tasks=["mmlu", "gsm8k", "arc_challenge", "truthfulqa", "ifeval"],
         limit=args.capability_eval_num,
         apply_chat_template=True, # Essential for Instruct models
     )

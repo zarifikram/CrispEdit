@@ -9,12 +9,8 @@ from dotenv import load_dotenv
 load_dotenv()
 HF_CACHE_DIR = os.getenv("HF_CACHE_DIR")
 os.environ["HF_DATASETS_CACHE"] = os.getenv("HF_DATASETS_DIR")
-
-os.environ["CUDA_VISIBLE_DEVICES"] = "1,2,3" # TO-DO: CHANGE TO YOURS
-os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com' 
+os.environ['HF_ENDPOINT'] = os.getenv("HF_ENDPOINT")
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
-os.environ["HTTP_PROXY"] = "http://127.0.0.1:1087"
-os.environ["HTTPS_PROXY"] = "http://127.0.0.1:1087"
 import wandb
 
 import argparse

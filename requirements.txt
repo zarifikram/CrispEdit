@@ -29,3 +29,4 @@ zhipuai==2.1.5.20250415
 sentencepiece==0.2.0
 wandb
 python-dotenv
+langdetect
