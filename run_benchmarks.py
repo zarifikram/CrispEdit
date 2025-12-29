@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
 # os.environ['HF_ENDPOINT'] = os.getenv("HF_ENDPOINT")
+os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 import argparse
 from utils import print_time, prepare_requests_from_data_type, save_clean_results
 from easyeditor.editors.utils import summary_metrics
@@ -12,6 +13,7 @@ from easyeditor.evaluate.evaluate import compute_edit_quality
 import random
 import torch
 from tqdm import tqdm
+import wandb
 from easyeditor.util import HyperParams
 from lm_eval import simple_evaluate
 from lm_eval.models.huggingface import HFLM
@@ -28,7 +30,7 @@ def get_model_and_tokenizer_from_dir(edited_model_dir_local):
     PREFIX_DIR = os.getenv("HF_CACHE_DIR")
     edited_model_dir = PREFIX_DIR + edited_model_dir_local
     tokenizer = AutoTokenizer.from_pretrained(edited_model_dir)
-    model = AutoModelForCausalLM.from_pretrained(edited_model_dir)#, device_map='auto')
+    model = AutoModelForCausalLM.from_pretrained(edited_model_dir, device_map='auto')
     return model, tokenizer
 
 def get_arguments():
@@ -42,6 +44,7 @@ def get_arguments():
     parser.add_argument('--alg_name', required=True, type=str, default='ft_edit', help='Name of the editing algorithm used.')
     parser.add_argument('--model_name', required=True, type=str, default='gpt2-xl', help='Name of the base model used.')
     parser.add_argument('--evaluation_criteria', required=True, type=str, default='exact_match', choices=['exact_match', 'llm_judge'], help='Evaluation criteria to use.')  
+    parser.add_argument('--wandb_project', type=str, default='JIGSAW_EVAL', help='WandB project name.')
     args = parser.parse_args()
     return args
 
@@ -64,6 +67,9 @@ if __name__ == "__main__":
     # device expects the device number only
     device = model.device.index
 
+    run_name = f"{hparams.alg_name}_{args.data_type}_{hparams.model_name}"
+    run = wandb.init(project=args.wandb_project, name=run_name, config=vars(hparams))
+
     # before evaluation, always make sure tokenizer padding side is correct
     if tokenizer.padding_side != "left":
         tokenizer.padding_side = "left"
@@ -81,8 +87,8 @@ if __name__ == "__main__":
         "mmlu":           {"shots": 5, "batch": "auto"}, 
 
         # HEAVY tasks (High shots + CoT): STRICT batch limit needed
-        "gsm8k_cot":      {"shots": 8,  "batch": "auto"}, # CoT generates long outputs, eats memory, add "batch": 1 (or whatever else) if OOM
-        "arc_challenge":  {"shots": 25, "batch": "auto"}  # 25-shot context is massive, add "batch": 1 if OOM
+        "gsm8k_cot":      {"shots": 8,  "batch": 2}, # CoT generates long outputs, eats memory, add "batch": 1 (or whatever else) if OOM
+        "arc_challenge":  {"shots": 25, "batch": 1}  # 25-shot context is massive, add "batch": 1 if OOM
     }
     results = {"results": {}}
 
@@ -101,14 +107,17 @@ if __name__ == "__main__":
         
         if "results" in _results:
             results["results"].update(_results["results"])
+            wandb.log(_results["results"])
         else:
             raise ValueError(f"No results found for task {task_name}")
 
     print_time("End Capability Eval Time")
-    save_clean_results(results, f"./logs/{hparams.alg_name}_{args.data_type}_{hparams.model_name}")
-
+    save_clean_results(results, f"./logs/{run_name}")
     print_time("Begin Post Edit Eval Time")
     requests = random.sample(requests, len(requests))
+    artifact = wandb.Artifact('raw_results', type='dataset')
+    artifact.add_file(f'./logs/{run_name}/capability.json')
+    run.log_artifact(artifact)
     if args.eval_num is not None:
         requests = requests[:args.eval_num]
 
@@ -124,6 +133,9 @@ if __name__ == "__main__":
 
         print(f"{i} editing: {request['prompt']} -> {request['target_new']}  \n\n {all_metrics[i]}")
 
-    summary_metrics(all_metrics, f"./logs/{hparams.alg_name}_{args.data_type}_{hparams.model_name}")
+    summary_metrics(all_metrics, f"./logs/{run_name}")
 
     print_time("End Post Edit Eval Time") 
+    artifact = wandb.Artifact('mean_metrics', type='dataset')
+    artifact.add_file(f'./logs/{run_name}/mean_metrics.json')
+    run.log_artifact(artifact)
