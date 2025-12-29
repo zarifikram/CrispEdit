@@ -92,7 +92,7 @@ python edit.py --editing_method AlphaEdit --hparams_dir ./hparams/AlphaEdit/llam
 #### Evaluate
 - **Base Model**
   ```shell
-  python run_benchmarks.py --edited_model_dir models--meta-llama--Meta-Llama-3-8B-Instruct/snapshots/8afb486c1db24fe5011ec46dfbe5b5dccdb575c2/ --model_name llama3-8b --max_length 40 --context_type qa_inst --alg_name Base --data_type wiki --eval_num 30 --evaluation_criteria llm_judge --capability_eval_num 200
+  python run_benchmarks.py --edited_model_dir models--meta-llama--Meta-Llama-3-8B-Instruct/snapshots/8afb486c1db24fe5011ec46dfbe5b5dccdb575c2/ --model_name llama3-8b --max_length 40 --context_type qa_inst --alg_name Base --data_type wiki --eval_num 3000 --evaluation_criteria llm_judge --capability_eval_num 200
   ```
 - **UltraEdit**
   ```shell

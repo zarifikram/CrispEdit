@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
-os.environ['HF_ENDPOINT'] = os.getenv("HF_ENDPOINT")
+# os.environ['HF_ENDPOINT'] = os.getenv("HF_ENDPOINT")
 import argparse
 from utils import print_time, prepare_requests_from_data_type, save_clean_results
 from easyeditor.editors.utils import summary_metrics
@@ -28,7 +28,7 @@ def get_model_and_tokenizer_from_dir(edited_model_dir_local):
     PREFIX_DIR = os.getenv("HF_CACHE_DIR")
     edited_model_dir = PREFIX_DIR + edited_model_dir_local
     tokenizer = AutoTokenizer.from_pretrained(edited_model_dir)
-    model = AutoModelForCausalLM.from_pretrained(edited_model_dir, device_map='auto')
+    model = AutoModelForCausalLM.from_pretrained(edited_model_dir)#, device_map='auto')
     return model, tokenizer
 
 def get_arguments():
@@ -71,30 +71,38 @@ if __name__ == "__main__":
     lm_wrapper = HFLM(
         pretrained=model,
         tokenizer=tokenizer,
-        batch_size="auto",  # Let the harness optimize memory
     )
 
     print_time("Begin Capability Eval Time")
-    results_main = simple_evaluate(
-        model=lm_wrapper,
-        tasks=["mmlu", "gsm8k_cot", "truthfulqa_mc2", "ifeval"],
-        limit=args.capability_eval_num,
-        apply_chat_template=True,
-        fewshot_as_multiturn=True,
-    )
 
-    results_arc = simple_evaluate(
-        model=lm_wrapper,
-        tasks=["arc_challenge"],
-        limit=args.capability_eval_num,
-        num_fewshot=25,
-        apply_chat_template=True,
-        fewshot_as_multiturn=True,
-    )
+    tasks_with_config = {
+        "ifeval":         {"shots": 0, "batch": "auto"},
+        "truthfulqa_mc2": {"shots": 0, "batch": "auto"},
+        "mmlu":           {"shots": 5, "batch": "auto"}, 
 
-    results = results_main.copy()
-    if "results" in results_arc:
-        results["results"].update(results_arc["results"])
+        # HEAVY tasks (High shots + CoT): STRICT batch limit needed
+        "gsm8k_cot":      {"shots": 8,  "batch": "auto"}, # CoT generates long outputs, eats memory, add "batch": 1 (or whatever else) if OOM
+        "arc_challenge":  {"shots": 25, "batch": "auto"}  # 25-shot context is massive, add "batch": 1 if OOM
+    }
+    results = {"results": {}}
+
+    for task_name, config in tasks_with_config.items():
+        print(f"Running {task_name} (Shots: {config['shots']}, Batch: {config['batch']})...")
+        
+        _results = simple_evaluate(
+            model=lm_wrapper,
+            tasks=[task_name],
+            limit=args.capability_eval_num,
+            num_fewshot=config['shots'],
+            batch_size=config['batch'],
+            apply_chat_template=True,
+            fewshot_as_multiturn=True,
+        )
+        
+        if "results" in _results:
+            results["results"].update(_results["results"])
+        else:
+            raise ValueError(f"No results found for task {task_name}")
 
     print_time("End Capability Eval Time")
     save_clean_results(results, f"./logs/{hparams.alg_name}_{args.data_type}_{hparams.model_name}")
