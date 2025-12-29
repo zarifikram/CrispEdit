@@ -14,25 +14,11 @@ def save_clean_results(results, logs_dir):
     results_filename = 'capability.json'
     output_file = os.path.join(logs_dir, results_filename)
 
-    clean_data = {}
-    
-    for task_name, metrics in results["results"].items():
-        if "acc_norm,none" in metrics:
-            score = metrics["acc_norm,none"]
-        elif "acc,none" in metrics:
-            score = metrics["acc,none"]
-        elif "exact_match,strict-match" in metrics: # Common for GSM8K
-            score = metrics["exact_match,strict-match"]
-        else:
-            score = next((v for v in metrics.values() if isinstance(v, float)), 0.0)
-
-        clean_data[task_name] = round(score, 4)
-
     with open(output_file, "w") as f:
-        json.dump(clean_data, f, indent=4)
+        json.dump(results["results"], f, indent=4)
     
     print(f"Clean results saved to {output_file}")
-    print("Preview:", clean_data)
+    print("Preview:", results["results"])
 
     from lm_eval.utils import make_table
     results_filename = 'table.md'

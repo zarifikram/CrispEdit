@@ -13,7 +13,6 @@ import random
 import torch
 from tqdm import tqdm
 from easyeditor.util import HyperParams
-from lm_eval.utils import make_table
 from lm_eval import simple_evaluate
 from lm_eval.models.huggingface import HFLM
 
@@ -78,10 +77,12 @@ if __name__ == "__main__":
     print_time("Begin Capability Eval Time")
     results = simple_evaluate(
         model=lm_wrapper,      # Pass the OBJECT, not the string name
-        tasks=["mmlu", "gsm8k", "arc_challenge", "truthfulqa", "ifeval"],
+        tasks=["mmlu", "gsm8k_cot", "arc_challenge", "truthfulqa_mc2", "ifeval"],
         limit=args.capability_eval_num,
         apply_chat_template=True, # Essential for Instruct models
+        fewshot_as_multiturn=True,
     )
+
     print_time("End Capability Eval Time")
     save_clean_results(results, f"./logs/{hparams.alg_name}_{args.data_type}_{hparams.model_name}")
 
