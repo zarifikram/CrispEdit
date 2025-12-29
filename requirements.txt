@@ -31,3 +31,4 @@ wandb
 python-dotenv
 langdetect
 immutabledict
+lm_eval

@@ -75,13 +75,26 @@ if __name__ == "__main__":
     )
 
     print_time("Begin Capability Eval Time")
-    results = simple_evaluate(
-        model=lm_wrapper,      # Pass the OBJECT, not the string name
-        tasks=["mmlu", "gsm8k_cot", "arc_challenge", "truthfulqa_mc2", "ifeval"],
+    results_main = simple_evaluate(
+        model=lm_wrapper,
+        tasks=["mmlu", "gsm8k_cot", "truthfulqa_mc2", "ifeval"],
         limit=args.capability_eval_num,
-        apply_chat_template=True, # Essential for Instruct models
+        apply_chat_template=True,
         fewshot_as_multiturn=True,
     )
+
+    results_arc = simple_evaluate(
+        model=lm_wrapper,
+        tasks=["arc_challenge"],
+        limit=args.capability_eval_num,
+        num_fewshot=25,
+        apply_chat_template=True,
+        fewshot_as_multiturn=True,
+    )
+
+    results = results_main.copy()
+    if "results" in results_arc:
+        results["results"].update(results_arc["results"])
 
     print_time("End Capability Eval Time")
     save_clean_results(results, f"./logs/{hparams.alg_name}_{args.data_type}_{hparams.model_name}")
