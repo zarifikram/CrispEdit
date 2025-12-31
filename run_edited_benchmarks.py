@@ -75,7 +75,6 @@ if __name__ == "__main__":
 
     print_time("Begin Post Edit Eval Time")
     requests = random.sample(requests, len(requests))
-    run.log_artifact(artifact)
     if args.eval_num is not None:
         requests = requests[:args.eval_num]
 
