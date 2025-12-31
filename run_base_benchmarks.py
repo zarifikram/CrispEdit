@@ -41,6 +41,7 @@ def get_arguments():
     parser.add_argument('--alg_name', required=True, type=str, default='ft_edit', help='Name of the editing algorithm used.')
     parser.add_argument('--model_name', required=True, type=str, default='gpt2-xl', help='Name of the base model used.')
     parser.add_argument('--wandb_project', type=str, default='JIGSAW_EVAL', help='WandB project name.')
+    parser.add_argument('--wandb_run_id', type=str, default=None, help='WandB run ID for resuming runs.')
     args = parser.parse_args()
     return args
 
@@ -63,7 +64,7 @@ if __name__ == "__main__":
     device = model.device.index
 
     run_name = f"{hparams.alg_name}_{args.data_type}_{hparams.model_name}"
-    run = wandb.init(project=args.wandb_project, name=run_name, config=vars(hparams), resume=True)
+    run = wandb.init(project=args.wandb_project, name=run_name, config=vars(hparams), resume=args.wandb_run_id if args.wandb_run_id else "must", id=args.wandb_run_id)
 
     # before evaluation, always make sure tokenizer padding side is correct
     if tokenizer.padding_side != "left":

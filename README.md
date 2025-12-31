@@ -94,6 +94,10 @@ python edit.py --editing_method AlphaEdit --hparams_dir ./hparams/AlphaEdit/llam
   ```shell
   python run_base_benchmarks.py --edited_model_dir models--meta-llama--Meta-Llama-3-8B-Instruct/snapshots/8afb486c1db24fe5011ec46dfbe5b5dccdb575c2/ --model_name llama3-8b --alg_name Base --data_type wiki --eval_num 200
   ```
+- **Base Model (Base Capabilities) (Example: Resume)**
+  ```shell
+  python run_base_benchmarks.py --edited_model_dir models--meta-llama--Meta-Llama-3-8B-Instruct/snapshots/8afb486c1db24fe5011ec46dfbe5b5dccdb575c2/ --model_name llama3-8b --alg_name Base --data_type wiki --eval_num 200 --wandb_run_id your_wandb_run_id
+  ```
 - **Base Model (Edited Capabilities)**
   ```shell
   python run_edited_benchmarks.py --edited_model_dir models--meta-llama--Meta-Llama-3-8B-Instruct/snapshots/8afb486c1db24fe5011ec46dfbe5b5dccdb575c2/ --model_name llama3-8b --max_length 40 --context_type qa_inst --alg_name Base --data_type wiki --evaluation_criteria llm_judge --eval_num 3000 
