@@ -98,7 +98,7 @@ Just return the letters "A" or "B", with no text around it.
     )
     llm_ans = completion.choices[0].message.content
     llm_score = 1.0 if llm_ans == "A" else 0.0
-    time.sleep(1) # avoid high rate of request
+    time.sleep(0.25) # avoid high rate of request
     return llm_score
 
 def test_prediction_acc_real(model, tok, hparams, prompt, target, device, locality=False):

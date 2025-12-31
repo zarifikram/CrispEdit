@@ -38,7 +38,6 @@ def get_arguments():
     parser.add_argument('--edited_model_dir', required=True, type=str, default=None, help='Path to edited model for evaluation.')
     parser.add_argument('--data_type', required=True, type=str, default='zsre', choices=['zsre', 'counterfact', 'wiki'])
     parser.add_argument('--eval_num', required=False, type=int, default=3000, help='Number of evaluation instances to use. Default uses all.')
-    parser.add_argument('--capability_eval_num', required=False, type=int, default=200, help='Number of evaluation instances to use for capability. Default uses 200.')
     parser.add_argument('--max_length', required=False, type=int, default=40, help='Maximum length of the generated sequences.')
     parser.add_argument('--context_type', required=True, type=str, default='qa_inst', choices=['qa_inst', 'chat_temp', 'no_context'], help='Type of context to use for evaluation.')
     parser.add_argument('--alg_name', required=True, type=str, default='ft_edit', help='Name of the editing algorithm used.')
@@ -68,55 +67,14 @@ if __name__ == "__main__":
     device = model.device.index
 
     run_name = f"{hparams.alg_name}_{args.data_type}_{hparams.model_name}"
-    run = wandb.init(project=args.wandb_project, name=run_name, config=vars(hparams))
+    run = wandb.init(project=args.wandb_project, name=run_name, config=vars(hparams), resume=True)
 
     # before evaluation, always make sure tokenizer padding side is correct
     if tokenizer.padding_side != "left":
         tokenizer.padding_side = "left"
 
-    lm_wrapper = HFLM(
-        pretrained=model,
-        tokenizer=tokenizer,
-    )
-
-    print_time("Begin Capability Eval Time")
-
-    tasks_with_config = {
-        "ifeval":         {"shots": 0, "batch": "auto"},
-        "truthfulqa_mc2": {"shots": 0, "batch": "auto"},
-        "mmlu":           {"shots": 5, "batch": "auto"}, 
-
-        # HEAVY tasks (High shots + CoT): STRICT batch limit needed
-        "gsm8k_cot":      {"shots": 8,  "batch": 2}, # CoT generates long outputs, eats memory, add "batch": 1 (or whatever else) if OOM
-        "arc_challenge":  {"shots": 25, "batch": 1}  # 25-shot context is massive, add "batch": 1 if OOM
-    }
-    results = {"results": {}}
-
-    for task_name, config in tasks_with_config.items():
-        print(f"Running {task_name} (Shots: {config['shots']}, Batch: {config['batch']})...")
-        
-        _results = simple_evaluate(
-            model=lm_wrapper,
-            tasks=[task_name],
-            limit=args.capability_eval_num,
-            num_fewshot=config['shots'],
-            batch_size=config['batch'],
-            apply_chat_template=True,
-            fewshot_as_multiturn=True,
-        )
-        
-        if "results" in _results:
-            results["results"].update(_results["results"])
-            wandb.log(_results["results"])
-        else:
-            raise ValueError(f"No results found for task {task_name}")
-
-    print_time("End Capability Eval Time")
-    save_clean_results(results, f"./logs/{run_name}")
     print_time("Begin Post Edit Eval Time")
     requests = random.sample(requests, len(requests))
-    artifact = wandb.Artifact('raw_results', type='dataset')
-    artifact.add_file(f'./logs/{run_name}/capability.json')
     run.log_artifact(artifact)
     if args.eval_num is not None:
         requests = requests[:args.eval_num]
