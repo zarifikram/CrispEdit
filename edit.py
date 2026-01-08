@@ -1,17 +1,17 @@
 import json
 import argparse
 import torch
-import os
-import numpy as np
-import wandb
-from utils import prepare_prompts_from_data_type, save_model_and_tokenizer
-import random
 from dotenv import load_dotenv
 load_dotenv()
+import os
 os.environ["HF_DATASETS_CACHE"] = os.getenv("HF_DATASETS_DIR")
 os.environ["CUDA_VISIBLE_DEVICES"] = "3" # TO-DO: CHANGE TO YOURS
 os.environ['HF_ENDPOINT'] = os.getenv("HF_ENDPOINT")
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
+import numpy as np
+import wandb
+from utils import prepare_prompts_from_data_type, save_model_and_tokenizer
+import random
 
 SEED = 69
 random.seed(SEED)
@@ -43,7 +43,7 @@ def get_arguments():
     parser.add_argument('--editing_method', required=True, type=str, choices=['FT', 'MEND', 'ROME', 'R-ROME', 'MEMIT', 'GRACE', 'WISE', 'AlphaEdit', 'IKE', 'MELO', 'LoRA', 'UltraEdit'])
     parser.add_argument('--batch_size', required=True, type=int, default=32, help='Batch size for fine-tuning.')
     parser.add_argument('--eval_every', required=True, type=int, default=512, help='Evaluation frequency.')
-    parser.add_argument('--sequential_edit', default='False', type=str)
+    parser.add_argument('--sequential_edit', default='True', type=str)
     parser.add_argument('--batch_edit', default='False', type=str)
     parser.add_argument('--wandb_project', type=str, default='JIGSAW', help='WandB project name.')
     args = parser.parse_args()
@@ -118,6 +118,7 @@ if __name__ == "__main__":
             target_new=target_new,
             locality_inputs=locality_inputs,
             sequential_edit=sequential_edit,
+            eval_every=args.eval_every,
         )
 
     save_model_and_tokenizer(edited_model, tokenizer, save_model_name)

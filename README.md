@@ -80,11 +80,15 @@ python edit.py --editing_method AlphaEdit --hparams_dir ./hparams/AlphaEdit/llam
   ```shell
   python edit.py --model llama3-8b --data_type wiki --editing_method AlphaEdit --batch_size 32 --eval_every 512 --batch_edit True --wandb_project JIGSAW
   ```
+- **WISE**
+  ```shell
+  python edit.py --model llama3-8b --data_type wiki --editing_method WISE --batch_size 1 --eval_every 512 --batch_edit False --wandb_project JIGSAW
+  ```
 - **Loc-BF-FT**
   ```shell
   python locft-bf.py --model llama3-8b --data_type wiki --batch_size 32 --wandb_project JIGSAW
   ```
-- **AlphaEdit FT**
+- **Adam-NSCL**
   ```shell
   python alphaedit_ft.py --model llama3-8b --data_type wiki --cache_sample_num 10000 --energy_threshold 0.5 --batch_size 32 --wandb_project JIGSAW
   ```

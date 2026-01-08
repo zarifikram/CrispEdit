@@ -69,7 +69,7 @@ if __name__ == "__main__":
 
     run_name = f"{hparams.alg_name}_{args.data_type}_{hparams.model_name}"
     # if there is a run ID, use it to resume
-    run = wandb.init(project=args.wandb_project, name=run_name, config=vars(hparams), resume=args.wandb_run_id if args.wandb_run_id else "must", id=args.wandb_run_id)
+    run = wandb.init(project=args.wandb_project, name=run_name, config=vars(hparams), resume=args.wandb_run_id if not args.wandb_run_id else "must", id=args.wandb_run_id)
 
     # before evaluation, always make sure tokenizer padding side is correct
     if tokenizer.padding_side != "left":

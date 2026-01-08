@@ -48,12 +48,9 @@ def get_arguments():
 def build_hparams_from_args(args):
     hparams = HyperParams()
     hparams.alg_name = args.alg_name
-    hparams.context_type = args.context_type
-    hparams.max_length = args.max_length
     hparams.api_key = API_KEY
     hparams.evaluation_type = "WILD"
     hparams.model_name = args.model_name
-    hparams.evaluation_criteria = args.evaluation_criteria
     return hparams
 
 if __name__ == "__main__":
@@ -64,7 +61,7 @@ if __name__ == "__main__":
     device = model.device.index
 
     run_name = f"{hparams.alg_name}_{args.data_type}_{hparams.model_name}"
-    run = wandb.init(project=args.wandb_project, name=run_name, config=vars(hparams), resume=args.wandb_run_id if args.wandb_run_id else "must", id=args.wandb_run_id)
+    run = wandb.init(project=args.wandb_project, name=run_name, config=vars(hparams), resume=args.wandb_run_id if not args.wandb_run_id else "must", id=args.wandb_run_id)
 
     # before evaluation, always make sure tokenizer padding side is correct
     if tokenizer.padding_side != "left":
