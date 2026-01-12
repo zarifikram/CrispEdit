@@ -13,7 +13,41 @@ import regex
 import time
 from openai import OpenAI
 from transformers import T5ForConditionalGeneration
+import threading
+import httpx
+from openai import OpenAI
+from openai import APITimeoutError, APIConnectionError, RateLimitError, APIStatusError
 
+# Lazy client: created only on the first llm_judge call
+_OAI_CLIENT = None
+_OAI_LOCK = threading.Lock()
+
+def _get_oai_client(api_key: str) -> OpenAI:
+    global _OAI_CLIENT
+    if _OAI_CLIENT is not None:
+        return _OAI_CLIENT
+
+    with _OAI_LOCK:
+        if _OAI_CLIENT is not None:
+            return _OAI_CLIENT
+
+        # Prefer the passed api_key; fallback to env if needed
+        key = api_key or os.getenv("API_KEY")
+        if not key:
+            raise RuntimeError("No API key provided (api_key empty and API_KEY env var not set).")
+
+        # Use an httpx client with explicit timeouts to reduce hangs
+        timeout = httpx.Timeout(connect=10.0, read=60.0, write=60.0, pool=10.0)
+        limits = httpx.Limits(max_connections=20, max_keepalive_connections=10)
+        http_client = httpx.Client(timeout=timeout, limits=limits)
+
+        _OAI_CLIENT = OpenAI(
+            # base_url="https://openrouter.ai/api/v1",
+            api_key=key,
+            http_client=http_client,
+            max_retries=0,  # we handle retries explicitly below
+        )
+        return _OAI_CLIENT
 
 def normalize_answer(s):
     def remove_articles(text):
@@ -75,31 +109,48 @@ B: INCORRECT
 
 Just return the letters "A" or "B", with no text around it.
     """.strip()
-
+    print(ground_truth)
+    print(prediction)
+    
     content = content_template.format(
         question=question,
         target=ground_truth,
         predicted_answer=prediction,
     )
+    client = _get_oai_client(api_key)
+    for attempt in range(1, 4):  # 3 attempts total
+        try:
+            completion = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": ""},
+                    {"role": "user", "content": content}
+                ],
+                temperature=0.0,
+                timeout=60.0,  # request-level timeout
+            )
+            llm_ans = completion.choices[0].message.content
+            llm_score = 1.0 if llm_ans == "A" else 0.0
 
-    # we will use openRouter key for LLM judgement
-    client = OpenAI(
-        # base_url="https://openrouter.ai/api/v1",
-        api_key=api_key,
-    )
+            # time.sleep(0.05)  # avoid high rate of request
+            return llm_score
 
-    completion = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {"role": "system", "content": ""},
-            {"role": "user", "content": content}
-        ],
-        temperature=0.0
-    )
-    llm_ans = completion.choices[0].message.content
-    llm_score = 1.0 if llm_ans == "A" else 0.0
-    time.sleep(0.25) # avoid high rate of request
-    return llm_score
+        except (APITimeoutError, APIConnectionError, httpx.TimeoutException, httpx.ConnectError,
+                RateLimitError, APIStatusError) as e:
+            last_exc = e
+            if attempt < 3:
+                time.sleep(1.0)
+                continue
+            raise  # crash after 3rd failure
+
+        except Exception as e:
+            # Anything unexpected: retry similarly, then crash
+            last_exc = e
+            if attempt < 3:
+                time.sleep(1.0)
+                continue
+            raise
+
 
 def test_prediction_acc_real(model, tok, hparams, prompt, target, device, locality=False):
     # input
