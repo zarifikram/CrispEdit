@@ -11,6 +11,7 @@ from ...util.nethook import Trace, set_requires_grad
 from ...util.runningstats import CombinedStat, Mean, NormMean, SecondMoment, tally, make_loader
 from dotenv import load_dotenv
 import os
+from typing import List
 
 load_dotenv()
 CACHE_DIR = os.getenv("HF_DATASETS_DIR")
@@ -271,7 +272,7 @@ def layer_stats_kfac(
         print(f"Max length is {maxlen}")
         return TokenizedDataset(raw_ds["train"], tokenizer, maxlen=maxlen)
 
-    batch_size = 8 # Examine this many dataset texts at once
+    batch_size = 1 # Examine this many dataset texts at once
     npos = get_num_positions_from_model(model)
 
 
@@ -423,7 +424,223 @@ def layer_stats_kfac(
         
     A, B = A.to(model.device), B.to(model.device)
     return A, B
+def layer_stats_kfac_one_pass(
+    model,
+    tokenizer,
+    layer_names: List[str],
+    stats_dir,
+    ds_name,
+    to_collect,
+    model_name=None,
+    sample_size=None,
+    precision=None,
+    batch_tokens=None,
+    progress=tqdm,
+    force_recompute=False,
+):
+    # --- 1. Setup paths and check cache for ALL layers ---
+    if model_name is None:
+        model_name = model.config._name_or_path.rsplit("/")[-1]
+    stats_dir = Path(stats_dir)
+    
+    results = {}
+    missing_layers = []
 
+    if precision is None:
+        precision = "float64"
+    dtype = getattr(torch, precision)
+    size_suffix = "" if sample_size is None else f"_{sample_size}"
+
+    # Check which layers are already cached
+    for layer_name in layer_names:
+        file_extension = f"{model_name}/{ds_name}_stats/{layer_name}_{precision}_kfac{size_suffix}.npz"
+        filename = stats_dir / file_extension
+        
+        if filename.exists() and not force_recompute:
+            # print(f"Loading cached KFAC matrices for {layer_name}")
+            loaded = torch.load(filename)
+            results[layer_name] = (loaded['A'], loaded['B'])
+        else:
+            missing_layers.append(layer_name)
+
+    if not missing_layers:
+        return results
+
+    print(f"Recalculating KFAC for {len(missing_layers)} layers: {missing_layers}")
+
+    # --- 2. Dataset and Batching Logic (Restored from original) ---
+    def get_ds():
+        raw_ds = load_dataset(
+            ds_name,
+            dict(wikitext="wikitext-103-raw-v1", wikipedia="20220301.en")[ds_name],
+            trust_remote_code=True,
+            cache_dir=CACHE_DIR, # Ensure CACHE_DIR is imported/available
+        )
+        raw_ds = raw_ds["train"].train_test_split(test_size=0.001, seed=69, shuffle=True)
+        raw_ds['val'] = raw_ds.pop("test")
+
+        maxlen = get_max_length_from_model(model) # Ensure this helper is imported
+        if batch_tokens is not None and batch_tokens < maxlen:
+            maxlen = batch_tokens
+        
+        # Hardcoded overrides from your original snippet
+        maxlen = 2048
+        maxlen = 512 
+        print(f"Max length is {maxlen}")
+        return TokenizedDataset(raw_ds["train"], tokenizer, maxlen=maxlen)
+
+    batch_size = 1
+    npos = get_num_positions_from_model(model) # Ensure this helper is imported
+
+    # FIX: This was missing in the previous version, causing the TypeError
+    if batch_tokens is None:
+        batch_tokens = npos * 3 
+        
+    if batch_tokens < npos:
+        size_suffix = "_t{batch_tokens}" + size_suffix
+
+    ds = get_ds()
+
+    # --- 3. Initialize Matrices and Hooks for MISSING layers ---
+    matrices = {}
+    handles = []
+    
+    # State storage for hooks
+    captured_inputs = {}
+    captured_grads = {}
+
+    def get_hook(l_name):
+        def save_input_hook(module, input_tuple, output):
+            captured_inputs[l_name] = input_tuple[0].detach()
+            output.requires_grad_(True)
+            def capture_grad(grad):
+                captured_grads[l_name] = grad.detach()
+            output.register_hook(capture_grad)
+        return save_input_hook
+
+    for layer_name in missing_layers:
+        # Resolve module
+        target_name = layer_name.split(".weight")[0] if ".weight" in layer_name else layer_name
+        module = dict(model.named_modules())[target_name]
+        
+        # Init A and B
+        in_dim, out_dim = get_in_and_out_dim_from_layer(module, target_name)
+        matrices[layer_name] = {
+            "A": torch.zeros((in_dim, in_dim), dtype=dtype, device=model.device),
+            "B": torch.zeros((out_dim, out_dim), dtype=dtype, device=model.device)
+        }
+        
+        # Register Hook
+        handles.append(module.register_forward_hook(get_hook(layer_name)))
+
+    # --- 4. Training Loop ---
+    
+    # Restore the 'stat' object logic
+    stat = CombinedStat(**{k: STAT_TYPES[k]() for k in to_collect})
+    
+    loader = tally(
+        stat,
+        ds,
+        cache=None, # We don't use the cache arg here because we manage multiple files manually
+        sample_size=sample_size,
+        batch_size=batch_size,
+        collate_fn=length_collation(batch_tokens),
+        pin_memory=True,
+        random_sample=1,
+        num_workers=2,
+    )
+    
+    batch_count = -(-(sample_size or len(ds)) // batch_size)
+
+    # Backup gradients state
+    grads = {n: p.requires_grad for n, p in model.named_parameters()}
+    for p in model.parameters(): p.requires_grad = False
+    model.requires_grad_(False)
+    model.gradient_checkpointing_enable()
+    
+    N = 0
+    total_tokens = 0
+
+    with torch.enable_grad():
+        for batch_group in progress(loader, total=batch_count):
+            for batch in batch_group:
+                batch = dict_to_(batch, model.device)
+                labels = batch['input_ids'].clone()
+                labels[labels == 0] = -100
+                labels[labels == tokenizer.pad_token_id] = -100
+                
+                model.zero_grad()
+                outputs = model(**batch, use_cache=False)
+                logits = outputs.logits if hasattr(outputs, 'logits') else outputs
+
+                shift_logits = logits[..., :-1, :].contiguous()
+                shift_labels = labels[..., 1:].contiguous()
+                
+                loss = torch.nn.functional.cross_entropy(
+                    shift_logits.view(-1, shift_logits.size(-1)),
+                    shift_labels.view(-1),
+                    ignore_index=-100, 
+                    reduction='sum'
+                )
+                loss.backward()
+
+                # UPDATE STEP: Iterate over all active layers
+                with torch.no_grad():
+                    # Check if we captured anything (safeguard)
+                    if not captured_inputs: 
+                        continue
+
+                    # Mask is shared across layers for the same batch
+                    valid_mask = (shift_labels != -100)
+                    current_valid_tokens = valid_mask.sum().item()
+
+                    for layer_name in missing_layers:
+                        if layer_name not in captured_inputs or layer_name not in captured_grads:
+                            continue
+                        
+                        feat_in = captured_inputs[layer_name].to(model.device)
+                        grad_out = captured_grads[layer_name].to(model.device)
+                        
+                        # Truncate to match valid mask logic (seq_len - 1)
+                        feat_in = feat_in[:, :-1, :]
+                        grad_out = grad_out[:, :-1, :]
+
+                        input_flat = feat_in[valid_mask].to(dtype=dtype)
+                        grad_flat = grad_out[valid_mask].to(dtype=dtype)
+                        
+                        matrices[layer_name]["A"].addmm_(input_flat.T, input_flat)
+                        matrices[layer_name]["B"].addmm_(grad_flat.T, grad_flat)
+
+                    # Update counters (only once per batch)
+                    total_tokens += current_valid_tokens
+                    N += batch['input_ids'].size(0)
+
+                    # Clear captures for next batch
+                    captured_inputs.clear()
+                    captured_grads.clear()
+                
+                if sample_size is not None and N >= sample_size: break
+            if sample_size is not None and N >= sample_size: break
+
+    # --- 5. Cleanup and Save ---
+    for h in handles: h.remove()
+    for name, param in model.named_parameters(): 
+        param.requires_grad = grads[name]
+
+    for layer_name in missing_layers:
+        A = matrices[layer_name]["A"] / total_tokens
+        B = matrices[layer_name]["B"] / total_tokens
+        
+        # Save individually to match original file structure
+        file_extension = f"{model_name}/{ds_name}_stats/{layer_name}_{precision}_kfac{size_suffix}.npz"
+        filename = stats_dir / file_extension
+        filename.parent.mkdir(parents=True, exist_ok=True)
+        torch.save({'A': A, 'B': B, 'N': total_tokens}, filename)
+        
+        results[layer_name] = (A, B)
+
+    return results
+    
 def calculate_cache_loss(
     model,
     tokenizer,
