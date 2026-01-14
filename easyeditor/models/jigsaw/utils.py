@@ -1,4 +1,4 @@
-from ..rome.layer_stats import layer_stats_kfac
+from ..rome.layer_stats import layer_stats_kfac, layer_stats_kfac_one_pass
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from .Jigsaw_hparams import JigsawHyperParams
@@ -29,10 +29,10 @@ def calculate_projection_cache_with_kfac(A, B, energy_threhold=0.9):
     M = M < null_threshold
     print(f"Rank is {rank} out of {A.shape[0]*B.shape[0]} total, null threshold: {null_threshold}")
 
-    A_inv = torch.linalg.inv(A)
-    B_inv = torch.linalg.inv(B)
+    A_inv = None #torch.linalg.inv(A)
+    B_inv = None #torch.linalg.inv(B)
 
-    return {'Ua': Ua, 'Ub': Ub, 'M': M, 'A_inv': A_inv, 'B_inv': B_inv}
+    return {'Ua': Ua, 'Ub': Ub, 'M': M, }#'A_inv': A_inv, 'B_inv': B_inv}
 
 def get_cov_ab(
     model: AutoModelForCausalLM,
@@ -105,9 +105,50 @@ def get_weights(
 def calculate_projection_caches(model, tok, hparams, force_recompute=False):
     weights = get_weights(model, hparams)
     proj_map = {}
-    for i, layer in enumerate(hparams.layers):
-        proj_layer_cache = calculate_projection_cache_by_layer(model, tok, layer, hparams, force_recompute)
-        rewrite_module_name = hparams.rewrite_module_tmp.format(layer)
-        proj_map[weights[rewrite_module_name]] = proj_layer_cache
+    
+    # 1. Identify all target layers
+    layer_name_map = {}
+    for layer_num in hparams.layers:
+        # Format the name: e.g., "layers.5.mlp.down_proj"
+        layer_name = hparams.rewrite_module_tmp.format(layer_num)
+        layer_name_map[layer_num] = layer_name
+
+    target_layers = list(layer_name_map.values())
+
+    # 2. Get covariance stats for ALL layers in ONE pass
+    print(f"Retrieving covariance statistics for {len(target_layers)} layers...")
+    
+    stats_dict = layer_stats_kfac_one_pass(
+        model=model,
+        tokenizer=tok,
+        layer_names=target_layers,
+        stats_dir=STATS_DIR,
+        ds_name=hparams.mom2_dataset,
+        to_collect=["mom2"],
+        sample_size=hparams.mom2_n_samples if not force_recompute else hparams.mom2_n_samples // 10,
+        precision=hparams.mom2_dtype,
+        force_recompute=force_recompute
+    )
+
+    # 3. Compute projections for each layer
+    for layer_num in hparams.layers:
+        layer_name = layer_name_map[layer_num]
+        A, B = stats_dict[layer_name]
+
+        # Apply Model-Specific Logic (moved from calculate_projection_cache_by_layer)
+        # If model is not llama/phi, swap A and B
+        if hparams.model_name not in ["Llama3-8B", "phi-1.5"]:
+            A, B = B, A
+
+        # Calculate Projection
+        null_threshold = hparams.energy_threshold
+        # Ensure correct device/dtype
+        P_cache = calculate_projection_cache_with_kfac(A, B, energy_threhold=null_threshold)
+        
+        for key in P_cache:
+            P_cache[key] = P_cache[key].to(model.device).to(model.dtype)
+            
+        # Store in map
+        proj_map[weights[layer_name]] = P_cache
 
     return proj_map
