@@ -160,17 +160,15 @@ def execute_ft_sequential(
     wandb.log({"Task 1 Loss": old_task_loss})
     
     loss_meter = AverageMeter()
-    for it in trange(hparams.num_steps):
+    random.shuffle(requests)
+    texts = [r["prompt"] for r in requests]
+    targets = [r["target_new"] for r in requests]
+    # split into batches
+    for txt, tgt in zip(
+        chunks(texts, hparams.batch_size), chunks(targets, hparams.batch_size)
+    ):
         loss_meter.reset()
-
-        random.shuffle(requests)
-        texts = [r["prompt"] for r in requests]
-        targets = [r["target_new"] for r in requests]
-
-        # split into batches
-        for txt, tgt in zip(
-            chunks(texts, hparams.batch_size), chunks(targets, hparams.batch_size)
-        ):
+        for it in trange(hparams.num_steps):
             inputs_targets = [txt_ + tgt_ for txt_, tgt_ in zip(txt, tgt)]
             encodings = tok(inputs_targets, return_tensors="pt", padding=True).to(device)
 
@@ -183,12 +181,17 @@ def execute_ft_sequential(
             opt.zero_grad()
             outputs = model(**encodings, labels=labels)
             loss = outputs.loss
-                
-            loss_meter.update(loss.item(), n=labels.size(0))
-            
             if loss.item() >= 1e-2:
                 loss.backward()
                 opt.step()
+                
+            loss_meter.update(loss.item(), n=labels.size(0))
+            if loss_meter.avg < 1e-2:
+                break
+
+        # now get A and B for new samples
+        # Update A, B. Calculate P caches
+        # And update Adam.
 
         old_task_loss = calculate_cache_loss(
             model,
@@ -196,10 +199,8 @@ def execute_ft_sequential(
             hparams.mom2_dataset,
             sample_size=100
         )
-        wandb.log({f"FT Loss": loss_meter.avg, "Task 1 Loss": old_task_loss})
+        wandb.log({"Task 1 Loss": old_task_loss})
         
-        if loss_meter.avg < 1e-2:
-            break
     
     return model
 

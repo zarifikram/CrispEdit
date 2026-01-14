@@ -67,7 +67,6 @@ python edit.py --editing_method AlphaEdit --hparams_dir ./hparams/AlphaEdit/llam
   ```shell
   python run_snap.py --model llama3-8b --data_type wiki --cache_sample_num 10000 --energy_threshold 0.8 --batch_size 32 --wandb_project JIGSAW
   ```
-
 - **MEMIT**
   ```shell
   python edit.py --model llama3-8b --data_type wiki --editing_method MEMIT --batch_size 32 --eval_every 512 --batch_edit True --wandb_project JIGSAW
@@ -84,6 +83,10 @@ python edit.py --editing_method AlphaEdit --hparams_dir ./hparams/AlphaEdit/llam
   ```shell
   python edit.py --model llama3-8b --data_type wiki --editing_method WISE --batch_size 1 --eval_every 512 --batch_edit False --wandb_project JIGSAW
   ```
+- **MEND**
+  ```shell
+  python edit.py --model llama3-8b --data_type wiki --editing_method MEND --batch_size 1 --eval_every 512 --batch_edit False --wandb_project JIGSAW
+  ```
 - **Loc-BF-FT**
   ```shell
   python locft-bf.py --model llama3-8b --data_type wiki --batch_size 32 --wandb_project JIGSAW
@@ -92,7 +95,6 @@ python edit.py --editing_method AlphaEdit --hparams_dir ./hparams/AlphaEdit/llam
   ```shell
   python alphaedit_ft.py --model llama3-8b --data_type wiki --cache_sample_num 10000 --energy_threshold 0.5 --batch_size 32 --wandb_project JIGSAW
   ```
-
 #### Evaluate
 - **Base Model (Base Capabilities)**
   ```shell
@@ -106,14 +108,6 @@ python edit.py --editing_method AlphaEdit --hparams_dir ./hparams/AlphaEdit/llam
   ```shell
   python run_edited_benchmarks.py --edited_model_dir models--meta-llama--Meta-Llama-3-8B-Instruct/snapshots/8afb486c1db24fe5011ec46dfbe5b5dccdb575c2/ --model_name llama3-8b --max_length 40 --context_type qa_inst --alg_name Base --data_type wiki --evaluation_criteria llm_judge --eval_num 3000 
   ```
-
-  ```shell
-  python run_edited_benchmarks.py --edited_model_dir models--QuixiAI--Llama-3-8B-Instruct-abliterated-v2/snapshots/c99bd5b5e73f1d24504d1145b8a8dfd66c0a2378/ --model_name llama3-8b-abliterated --max_length 100 --context_type chat_temp --alg_name Base --data_type safeedit_test --evaluation_criteria llm_judge --eval_num 1350 
-  ```
-  ```shell
-  python run_edited_benchmarks.py --edited_model_dir llama3-8b_JIGSAW_safeedit_train_0.95/ --model_name llama3-8b --max_length 100 --context_type chat_temp --alg_name Base --data_type safeedit_test --evaluation_criteria llm_judge --eval_num 1350 
-  ```
-
 - **UltraEdit**
   ```shell
   python run_benchmarks.py --edited_model_dir llama3-8b_UltraEdit_wiki --model_name llama3-8b --max_length 40 --context_type qa_inst --alg_name JIGSAW --data_type wiki --eval_num 30 --evaluation_criteria exact_match
@@ -122,7 +116,7 @@ python edit.py --editing_method AlphaEdit --hparams_dir ./hparams/AlphaEdit/llam
   ```shell
   python run_benchmarks.py --edited_model_dir llama3-8b_JIGSAW_wiki_0.5 --model_name llama3-8b --max_length 40 --context_type qa_inst --alg_name JIGSAW --data_type wiki --eval_num 30 --evaluation_criteria exact_match
   ```
-#### SafeEdit Training
+<!-- #### SafeEdit Training
 - **Jigsaw**
   ```shell
   python run_snap.py --model llama3-8b --data_type safeedit_train --cache_sample_num 10000 --energy_threshold 0.8 --batch_size 32 --wandb_project JIGSAW
@@ -134,4 +128,4 @@ python edit.py --editing_method AlphaEdit --hparams_dir ./hparams/AlphaEdit/llam
 #### SafeEdit Eval Base
 ```shell
   python run_base_benchmarks.py --edited_model_dir llama3-8b_JIGSAW_safeedit_train_0.95/ --model_name llama3-8b --alg_name Base --data_type safeedit_test --eval_num 20
-  ```
+  ``` -->

@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 os.environ["HF_DATASETS_CACHE"] = os.getenv("HF_DATASETS_DIR")
-os.environ["CUDA_VISIBLE_DEVICES"] = "3" # TO-DO: CHANGE TO YOURS
 os.environ['HF_ENDPOINT'] = os.getenv("HF_ENDPOINT")
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 import numpy as np

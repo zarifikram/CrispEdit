@@ -928,7 +928,6 @@ class BaseEditor:
 
         if isinstance(edited_model, LORA):
             edited_model = edited_model.model
-
         new_task_loss = calculate_cache_loss(
             edited_model,
             self.tok,
