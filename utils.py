@@ -1,6 +1,6 @@
 from datetime import datetime
 import json
-from easyeditor.editors.utils import _prepare_requests
+from easyeditor.editors.utils import _prepare_requests, _prepare_requests_safeedit
 
 from dotenv import load_dotenv
 import os
@@ -39,15 +39,21 @@ def save_model_and_tokenizer(model, tokenizer, local_directory):
     tokenizer.save_pretrained(save_directory)
     
 def prepare_requests_from_data_type(data_type):
-    prompts, rephrase_prompts, subject, target_new, locality_inputs, ground_truth = prepare_prompts_from_data_type(data_type)
-    requests = _prepare_requests(prompts, target_new, ground_truth, None, rephrase_prompts, locality_inputs)
+    if "safeedit" not in data_type:
+        prompts, rephrase_prompts, subject, target_new, locality_inputs, ground_truth = prepare_prompts_from_data_type(data_type)
+        requests = _prepare_requests(prompts, target_new, ground_truth, None, rephrase_prompts, locality_inputs)
+    else:
+        prompts, target_safe, target_unsafe, gen_prompts, questions = prepare_prompts_from_data_type_safeedit(data_type)
+        requests = _prepare_requests_safeedit(prompts, target_safe, target_unsafe, gen_prompts, questions)
 
     return requests
 
 def prepare_prompts_from_data_type(data_type):
-    data_file = {"zsre": "zsre_mend_eval_3k",
-                "counterfact": "counterfact-edit_3k",
-                "wiki": "wiki_big_edit_3k"}[data_type]
+    data_file = {
+        "zsre": "zsre_mend_eval_3k",
+        "counterfact": "counterfact-edit_3k",
+        "wiki": "wiki_big_edit_3k",
+    }[data_type]
     data = json.load(open(f"./data/{data_file}.json", 'r', encoding='utf-8'))
 
     if data_type == 'counterfact':
@@ -90,6 +96,21 @@ def prepare_prompts_from_data_type(data_type):
     }
 
     return prompts, rephrase_prompts, subject, target_new, locality_inputs, ground_truth
+
+def prepare_prompts_from_data_type_safeedit(data_type):
+    data_file = {
+        "safeedit_train": "SafeEdit_train",
+        "safeedit_test": "SafeEdit_test",
+    }[data_type]
+    data = json.load(open(f"./data/{data_file}.json", 'r', encoding='utf-8'))
+
+    prompts = [d['adversarial prompt'] for d in data]
+    target_safe = [d['safe generation'] for d in data]
+    target_unsafe = [d['unsafe generation'] for d in data]
+    gen_prompts = [d['generalization test'] for d in data]
+    questions = [d['question'] for d in data]
+
+    return prompts, target_safe, target_unsafe, gen_prompts, questions
 
 def chunks(arr, n):
     """Yield successive n-sized chunks from arr."""

@@ -1,0 +1,70 @@
+import random
+import numpy as np
+import os
+from dotenv import load_dotenv
+load_dotenv()
+from utils import print_time, prepare_requests_from_data_type, save_model_and_tokenizer, chunks
+HF_CACHE_DIR = os.getenv("HF_CACHE_DIR")
+os.environ["HF_DATASETS_CACHE"] = os.getenv("HF_DATASETS_DIR")
+os.environ['HF_ENDPOINT'] = os.getenv("HF_ENDPOINT")
+os.environ['TOKENIZERS_PARALLELISM'] = 'false'
+import wandb
+
+import argparse
+import torch
+
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from easyeditor.models.jigsaw.Jigsaw_hparams import JigsawHyperParams
+
+from snapedit import *
+
+SEED = 69
+random.seed(SEED)
+np.random.seed(SEED)
+torch.manual_seed(SEED)
+torch.cuda.manual_seed_all(SEED)
+torch.backends.cudnn.deterministic = True
+
+def get_arguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--model', required=True, type=str)
+    parser.add_argument('--data_type', required=True, type=str, default='zsre', choices=['zsre', 'counterfact', 'wiki', 'safeedit_train', 'safeedit_test'])
+    parser.add_argument('--cache_sample_num', type=int, default=1000, help='Number of samples to use for caching projection matrices.')
+    parser.add_argument('--energy_threshold', type=float, default=0.9, help='Energy threshold for projection matrix computation.')
+    parser.add_argument('--batch_size', type=int, default=32, help='Batch size for fine-tuning.')
+    parser.add_argument('--sequential_edit', default='False', type=str)
+    parser.add_argument('--wandb_project', type=str, default='JIGSAW', help='WandB project name.')
+    args = parser.parse_args()
+    return args
+
+if __name__ == "__main__":
+    args = get_arguments()
+    requests = prepare_requests_from_data_type(args.data_type)
+    requests = setup_requests_for_safeedit(requests)
+    hparams = JigsawHyperParams.from_hparams(f"./hparams/JIGSAW/{args.model}")
+    hparams.batch_size = args.batch_size
+    hparams.energy_threshold = args.energy_threshold
+    hparams.mom2_n_samples = args.cache_sample_num
+    save_model_name = f"{args.model}_{hparams.alg_name}_{args.data_type}_{args.energy_threshold}"
+    print(f"Model will be saved to BASE_DIR/{save_model_name}")
+    wandb.init(project=args.wandb_project, name=save_model_name, config=vars(hparams))
+
+    MODEL_NAME = hparams.model_name
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, cache_dir=HF_CACHE_DIR)
+    model = AutoModelForCausalLM.from_pretrained(MODEL_NAME, cache_dir=HF_CACHE_DIR, device_map='auto')
+    device = model.device
+
+    # set appropriate padding token
+    tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+    model.resize_token_embeddings(len(tokenizer), mean_resizing=False)
+    model.config.pad_token_id = tokenizer.pad_token_id
+    
+
+    print_time("Begin FT Time")
+    if args.sequential_edit:
+        edited_model = execute_ft_sequential(model, tokenizer, requests, hparams)
+    else:
+        edited_model = execute_ft(model, tokenizer, requests, hparams)
+    print_time("End FT Time")
+
+    save_model_and_tokenizer(edited_model, tokenizer, save_model_name)

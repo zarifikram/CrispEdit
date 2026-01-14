@@ -9,7 +9,7 @@ from utils import print_time, prepare_requests_from_data_type, save_clean_result
 from easyeditor.editors.utils import summary_metrics
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import numpy as np
-from easyeditor.evaluate.evaluate import compute_edit_quality
+from easyeditor.evaluate.evaluate import compute_edit_quality, compute_edit_quality_safety
 import random
 import torch
 from tqdm import tqdm
@@ -30,13 +30,13 @@ def get_model_and_tokenizer_from_dir(edited_model_dir_local):
     PREFIX_DIR = os.getenv("HF_CACHE_DIR")
     edited_model_dir = PREFIX_DIR + edited_model_dir_local
     tokenizer = AutoTokenizer.from_pretrained(edited_model_dir)
-    model = AutoModelForCausalLM.from_pretrained(edited_model_dir, device_map='auto')
+    model = AutoModelForCausalLM.from_pretrained(edited_model_dir, device_map='cuda')
     return model, tokenizer
 
 def get_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('--edited_model_dir', required=True, type=str, default=None, help='Path to edited model for evaluation.')
-    parser.add_argument('--data_type', required=True, type=str, default='zsre', choices=['zsre', 'counterfact', 'wiki'])
+    parser.add_argument('--data_type', required=True, type=str, default='zsre', choices=['zsre', 'counterfact', 'wiki', 'safeedit_train', 'safeedit_test'])
     parser.add_argument('--eval_num', required=False, type=int, default=3000, help='Number of evaluation instances to use. Default uses all.')
     parser.add_argument('--max_length', required=False, type=int, default=40, help='Maximum length of the generated sequences.')
     parser.add_argument('--context_type', required=True, type=str, default='qa_inst', choices=['qa_inst', 'chat_temp', 'no_context'], help='Type of context to use for evaluation.')
@@ -67,6 +67,11 @@ if __name__ == "__main__":
     # device expects the device number only
     device = model.device.index
 
+    # set appropriate padding token
+    tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+    model.resize_token_embeddings(len(tokenizer), mean_resizing=False)
+    model.config.pad_token_id = tokenizer.pad_token_id
+
     run_name = f"{hparams.alg_name}_{args.data_type}_{hparams.model_name}"
     # if there is a run ID, use it to resume
     run = wandb.init(project=args.wandb_project, name=run_name, config=vars(hparams), resume=args.wandb_run_id if not args.wandb_run_id else "must", id=args.wandb_run_id)
@@ -81,16 +86,18 @@ if __name__ == "__main__":
         requests = requests[:args.eval_num]
 
     all_metrics = []
+
+    edit_eval_method = compute_edit_quality if "safe" not in args.data_type else compute_edit_quality_safety
     for i, request in enumerate(tqdm(requests)):
         metrics = {
             'case_id': i,
             "requested_rewrite": request,
             "pre": {},
-            "post": compute_edit_quality(model, hparams.model_name, hparams, tokenizer, request, device),
+            "post": edit_eval_method(model, hparams.model_name, hparams, tokenizer, request, device)
         }
         all_metrics.append(metrics)
 
-        print(f"{i} editing: {request['prompt']} -> {request['target_new']}  \n\n {all_metrics[i]}")
+        # print(f"{i} editing: {request['prompt']} -> {request['target_new']}  \n\n {all_metrics[i]}")
 
     summary_metrics(all_metrics, f"./logs/{run_name}")
 

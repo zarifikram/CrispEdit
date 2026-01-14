@@ -19,6 +19,7 @@ from .evaluate_utils import (
     test_batch_prediction_acc, 
     test_prediction_acc,
     test_prediction_acc_real,
+    test_safety_acc,
     test_generation_quality, 
     test_concept_gen,
     test_safety_gen,
@@ -32,6 +33,29 @@ from .evaluate_utils import (
     F1
 )
 
+def compute_edit_quality_safety(
+    model,
+    model_name,
+    hparams: HyperParams,
+    tok: AutoTokenizer,
+    record: typing.Dict,
+    device,
+    eval_metric: str = 'token_em',
+    test_generation = False
+) -> typing.Dict:
+    if isinstance(model,LORA):
+        model=model.model
+    target_safe, target_unsafe = (
+        record[x] for x in ["target_safe", "target_unsafe"]
+    )
+
+    prompts = record["prompt"]
+    prompts_question_only, prompts_diff_question, prompts_diff_attack, prompts_diff_attack_and_question = (
+        record['generalization_test'][x] for x in ["test input of only harmful question", "test input of other attack prompt input", "test input of other question input", "test input of other questions and attack prompts"]
+    )
+    ret = compute_safety_rewrite_quality(model, model_name, hparams, tok, prompts, target_safe, target_unsafe, device=device, key='safety_rewrite', eval_metric=eval_metric)
+    return ret
+    
 def compute_edit_quality(
     model,
     model_name,
@@ -93,6 +117,26 @@ def compute_edit_quality(
             ret['fluency'] = test_generation_quality(model=model,tok=tok,prefixes=rewrite_prompts if isinstance(rewrite_prompts,list) else [rewrite_prompts,], max_out_len=100, vanilla_generation=True)
         else:
             ret['fluency'] = test_generation_quality(model=model,tok=tok,prefixes=rewrite_prompts if isinstance(rewrite_prompts,list) else [rewrite_prompts,], max_out_len=100, vanilla_generation=False)
+    return ret
+
+def compute_safety_rewrite_quality(
+    model,
+    model_name,
+    hparams: HyperParams,
+    tok: AutoTokenizer,
+    prompt: str,
+    target_safe: str,
+    target_unsafe: str,
+    device,
+    key: str = 'safe_rewrite',
+    eval_metric: str = 'token_em',
+) -> typing.Dict:
+    assert hasattr(hparams, 'evaluation_type') and hparams.evaluation_type == "WILD", "Safety evaluation only supports WILD evaluation currently (it does not make sense otherwise!)"
+    safety_acc, gen_content = test_safety_acc(model, tok, hparams, prompt, target_safe, target_unsafe, device)
+    ret = {
+        f"{key}_safety_acc": safety_acc,
+        f"{key}_gen_content": gen_content,
+    }
     return ret
 
 def compute_rewrite_or_rephrase_quality(

@@ -37,6 +37,7 @@ def summary_metrics(all_metrics, logs_dir: str):
     with open(output_file, 'w', encoding="utf-8") as f:
         json.dump(all_metrics, f, ensure_ascii=False, indent=4)
 
+    
     mean_metrics = dict()
     for eval in ["pre", "post"]:
         mean_metrics[eval] = dict()
@@ -52,6 +53,9 @@ def summary_metrics(all_metrics, logs_dir: str):
                         mean_metrics[eval][key][lkey] = np.mean(metrics)
                     # mean_metrics[eval][key][lkey] = np.mean(
                     #     [metric[eval][key][lkey] for metric in all_metrics])
+        for key in ["safety_rewrite_safety_acc"]:
+            if key in all_metrics[0][eval].keys():
+                mean_metrics[eval][key] = np.mean([metric[eval][key] for metric in all_metrics])
     # mean_metrics["time"] = np.mean([metric["time"] for metric in all_metrics])
 
     metrics_filename = 'mean_metrics.json'
@@ -167,4 +171,24 @@ def _prepare_requests(prompts: Union[str, List[str]],
                             }
                         }
                     )
+    return requests
+
+def _prepare_requests_safeedit(prompts: Union[str, List[str]],
+                              target_safe: Union[str, List[str]],
+                              target_unsafe: Union[str, List[str]],
+                              gen_prompts: Optional[Union[str, List[str]]] = None,
+                              questions: Optional[Union[str, List[str]]] = None,
+                              **kwargs
+                              ):
+
+    requests = [{
+        'prompt': prompt,
+        'target_safe': target_safe_,
+        'target_unsafe': target_unsafe_,
+        'generalization_test': gen_prompt_ if gen_prompts is not None else None,
+        'question': question_ if questions is not None else None,
+    }
+    for prompt, target_safe_, target_unsafe_, gen_prompt_, question_ in zip(prompts, target_safe, target_unsafe, gen_prompts if gen_prompts is not None else [None]*len(prompts), questions if questions is not None else [None]*len(prompts))
+    ]
+
     return requests

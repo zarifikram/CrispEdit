@@ -36,7 +36,7 @@ def get_model_and_tokenizer_from_dir(edited_model_dir_local):
 def get_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('--edited_model_dir', required=True, type=str, default=None, help='Path to edited model for evaluation.')
-    parser.add_argument('--data_type', required=True, type=str, default='zsre', choices=['zsre', 'counterfact', 'wiki'])
+    parser.add_argument('--data_type', required=True, type=str, default='zsre', choices=['zsre', 'counterfact', 'wiki', 'safeedit_train', 'safeedit_test'])
     parser.add_argument('--eval_num', required=False, type=int, default=200, help='Number of evaluation instances to use for capability. Default uses 200.')
     parser.add_argument('--alg_name', required=True, type=str, default='ft_edit', help='Name of the editing algorithm used.')
     parser.add_argument('--model_name', required=True, type=str, default='gpt2-xl', help='Name of the base model used.')
@@ -48,8 +48,6 @@ def get_arguments():
 def build_hparams_from_args(args):
     hparams = HyperParams()
     hparams.alg_name = args.alg_name
-    hparams.api_key = API_KEY
-    hparams.evaluation_type = "WILD"
     hparams.model_name = args.model_name
     return hparams
 
