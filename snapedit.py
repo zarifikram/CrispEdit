@@ -7,7 +7,7 @@ import wandb
 from utils import chunks
 
 from easyeditor.models.jigsaw.Jigsaw_hparams import JigsawHyperParams
-from easyeditor.models.jigsaw.utils import calculate_projection_caches
+from easyeditor.models.jigsaw.utils import calculate_projection_caches, update_projection_caches_with_request
 from easyeditor.models.jigsaw import ProjectedAdam
 from easyeditor.models.rome.layer_stats import calculate_cache_loss
 
@@ -189,9 +189,14 @@ def execute_ft_sequential(
             if loss_meter.avg < 1e-2:
                 break
 
-        # now get A and B for new samples
-        # Update A, B. Calculate P caches
-        # And update Adam.
+        weight_to_projection_cache = update_projection_caches_with_request(
+            weight_to_projection_cache,
+            txt,
+            tgt,
+            model,
+            tok,
+            hparams
+        )
 
         old_task_loss = calculate_cache_loss(
             model,

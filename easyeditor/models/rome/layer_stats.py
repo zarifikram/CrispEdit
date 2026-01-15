@@ -424,6 +424,7 @@ def layer_stats_kfac(
         
     A, B = A.to(model.device), B.to(model.device)
     return A, B
+
 def layer_stats_kfac_one_pass(
     model,
     tokenizer,
@@ -638,6 +639,138 @@ def layer_stats_kfac_one_pass(
         torch.save({'A': A, 'B': B, 'N': total_tokens}, filename)
         
         results[layer_name] = (A, B)
+
+    return results
+
+def layer_stats_kfac_with_txt_tgt(
+    model,
+    tokenizer,
+    layer_names: List[str],
+    txt,
+    tgt,
+    model_name=None,
+    precision=None,
+):
+    # --- 1. Setup paths and check cache for ALL layers ---
+    if model_name is None:
+        model_name = model.config._name_or_path.rsplit("/")[-1]
+    
+    results = {}
+
+    if precision is None:
+        precision = "float64"
+    dtype = getattr(torch, precision)
+
+    print(f"Recalculating KFAC for {len(layer_names)} layers: {layer_names}")
+
+    batch_size = 1 # we do entire batch in one go (hopefully)
+
+    # --- 3. Initialize Matrices and Hooks for MISSING layers ---
+    matrices = {}
+    handles = []
+    
+    # State storage for hooks
+    captured_inputs = {}
+    captured_grads = {}
+
+    def get_hook(l_name):
+        def save_input_hook(module, input_tuple, output):
+            captured_inputs[l_name] = input_tuple[0].detach()
+            output.requires_grad_(True)
+            def capture_grad(grad):
+                captured_grads[l_name] = grad.detach()
+            output.register_hook(capture_grad)
+        return save_input_hook
+
+    for layer_name in layer_names:
+        # Resolve module
+        target_name = layer_name.split(".weight")[0] if ".weight" in layer_name else layer_name
+        module = dict(model.named_modules())[target_name]
+        
+        # Init A and B
+        in_dim, out_dim = get_in_and_out_dim_from_layer(module, target_name)
+        matrices[layer_name] = {
+            "A": torch.zeros((in_dim, in_dim), dtype=dtype, device=model.device),
+            "B": torch.zeros((out_dim, out_dim), dtype=dtype, device=model.device)
+        }
+        
+        # Register Hook
+        handles.append(module.register_forward_hook(get_hook(layer_name)))
+    
+    # Backup gradients state
+    grads = {n: p.requires_grad for n, p in model.named_parameters()}
+    for p in model.parameters(): p.requires_grad = False
+    model.requires_grad_(False)
+    model.gradient_checkpointing_enable()
+    
+    N = 0
+    total_tokens = 0
+
+    with torch.enable_grad():
+        inputs_targets = [txt_ + tgt_ for txt_, tgt_ in zip(txt, tgt)]
+        encodings = tokenizer(inputs_targets, return_tensors="pt", padding=True).to(model.device)
+        labels = encodings["input_ids"].clone()
+        labels[labels == 0] = -100
+        labels[labels == tokenizer.pad_token_id] = -100
+                
+        model.zero_grad()
+        outputs = model(**encodings, use_cache=False)
+        logits = outputs.logits if hasattr(outputs, 'logits') else outputs
+
+        shift_logits = logits[..., :-1, :].contiguous()
+        shift_labels = labels[..., 1:].contiguous()
+
+        loss = torch.nn.functional.cross_entropy(
+            shift_logits.view(-1, shift_logits.size(-1)),
+            shift_labels.view(-1),
+            ignore_index=-100,
+            reduction='sum'
+        )
+        loss.backward()
+
+        # UPDATE STEP: Iterate over all active layers
+        with torch.no_grad():
+            # Check if we captured anything (safeguard)
+            assert captured_inputs is not None, "Did not really capture anything. Double check?"
+
+            # Mask is shared across layers for the same batch
+            valid_mask = (shift_labels != -100)
+            current_valid_tokens = valid_mask.sum().item()
+
+            for layer_name in layer_names:
+                if layer_name not in captured_inputs or layer_name not in captured_grads:
+                    continue
+
+                feat_in = captured_inputs[layer_name].to(model.device)
+                grad_out = captured_grads[layer_name].to(model.device)
+
+                # Truncate to match valid mask logic (seq_len - 1)
+                feat_in = feat_in[:, :-1, :]
+                grad_out = grad_out[:, :-1, :]
+
+                input_flat = feat_in[valid_mask].to(dtype=dtype)
+                grad_flat = grad_out[valid_mask].to(dtype=dtype)
+
+                matrices[layer_name]["A"].addmm_(input_flat.T, input_flat)
+                matrices[layer_name]["B"].addmm_(grad_flat.T, grad_flat)
+
+            # Update counters (only once per batch)
+            total_tokens += current_valid_tokens
+            N += encodings['input_ids'].size(0)
+
+            # Clear captures for next batch
+            captured_inputs.clear()
+            captured_grads.clear()
+                
+    # --- 5. Cleanup and Save ---
+    for h in handles: h.remove()
+    for name, param in model.named_parameters(): 
+        param.requires_grad = grads[name]
+
+    for layer_name in layer_names:
+        A = matrices[layer_name]["A"] / total_tokens
+        B = matrices[layer_name]["B"] / total_tokens        
+        results[layer_name] = (A, B, total_tokens)
 
     return results
     

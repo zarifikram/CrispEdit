@@ -1,4 +1,4 @@
-from ..rome.layer_stats import layer_stats_kfac, layer_stats_kfac_one_pass
+from ..rome.layer_stats import layer_stats_kfac, layer_stats_kfac_one_pass, layer_stats_kfac_with_txt_tgt
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from .Jigsaw_hparams import JigsawHyperParams
@@ -152,3 +152,37 @@ def calculate_projection_caches(model, tok, hparams, force_recompute=False):
         proj_map[weights[layer_name]] = P_cache
 
     return proj_map
+
+def update_projection_caches_with_request(weight_to_projection_cache, txt, tgt, model, tok, hparams):
+    new_stats_dict = layer_stats_kfac_with_txt_tgt(
+        model,
+        tok,
+        layer_names = [hparams.rewrite_module_tmp.format(layer) for layer in hparams.layers],
+        txt=txt,
+        tgt=tgt
+    )
+
+    weights = get_weights(model, hparams)
+
+    for layer_num in hparams.layers:
+        layer_name = hparams.rewrite_module_tmp.format(layer_num)
+        A_new, B_new, num_samples_new = new_stats_dict[layer_name]
+
+        old_P_cache = weight_to_projection_cache[weights[layer_name]]
+        A, B, num_samples_old = old_P_cache['A'], old_P_cache['B'], old_P_cache['num_samples']
+
+        A_updated = (A * num_samples_old + A_new * num_samples_new) / (num_samples_old + num_samples_new)
+        B_updated = (B * num_samples_old + B_new * num_samples_new) / (num_samples_old + num_samples_new)
+        num_samples_updated = num_samples_old + num_samples_new
+
+        null_threshold = hparams.energy_threshold
+        P_cache_updated = calculate_projection_cache_with_kfac(A_updated, B_updated, energy_threhold=null_threshold)
+        for key in P_cache_updated:
+            P_cache_updated[key] = P_cache_updated[key].to(model.device).to(model.dtype)
+
+        P_cache_updated['num_samples'] = num_samples_updated
+        weight_to_projection_cache[weights[layer_name]] = P_cache_updated
+
+    return weight_to_projection_cache
+
+

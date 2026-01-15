@@ -1,13 +1,10 @@
-from easyeditor.models.jigsaw.utils import calculate_projection_cache_by_layer,calculate_projection_caches
+from easyeditor.models.jigsaw.utils import calculate_projection_caches
 from easyeditor.models.jigsaw.Jigsaw_hparams import JigsawHyperParams
 from dotenv import load_dotenv
 import os
 import random
 import numpy as np
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from copy import deepcopy
-from typing import Any, Dict, List
-from utils import print_time, prepare_requests_from_data_type, save_model_and_tokenizer, chunks
 
 load_dotenv()
 HF_CACHE_DIR = os.getenv("HF_CACHE_DIR")
