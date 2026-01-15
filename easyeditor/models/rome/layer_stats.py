@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-from pyexpat import model
 
 import torch
 from datasets import load_dataset
@@ -559,6 +558,7 @@ def layer_stats_kfac_one_pass(
     for p in model.parameters(): p.requires_grad = False
     model.requires_grad_(False)
     model.gradient_checkpointing_enable()
+    model.enable_input_require_grads()
     
     N = 0
     total_tokens = 0
