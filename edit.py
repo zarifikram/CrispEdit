@@ -110,7 +110,7 @@ if __name__ == "__main__":
             eval_every=args.eval_every,
         )
     else:
-        metrics, edited_model, _, tokenizer = editor.edit(
+        edited_model, tokenizer = editor.edit(
             prompts=prompts,
             rephrase_prompts=rephrase_prompts,
             subject=subject,

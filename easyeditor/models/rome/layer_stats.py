@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from pyexpat import model
 
 import torch
 from datasets import load_dataset
@@ -460,7 +461,7 @@ def layer_stats_kfac_one_pass(
         if filename.exists() and not force_recompute:
             # print(f"Loading cached KFAC matrices for {layer_name}")
             loaded = torch.load(filename)
-            results[layer_name] = (loaded['A'], loaded['B'])
+            results[layer_name] = (loaded['A'], loaded['B'], loaded['N'])
         else:
             missing_layers.append(layer_name)
 
@@ -580,7 +581,7 @@ def layer_stats_kfac_one_pass(
                 loss = torch.nn.functional.cross_entropy(
                     shift_logits.view(-1, shift_logits.size(-1)),
                     shift_labels.view(-1),
-                    ignore_index=-100, 
+                    ignore_index=-100,
                     reduction='sum'
                 )
                 loss.backward()
@@ -588,7 +589,7 @@ def layer_stats_kfac_one_pass(
                 # UPDATE STEP: Iterate over all active layers
                 with torch.no_grad():
                     # Check if we captured anything (safeguard)
-                    if not captured_inputs: 
+                    if not captured_inputs:
                         continue
 
                     # Mask is shared across layers for the same batch
@@ -638,7 +639,7 @@ def layer_stats_kfac_one_pass(
         filename.parent.mkdir(parents=True, exist_ok=True)
         torch.save({'A': A, 'B': B, 'N': total_tokens}, filename)
         
-        results[layer_name] = (A, B)
+        results[layer_name] = (A, B, total_tokens)
 
     return results
 
@@ -702,66 +703,73 @@ def layer_stats_kfac_with_txt_tgt(
     for p in model.parameters(): p.requires_grad = False
     model.requires_grad_(False)
     model.gradient_checkpointing_enable()
+    model.enable_input_require_grads()
     
-    N = 0
     total_tokens = 0
 
     with torch.enable_grad():
-        inputs_targets = [txt_ + tgt_ for txt_, tgt_ in zip(txt, tgt)]
-        encodings = tokenizer(inputs_targets, return_tensors="pt", padding=True).to(model.device)
-        labels = encodings["input_ids"].clone()
-        labels[labels == 0] = -100
-        labels[labels == tokenizer.pad_token_id] = -100
-                
-        model.zero_grad()
-        outputs = model(**encodings, use_cache=False)
-        logits = outputs.logits if hasattr(outputs, 'logits') else outputs
+        # possibly the worst code i've ever written in a while...
+        for txt_edit, tgt_edit in tqdm(zip(chunks(txt, batch_size), chunks(tgt, batch_size))):
+            inputs_targets = [txt_ + tgt_ for txt_, tgt_ in zip(txt_edit, tgt_edit)]
+            encodings = tokenizer(inputs_targets, return_tensors="pt", padding=True).to(model.device)
+            labels = encodings["input_ids"].clone()
+            
+            for i, prompt in enumerate(txt_edit):
+                prompt_len = len(tokenizer.encode(prompt, add_special_tokens=True))
+                # Set prompt tokens to -100 so they are ignored by CrossEntropy and your valid_mask
+                labels[i, :prompt_len] = -100
 
-        shift_logits = logits[..., :-1, :].contiguous()
-        shift_labels = labels[..., 1:].contiguous()
+            labels[labels == 0] = -100
+            labels[labels == tokenizer.pad_token_id] = -100
+                    
+            model.zero_grad()
+            outputs = model(**encodings, use_cache=False)
+            logits = outputs.logits if hasattr(outputs, 'logits') else outputs
 
-        loss = torch.nn.functional.cross_entropy(
-            shift_logits.view(-1, shift_logits.size(-1)),
-            shift_labels.view(-1),
-            ignore_index=-100,
-            reduction='sum'
-        )
-        loss.backward()
+            shift_logits = logits[..., :-1, :].contiguous()
+            shift_labels = labels[..., 1:].contiguous()
 
-        # UPDATE STEP: Iterate over all active layers
-        with torch.no_grad():
-            # Check if we captured anything (safeguard)
-            assert captured_inputs is not None, "Did not really capture anything. Double check?"
+            loss = torch.nn.functional.cross_entropy(
+                shift_logits.view(-1, shift_logits.size(-1)),
+                shift_labels.view(-1),
+                ignore_index=-100,
+                reduction='sum'
+            )
+            loss.backward()
 
-            # Mask is shared across layers for the same batch
-            valid_mask = (shift_labels != -100)
-            current_valid_tokens = valid_mask.sum().item()
+            # UPDATE STEP: Iterate over all active layers
+            with torch.no_grad():
+                # Check if we captured anything (safeguard)
+                assert captured_inputs is not None, "Did not really capture anything. Double check?"
 
-            for layer_name in layer_names:
-                if layer_name not in captured_inputs or layer_name not in captured_grads:
-                    continue
+                # Mask is shared across layers for the same batch
+                valid_mask = (shift_labels != -100)
+                current_valid_tokens = valid_mask.sum().item()
 
-                feat_in = captured_inputs[layer_name].to(model.device)
-                grad_out = captured_grads[layer_name].to(model.device)
+                for layer_name in layer_names:
+                    if layer_name not in captured_inputs or layer_name not in captured_grads:
+                        continue
 
-                # Truncate to match valid mask logic (seq_len - 1)
-                feat_in = feat_in[:, :-1, :]
-                grad_out = grad_out[:, :-1, :]
+                    feat_in = captured_inputs[layer_name].to(model.device)
+                    grad_out = captured_grads[layer_name].to(model.device)
 
-                input_flat = feat_in[valid_mask].to(dtype=dtype)
-                grad_flat = grad_out[valid_mask].to(dtype=dtype)
+                    # Truncate to match valid mask logic (seq_len - 1)
+                    feat_in = feat_in[:, :-1, :]
+                    grad_out = grad_out[:, :-1, :]
 
-                matrices[layer_name]["A"].addmm_(input_flat.T, input_flat)
-                matrices[layer_name]["B"].addmm_(grad_flat.T, grad_flat)
+                    input_flat = feat_in[valid_mask].to(dtype=dtype)
+                    grad_flat = grad_out[valid_mask].to(dtype=dtype)
 
-            # Update counters (only once per batch)
-            total_tokens += current_valid_tokens
-            N += encodings['input_ids'].size(0)
+                    matrices[layer_name]["A"].addmm_(input_flat.T, input_flat)
+                    matrices[layer_name]["B"].addmm_(grad_flat.T, grad_flat)
 
-            # Clear captures for next batch
-            captured_inputs.clear()
-            captured_grads.clear()
-                
+                # Update counters (only once per batch)
+                total_tokens += current_valid_tokens
+
+                # Clear captures for next batch
+                captured_inputs.clear()
+                captured_grads.clear()
+                    
     # --- 5. Cleanup and Save ---
     for h in handles: h.remove()
     for name, param in model.named_parameters(): 
@@ -883,3 +891,14 @@ def calculate_cache_loss(
 
 if __name__ == "__main__":
     main()
+
+def chunks(arr, n):
+    """Yield successive n-sized chunks from arr."""
+    chunk = []
+    for a in arr:
+        chunk.append(a)
+        if len(chunk) == n:
+            yield chunk
+            chunk = []
+    if len(chunk) > 0:
+        yield chunk

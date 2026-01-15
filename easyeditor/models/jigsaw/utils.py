@@ -29,10 +29,7 @@ def calculate_projection_cache_with_kfac(A, B, energy_threhold=0.9):
     M = M < null_threshold
     print(f"Rank is {rank} out of {A.shape[0]*B.shape[0]} total, null threshold: {null_threshold}")
 
-    A_inv = None #torch.linalg.inv(A)
-    B_inv = None #torch.linalg.inv(B)
-
-    return {'Ua': Ua, 'Ub': Ub, 'M': M, }#'A_inv': A_inv, 'B_inv': B_inv}
+    return {'Ua': Ua, 'Ub': Ub, 'M': M, "A": A, "B": B}
 
 def get_cov_ab(
     model: AutoModelForCausalLM,
@@ -133,7 +130,7 @@ def calculate_projection_caches(model, tok, hparams, force_recompute=False):
     # 3. Compute projections for each layer
     for layer_num in hparams.layers:
         layer_name = layer_name_map[layer_num]
-        A, B = stats_dict[layer_name]
+        A, B, num_samples = stats_dict[layer_name]
 
         # Apply Model-Specific Logic (moved from calculate_projection_cache_by_layer)
         # If model is not llama/phi, swap A and B
@@ -147,6 +144,7 @@ def calculate_projection_caches(model, tok, hparams, force_recompute=False):
         
         for key in P_cache:
             P_cache[key] = P_cache[key].to(model.device).to(model.dtype)
+        P_cache['num_samples'] = num_samples
             
         # Store in map
         proj_map[weights[layer_name]] = P_cache
@@ -168,12 +166,17 @@ def update_projection_caches_with_request(weight_to_projection_cache, txt, tgt, 
         layer_name = hparams.rewrite_module_tmp.format(layer_num)
         A_new, B_new, num_samples_new = new_stats_dict[layer_name]
 
+        if hparams.model_name not in ["Llama3-8B", "phi-1.5"]:
+            A_new, B_new = B_new, A_new
+
         old_P_cache = weight_to_projection_cache[weights[layer_name]]
         A, B, num_samples_old = old_P_cache['A'], old_P_cache['B'], old_P_cache['num_samples']
-
+        
         A_updated = (A * num_samples_old + A_new * num_samples_new) / (num_samples_old + num_samples_new)
         B_updated = (B * num_samples_old + B_new * num_samples_new) / (num_samples_old + num_samples_new)
         num_samples_updated = num_samples_old + num_samples_new
+
+        del A, B, A_new, B_new
 
         null_threshold = hparams.energy_threshold
         P_cache_updated = calculate_projection_cache_with_kfac(A_updated, B_updated, energy_threhold=null_threshold)

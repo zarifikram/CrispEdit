@@ -1,6 +1,7 @@
 import random
 import numpy as np
 import os
+from snapedit import *
 from dotenv import load_dotenv
 load_dotenv()
 from utils import print_time, prepare_requests_from_data_type, save_model_and_tokenizer, chunks
@@ -16,8 +17,6 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from easyeditor.models.jigsaw.Jigsaw_hparams import JigsawHyperParams
 
-from snapedit import *
-
 SEED = 69
 random.seed(SEED)
 np.random.seed(SEED)
@@ -32,22 +31,33 @@ def get_arguments():
     parser.add_argument('--cache_sample_num', type=int, default=1000, help='Number of samples to use for caching projection matrices.')
     parser.add_argument('--energy_threshold', type=float, default=0.9, help='Energy threshold for projection matrix computation.')
     parser.add_argument('--batch_size', type=int, default=32, help='Batch size for fine-tuning.')
+    parser.add_argument('--num_edits', type=int, default=100, help='Sequential edit batch')
     parser.add_argument('--sequential_edit', default='False', type=str)
     parser.add_argument('--wandb_project', type=str, default='JIGSAW', help='WandB project name.')
     args = parser.parse_args()
     return args
 
-if __name__ == "__main__":
-    args = get_arguments()
-    requests = prepare_requests_from_data_type(args.data_type)
-    requests = setup_requests_for_safeedit(requests)
+def get_hparams(args):
     hparams = JigsawHyperParams.from_hparams(f"./hparams/JIGSAW/{args.model}")
     hparams.batch_size = args.batch_size
     hparams.energy_threshold = args.energy_threshold
     hparams.mom2_n_samples = args.cache_sample_num
+
+    if args.sequential_edit:
+        assert args.num_edits >= args.batch_size, "Makes no sense to have a batch_size bigger than number of edits..."
+        hparams.num_edits = args.num_edits
+    return hparams
+
+if __name__ == "__main__":
+    args = get_arguments()
+    requests = prepare_requests_from_data_type(args.data_type)
+    requests = setup_requests_for_safeedit(requests)
+    hparams = get_hparams(args)
+
+    
     save_model_name = f"{args.model}_{hparams.alg_name}_{args.data_type}_{args.energy_threshold}"
     print(f"Model will be saved to BASE_DIR/{save_model_name}")
-    wandb.init(project=args.wandb_project, name=save_model_name, config=vars(hparams))
+    wandb.init(project=args.wandb_project, name=save_model_name, config=vars(hparams), mode="online")
 
     MODEL_NAME = hparams.model_name
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, cache_dir=HF_CACHE_DIR)

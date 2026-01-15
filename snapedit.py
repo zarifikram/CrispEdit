@@ -154,7 +154,7 @@ def execute_ft_sequential(
         model,
         tok,
         hparams.mom2_dataset,
-        sample_size=100
+        sample_size=1
     )
 
     wandb.log({"Task 1 Loss": old_task_loss})
@@ -164,39 +164,44 @@ def execute_ft_sequential(
     texts = [r["prompt"] for r in requests]
     targets = [r["target_new"] for r in requests]
     # split into batches
-    for txt, tgt in zip(
-        chunks(texts, hparams.batch_size), chunks(targets, hparams.batch_size)
+    for txt_edit, tgt_edit in zip(
+        chunks(texts, hparams.num_edits), chunks(targets, hparams.num_edits)
     ):
-        loss_meter.reset()
         for it in trange(hparams.num_steps):
-            inputs_targets = [txt_ + tgt_ for txt_, tgt_ in zip(txt, tgt)]
-            encodings = tok(inputs_targets, return_tensors="pt", padding=True).to(device)
+            loss_meter.reset()
+            for txt, tgt in zip(
+                chunks(txt_edit, hparams.batch_size), chunks(tgt_edit, hparams.batch_size)
+            ):
+                inputs_targets = [txt_ + tgt_ for txt_, tgt_ in zip(txt, tgt)]
+                encodings = tok(inputs_targets, return_tensors="pt", padding=True).to(device)
 
-            labels = encodings["input_ids"].clone()
+                labels = encodings["input_ids"].clone()
 
-            labels[labels == tok.pad_token_id] = -100
-            for i, prompt in enumerate(txt):
-                prompt_len = len(tok(prompt, add_special_tokens=True)["input_ids"])
-                labels[i, :prompt_len] = -100
-            opt.zero_grad()
-            outputs = model(**encodings, labels=labels)
-            loss = outputs.loss
-            if loss.item() >= 1e-2:
-                loss.backward()
-                opt.step()
-                
-            loss_meter.update(loss.item(), n=labels.size(0))
-            if loss_meter.avg < 1e-2:
+                labels[labels == tok.pad_token_id] = -100
+                for i, prompt in enumerate(txt):
+                    prompt_len = len(tok(prompt, add_special_tokens=True)["input_ids"])
+                    labels[i, :prompt_len] = -100
+                opt.zero_grad()
+                outputs = model(**encodings, labels=labels)
+                loss = outputs.loss
+                if loss.item() >= 1e-2:
+                    loss.backward()
+                    opt.step()
+
+                loss_meter.update(loss.item(), n=labels.size(0))
+            if loss_meter.avg < 1e-2: ### TODO: needs fix ### zarif from future: Probably doesn't 
                 break
 
         weight_to_projection_cache = update_projection_caches_with_request(
             weight_to_projection_cache,
-            txt,
-            tgt,
+            txt_edit,
+            tgt_edit,
             model,
             tok,
             hparams
         )
+
+        opt.reset_cache(weight_to_projection_cache)
 
         old_task_loss = calculate_cache_loss(
             model,
