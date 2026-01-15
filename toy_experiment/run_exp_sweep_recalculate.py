@@ -1,5 +1,3 @@
-from matplotlib import pyplot as plt
-import seaborn as sns
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -23,7 +21,7 @@ EPOCHS_PRE = 29
 EPOCHS_FT = 100
 BATCH_SIZE = 256
 
-DEVICE = torch.device("cuda:1" if torch.cuda.is_available() else "mps")
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps")
 
 class Lenet(nn.Module):
     def __init__(self):
@@ -101,7 +99,7 @@ class ProjectedSGD(optim.Optimizer):
 
         # Check if projectors are provided in each group
         for group in self.param_groups:
-            if 'P_A_null' not in group and 'P_B_null' not in group:
+            if 'P_A_null' not in group and 'P_B_null' not in group and 'P_cache' not in group:
                 raise ValueError("Each param group must contain 'P_A_null' and 'P_B_null' projectors.")
 
     @torch.no_grad()
@@ -113,11 +111,8 @@ class ProjectedSGD(optim.Optimizer):
 
         for group in self.param_groups:
             lr = group['lr']
-            P_A_null = group['P_A_null'].to(DEVICE)
 
-            if "P_B_null" in group:
-                P_B_null = group['P_B_null'].to(DEVICE)
-            
+
             weight_param = group['params'][0]
             bias_param = group['params'][1]
 
@@ -127,10 +122,21 @@ class ProjectedSGD(optim.Optimizer):
             # Get gradients
             grad_W = weight_param.grad.data
             
-            grad_W_proj = grad_W @ P_A_null
+            if "P_cache" in group:
+                cache = group['P_cache']
+                Ua = cache['Ua'].to(DEVICE)
+                Ub = cache['Ub'].to(DEVICE)
+                M = cache['M'].to(DEVICE)
+
+                grad_W_proj = Ub @ ( (Ub.T @ grad_W @ Ua) * M.T ) @ Ua.T
+
+            if "P_A_null" in group:
+                P_A_null = group['P_A_null'].to(DEVICE)
+                grad_W_proj = grad_W @ P_A_null
             
-            if "P_B_null" in group:
-                grad_W_proj = P_B_null @ grad_W_proj
+                if "P_B_null" in group:
+                    P_B_null = group['P_B_null'].to(DEVICE)
+                    grad_W_proj = P_B_null @ grad_W_proj
 
             weight_param.add_(grad_W_proj, alpha=-lr)
 
@@ -421,59 +427,31 @@ def calculate_jacobian_single_input(model, input_data, device, layer):
 
     return jacobian
 
-def get_null_space_projector(K, null_threshold=1e-5):
+def get_null_space_cache(A, B, energy_threshold=0.95):
+    Sa, Ua = torch.linalg.eigh(A) 
+    Sb, Ub = torch.linalg.eigh(B)
+
+    M = torch.outer(Sa, Sb)
+    _, energy_threshold = get_rank(M.view(-1), percent=energy_threshold)
+    M = M < energy_threshold
+
+    return {'Ua': Ua, 'Ub': Ub, 'M': M}
+
+def get_null_space_projector(K, energy_threshold=0.95):
     U, S, Vh = torch.linalg.svd(K)
-    rank, _ = get_rank(S, percent=null_threshold)
-    # rank, _ = get_rank_entropy(S)
-    # rank = (S >= null_threshold).sum().item()
+    rank, _ = get_rank(S, percent=energy_threshold)
     U_hat = U[:, rank:]
     P_null = U_hat @ U_hat.t()
     return P_null
 
-def get_null_space_projectors(A, B, null_threshold=1e-5):
-    P_A_null = get_null_space_projector(A, null_threshold=null_threshold)
-    P_B_null = get_null_space_projector(B, null_threshold=null_threshold)
-    return P_A_null, P_B_null
-
-def get_null_space_projector_kron_efficient(A, B, null_threshold=1e-5):
-    Sa, Ua = torch.linalg.eigh(A) 
-    Sb, Ub = torch.linalg.eigh(B)
-
-    S = torch.kron(Sa, Sb)
-    _, null_threshold = get_rank(S, percent=null_threshold)
-    # _, null_threshold = get_rank_entropy(S)
-
-    V_hat_null = []
-    for i in range(Sa.numel()):
-        for j in range(Sb.numel()):
-            # if torch.abs(Sa[i] * Sb[j]) < null_threshold and torch.abs(Sa[i] * Sb[j]) > 1e-14:
-            if torch.abs(Sa[i] * Sb[j]) < null_threshold:
-                v_a = Ua[:, i]
-                v_b = Ub[:, j]
-                
-                v_kron = torch.kron(v_a, v_b).unsqueeze(1)
-                V_hat_null.append(v_kron)
-
-    if not V_hat_null:
-        dim = A.shape[0] * B.shape[0]
-        return torch.zeros(dim, dim, dtype=A.dtype, device=A.device)
-
-    V_hat = torch.cat(V_hat_null, dim=1)
-    Q, _ = torch.linalg.qr(V_hat)
-    P_null = Q @ Q.T
-                
-    return P_null
-
-def get_null_space_projector_kron_corrected(A, B, null_threshold, model, loader, criterion, device, layer):
+def get_null_space_projector_kron_corrected(A, B, energy_threshold, model, loader, criterion, device, layer):
     model.eval()
     in_dim = layer.in_features
     out_dim = layer.out_features
     corrected_S = torch.zeros((in_dim, out_dim), device=device)
 
-    
-
-    U_A, S_A, Vh_A = torch.linalg.svd(A, full_matrices=False)
-    U_B, S_B, Vh_B = torch.linalg.svd(B, full_matrices=False)
+    Sa, Ua = torch.linalg.eigh(A) 
+    Sb, Ub = torch.linalg.eigh(B)
 
     n_samples = 0
 
@@ -484,25 +462,17 @@ def get_null_space_projector_kron_corrected(A, B, null_threshold, model, loader,
         loss = criterion(outputs, targets)
         loss.backward()
         g_weight = layer.weight.grad.data # [D_out, D_in]
-        corrected_S += (U_B.t() @ g_weight.T @ U_A).pow(2)
+        corrected_S += (Ub.t() @ g_weight.T @ Ua).pow(2)
 
     n_samples += 1
 
     corrected_S = corrected_S.div(n_samples).T
-    _, null_threshold = get_rank(corrected_S.flatten(), percent=null_threshold)
+    _, energy_threshold = get_rank(corrected_S.flatten(), percent=energy_threshold)
 
-    eigen_vectors = []
-    for i in range(len(S_A)):
-        for j in range(len(S_B)):
-            if corrected_S[i, j] < null_threshold:
-                U_A_hat = U_A[:, i]
-                U_B_hat = U_B[:, j]
-                U_kron_hat = torch.kron(U_A_hat, U_B_hat).unsqueeze(1)
-                eigen_vectors.append(U_kron_hat)
-    U_kron_null = torch.cat(eigen_vectors, dim=1)
-    print(f"Kronecker projector null space dimension: {U_kron_null.shape[1]}")
-    P_kron_null = U_kron_null @ U_kron_null.t()
-    return P_kron_null, corrected_S.flatten()
+    M = corrected_S.reshape(torch.outer(Sa, Sb).shape)
+    M = M < energy_threshold
+
+    return {'Ua': Ua, 'Ub': Ub, 'M': M}
 
 def get_linear_layer_hessian(model: nn.Module, 
                              loader: DataLoader, 
@@ -677,10 +647,10 @@ def pretrain_and_save(model, train_loader, test_loader, criterion):
     # save the model
     torch.save({
         'model_state_dict': best_state_dict
-    }, f'model_cache/lenet_epoch_{EPOCHS_PRE}.pth')
+    }, f'model/lenet_epoch_{EPOCHS_PRE}.pth')
 
 def load_pretrained_model(train_loader, test_loader, criterion):
-    pretrain_path = f'model_cache/lenet_epoch_{EPOCHS_PRE}.pth'
+    pretrain_path = f'model/lenet_epoch_{EPOCHS_PRE}.pth'
     if os.path.exists(pretrain_path):
         checkpoint = torch.load(pretrain_path, map_location=DEVICE)
         model = Lenet().to(DEVICE)
@@ -715,40 +685,12 @@ def turn_off_grad_except_layer(model, layer):
             continue
         param.requires_grad = True
 
-
-def plot_spectra(spectra, title='Spectra', filename='spectra.png'):
-    # rank_0_7, th_0_7 = get_rank(spectra, percent=0.7)
-    # rank_0_9, th_0_9 = get_rank(spectra, percent=0.9)
-    # rank_0_95, th_0_95 = get_rank(spectra, percent=0.95)
-    # rank_0_99, th_0_99 = get_rank(spectra, percent=0.99)
-    # rank_effective, th_effective = get_rank_entropy(spectra)
-
-    # import matplotlib.pyplot as plt
-    # plt.figure(figsize=(10, 6))
-    # plt.scatter(range(len(spectra)), spectra.detach().cpu().numpy(), s=10, label='Singular Values')
-    # plt.yscale('log')
-    # plt.scatter([rank_0_7-1], [th_0_7], color='red', label='70% Energy Rank', s=100)
-    # plt.scatter([rank_0_9-1], [th_0_9], color='green', label='90% Energy Rank', s=100)
-    # plt.scatter([rank_0_95-1], [th_0_95], color='blue', label='95% Energy Rank', s=100)
-    # plt.scatter([rank_0_99-1], [th_0_99], color='purple', label='99% Energy Rank', s=100)
-    # plt.scatter([rank_effective-1], [th_effective], color='orange', label='Effective Rank', s=100)
-
-    # plt.title('' + title)
-    # plt.xlabel('Index')
-    # plt.ylabel('Value (log scale)')
-    # plt.legend()
-    # plt.grid(True)
-    # plt.savefig(filename)
-    # plt.close()
-    # do nothing
-    pass
-
-def calculate_sgd_optimizer(model, layer_name, lr, approx_loader, train_data_percentage, null_threshold, try_load=True):
+def calculate_sgd_optimizer(model, layer_name, lr, approx_loader, train_data_percentage, energy_threshold, try_load=True):
     layer = dict(model.named_modules())[layer_name]
     turn_off_grad_except_layer(model, layer)
     return optim.SGD(layer.parameters(), lr=lr)
 
-def calculate_alphaedit_optimizer(model, layer_name, lr, approx_loader, train_data_percentage, null_threshold, try_load=True):
+def calculate_adam_nscl_optimizer(model, layer_name, lr, approx_loader, train_data_percentage, energy_threshold, try_load=True):
     layer = dict(model.named_modules())[layer_name]
     turn_off_grad_except_layer(model, layer)
     if os.path.exists(f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_kfac.pth') and try_load:
@@ -759,10 +701,7 @@ def calculate_alphaedit_optimizer(model, layer_name, lr, approx_loader, train_da
         if try_load:
             torch.save({'A': A, 'B': B}, f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_kfac.pth')
 
-    plot_spectra(torch.linalg.svdvals(A), title='A Singular Values', filename=f'spectra/A_spectra_{train_data_percentage:.2f}_{layer_name}.png')
-    plot_spectra(torch.linalg.svdvals(B), title='B Singular Values', filename=f'spectra/B_spectra_{train_data_percentage:.2f}_{layer_name}.png')
-
-    P_A_null = get_null_space_projector(A, null_threshold=null_threshold)
+    P_A_null = get_null_space_projector(A, energy_threshold=energy_threshold)
 
     return ProjectedSGD(
         [
@@ -771,26 +710,7 @@ def calculate_alphaedit_optimizer(model, layer_name, lr, approx_loader, train_da
         lr=lr
     )
 
-def calculate_jigsaw_optimizer(model, layer_name, lr, approx_loader, train_data_percentage, null_threshold, try_load=True):
-    layer = dict(model.named_modules())[layer_name]
-    turn_off_grad_except_layer(model, layer)
-    if os.path.exists(f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_kfac.pth') and try_load:
-        checkpoint = torch.load(f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_kfac.pth', map_location=DEVICE)
-        A, B = checkpoint['A'],  checkpoint['B']
-    else:
-        A, B = calculate_kfac_factors_for_layer(model, approx_loader, nn.CrossEntropyLoss(), DEVICE, layer)
-        if try_load:
-            torch.save({'A': A, 'B': B}, f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_kfac.pth')
-
-    P_A_null, P_B_null = get_null_space_projectors(A, B, null_threshold=null_threshold)
-    return ProjectedSGD(
-        [
-            {'params': layer.parameters(), 'P_A_null': P_A_null, 'P_B_null': P_B_null}
-        ],
-        lr=lr
-    )
-
-def calculate_hessian_optimizer(model, layer_name, lr, approx_loader, train_data_percentage, null_threshold, try_load=True):
+def calculate_hessian_optimizer(model, layer_name, lr, approx_loader, train_data_percentage, energy_threshold, try_load=True):
     layer = dict(model.named_modules())[layer_name]
     turn_off_grad_except_layer(model, layer)
     if os.path.exists(f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_hessian.pth') and try_load:
@@ -800,9 +720,7 @@ def calculate_hessian_optimizer(model, layer_name, lr, approx_loader, train_data
         if try_load:
             torch.save(hessian, f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_hessian.pth')
 
-    plot_spectra(torch.linalg.svdvals(hessian), title='Hessian Singular Values', filename=f'spectra/hessian_spectra_{train_data_percentage:.2f}_{layer_name}.png')
-
-    P_null = get_null_space_projector(hessian, null_threshold=null_threshold)
+    P_null = get_null_space_projector(hessian, energy_threshold=energy_threshold)
     return ProjectedSGDFlatten(
         [
             {'params': layer.parameters(), 'P_null': P_null}
@@ -810,7 +728,7 @@ def calculate_hessian_optimizer(model, layer_name, lr, approx_loader, train_data
         lr=lr
     )
 
-def calculate_gauss_newton_optimizer(model, layer_name, lr, approx_loader, train_data_percentage, null_threshold, try_load=True):
+def calculate_gauss_newton_optimizer(model, layer_name, lr, approx_loader, train_data_percentage, energy_threshold, try_load=True):
     layer = dict(model.named_modules())[layer_name]
     turn_off_grad_except_layer(model, layer)
     if os.path.exists(f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_gn_hessian.pth') and try_load:
@@ -822,7 +740,7 @@ def calculate_gauss_newton_optimizer(model, layer_name, lr, approx_loader, train
 
     plot_spectra(torch.linalg.svdvals(gn_hessian), title='Gauss-Newton Hessian Singular Values', filename=f'spectra/gn_hessian_spectra_{train_data_percentage:.2f}_{layer_name}.png')
 
-    P_null = get_null_space_projector(gn_hessian, null_threshold=null_threshold)
+    P_null = get_null_space_projector(gn_hessian, energy_threshold=energy_threshold)
     return ProjectedSGDFlatten(
         [
             {'params': layer.parameters(), 'P_null': P_null}
@@ -830,27 +748,7 @@ def calculate_gauss_newton_optimizer(model, layer_name, lr, approx_loader, train
         lr=lr
     )
 
-def calculate_jacobian_optimizer(model, layer_name, lr, approx_loader, train_data_percentage, null_threshold, try_load=True):
-    layer = dict(model.named_modules())[layer_name]
-    turn_off_grad_except_layer(model, layer)
-    if os.path.exists(f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_jacobian.pth') and try_load:
-        jacobian_matrix = torch.load(f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_jacobian.pth', map_location=DEVICE)
-    else:
-        jacobian_matrix = calculate_jacobian_matrix(model, approx_loader, DEVICE, layer)
-        if try_load:
-            torch.save(jacobian_matrix, f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_jacobian.pth')
-
-    plot_spectra(torch.linalg.svdvals(jacobian_matrix), title='Jacobian Singular Values', filename=f'spectra/jacobian_spectra_{train_data_percentage:.2f}_{layer_name}.png')
-
-    P_null = get_null_space_projector(jacobian_matrix.T, null_threshold=null_threshold)
-    return ProjectedSGDFlatten(
-        [
-            {'params': layer.parameters(), 'P_null': P_null}
-        ],
-        lr=lr
-    )
-
-def calculate_kronecker_optimizer(model, layer_name, lr, approx_loader, train_data_percentage, null_threshold, try_load=True):
+def calculate_kronecker_optimizer(model, layer_name, lr, approx_loader, train_data_percentage, energy_threshold, try_load=True):
     layer = dict(model.named_modules())[layer_name]
     turn_off_grad_except_layer(model, layer)
     if os.path.exists(f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_kfac.pth') and try_load:
@@ -861,21 +759,17 @@ def calculate_kronecker_optimizer(model, layer_name, lr, approx_loader, train_da
         if try_load:
             torch.save({'A': A, 'B': B}, f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_kfac.pth')
 
-    # P_null = get_null_space_projector_kron_efficient(B, A, null_threshold=null_threshold)
-    P_null = get_null_space_projector(torch.kron(B,A), null_threshold=null_threshold)
+    P_cache = get_null_space_cache(A, B, energy_threshold=energy_threshold)
+    
 
-    spectra = (torch.linalg.svdvals(B).unsqueeze(1) @ torch.linalg.svdvals(A).unsqueeze(0)).view(-1)
-    spectra, _ = torch.sort(spectra, descending=True)
-    plot_spectra(spectra, title='Kronecker Singular Values', filename=f'spectra/kronecker_spectra_{train_data_percentage:.2f}_{layer_name}.png')
-
-    return ProjectedSGDFlatten(
+    return ProjectedSGD(
         [
-            {'params': layer.parameters(), 'P_null': P_null}
+            {'params': layer.parameters(), 'P_cache': P_cache}
         ],
         lr=lr
     )
 
-def calculate_kronecker_eigencorrected_optimizer(model, layer_name, lr, approx_loader, train_data_percentage, null_threshold, try_load=True):
+def calculate_kronecker_eigencorrected_optimizer(model, layer_name, lr, approx_loader, train_data_percentage, energy_threshold, try_load=True):
     layer = dict(model.named_modules())[layer_name]
     turn_off_grad_except_layer(model, layer)
     if os.path.exists(f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_kfac.pth') and try_load:
@@ -886,9 +780,8 @@ def calculate_kronecker_eigencorrected_optimizer(model, layer_name, lr, approx_l
         if try_load:
             torch.save({'A': A, 'B': B}, f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_kfac.pth')
 
-    P_null, spectra = get_null_space_projector_kron_corrected(B, A, null_threshold=null_threshold, model=model, loader=approx_loader, criterion=nn.CrossEntropyLoss(), device=DEVICE, layer=layer)
+    P_null, spectra = get_null_space_projector_kron_corrected(B, A, energy_threshold=energy_threshold, model=model, loader=approx_loader, criterion=nn.CrossEntropyLoss(), device=DEVICE, layer=layer)
     spectra, _ = torch.sort(spectra, descending=True)
-    plot_spectra(spectra, title='Kronecker Singular Values', filename=f'spectra/kronecker_eigencorrected_spectra_{train_data_percentage:.2f}_{layer_name}.png')
 
     return ProjectedSGDFlatten(
         [
@@ -897,7 +790,7 @@ def calculate_kronecker_eigencorrected_optimizer(model, layer_name, lr, approx_l
         lr=lr
     )
 
-def calculate_updated_kronecker_optimizer(model, layer_name, lr, approx_loader, train_data_percentage, null_threshold, try_load=True):
+def calculate_updated_kronecker_optimizer(model, layer_name, lr, approx_loader, train_data_percentage, energy_threshold, try_load=True):
     layer = dict(model.named_modules())[layer_name]
     turn_off_grad_except_layer(model, layer)
     if os.path.exists(f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_kfac_updated.pth') and try_load:
@@ -908,35 +801,12 @@ def calculate_updated_kronecker_optimizer(model, layer_name, lr, approx_loader, 
         if try_load:
             torch.save({'A': A, 'B': B}, f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_kfac_updated.pth')
 
-    # P_null = get_null_space_projector_kron_efficient(B, A, null_threshold=null_threshold)
-    P_null = get_null_space_projector(torch.kron(B,A), null_threshold=null_threshold)
+    # P_null = get_null_space_projector_kron_efficient(B, A, energy_threshold=energy_threshold)
+    P_null = get_null_space_projector(torch.kron(B,A), energy_threshold=energy_threshold)
 
     spectra = (torch.linalg.svdvals(B).unsqueeze(1) @ torch.linalg.svdvals(A).unsqueeze(0)).view(-1)
     # spectra = (torch.linalg.svdvals(torch.kron(B, A)))
     spectra, _ = torch.sort(spectra, descending=True)
-    plot_spectra(spectra, title='Kronecker Singular Values', filename=f'spectra/kronecker_updated_spectra_{train_data_percentage:.2f}_{layer_name}.png')
-
-    return ProjectedSGDFlatten(
-        [
-            {'params': layer.parameters(), 'P_null': P_null}
-        ],
-        lr=lr
-    )
-
-def calculate_updated_kronecker_optimizer_no_fac(model, layer_name, lr, approx_loader, train_data_percentage, null_threshold, try_load):
-    layer = dict(model.named_modules())[layer_name]
-    turn_off_grad_except_layer(model, layer)
-    if os.path.exists(f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_updated_nofac.pth') and try_load:
-        kron = torch.load(f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_updated_nofac.pth', map_location=DEVICE)
-    else:
-        kron = calculate_updated_kfac_nofac_for_layer(model, approx_loader, nn.CrossEntropyLoss(), DEVICE, layer)
-        if try_load:
-            torch.save(kron, f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_updated_nofac.pth')
-    P_null = get_null_space_projector(kron, null_threshold=null_threshold)
-
-    spectra = torch.linalg.svdvals(kron)
-    spectra, _ = torch.sort(spectra, descending=True)
-    plot_spectra(spectra, title='Kronecker Singular Values', filename=f'spectra/kronecker_updated_nofac_spectra_{train_data_percentage:.2f}_{layer_name}.png')
 
     return ProjectedSGDFlatten(
         [
@@ -947,18 +817,15 @@ def calculate_updated_kronecker_optimizer_no_fac(model, layer_name, lr, approx_l
 
 method_to_optimizer = {
     'SGD': calculate_sgd_optimizer,
-    'AlphaEdit': calculate_alphaedit_optimizer,
-    'Jigsaw': calculate_jigsaw_optimizer,
-    'Jigsaw_Hessian': calculate_hessian_optimizer,
-    'Jigsaw_GN_Hessian': calculate_gauss_newton_optimizer,
-    'Jigsaw_Jacobian': calculate_jacobian_optimizer,
-    'Kronecker': calculate_kronecker_optimizer,
-    'Kronecker_eigencorrected': calculate_kronecker_eigencorrected_optimizer,
-    'Kronecker_updated': calculate_updated_kronecker_optimizer,
-    # 'Kronecker_updated_nofac': calculate_updated_kronecker_optimizer_no_fac,
+    'Adam-NSCL': calculate_adam_nscl_optimizer,
+    'Snap_Hessian': calculate_hessian_optimizer,
+    'Snap_GN_Hessian': calculate_gauss_newton_optimizer,
+    'Snap_KFAC': calculate_kronecker_optimizer,
+    'Snap_EKFAC': calculate_kronecker_eigencorrected_optimizer,
+    # 'Kronecker_updated': calculate_updated_kronecker_optimizer,
 }
 
-def exp(method, null_threshold, train_data_percentage, lr_ft):
+def exp(method, energy_threshold, train_data_percentage, lr_ft):
     train_loader_pre, test_loader_pre, approx_loader = get_pretrain_and_approx_data(train_data_percentage)
     pretrain_model = load_pretrained_model(train_loader_pre, test_loader_pre, nn.CrossEntropyLoss())
 
@@ -969,13 +836,13 @@ def exp(method, null_threshold, train_data_percentage, lr_ft):
         lr_ft,
         approx_loader,
         train_data_percentage,
-        null_threshold,
+        energy_threshold,
         try_load=True
     )
 
     # get a partial of method_to_optimizer[method] with only model to fill out later
-    fn_get_optimizer_with_model = partial(method_to_optimizer[method], layer_name="fc2", lr=lr_ft, approx_loader=approx_loader, train_data_percentage=train_data_percentage, null_threshold=null_threshold, try_load=False)
-    print(f"Starting fine-tuning with method: {method}, Null Threshold: {null_threshold}, TrainData%: {train_data_percentage}")
+    fn_get_optimizer_with_model = partial(method_to_optimizer[method], layer_name="fc2", lr=lr_ft, approx_loader=approx_loader, train_data_percentage=train_data_percentage, energy_threshold=energy_threshold, try_load=False)
+    print(f"Starting fine-tuning with method: {method}, Energy Threshold: {energy_threshold}, TrainData%: {train_data_percentage}")
     ft_accs, ft_losses, pre_accs, pre_losses, weight_differences = fine_tune(
         pretrain_model,
         optimizer,
@@ -994,7 +861,7 @@ def exp(method, null_threshold, train_data_percentage, lr_ft):
         'pre_losses': pre_losses,
         'weight_differences': weight_differences,
         'method': method,
-        'null_threshold': null_threshold,
+        'energy_threshold': energy_threshold,
         'train_data_percentage': train_data_percentage,
         'lr_ft': lr_ft
     }
@@ -1007,19 +874,18 @@ if __name__ == "__main__":
     vals = (1 - 10 ** vals).tolist()
 
     threshold_grids = {
-        'Kronecker': vals,
-        'Kronecker_eigencorrected': vals,
-        'Kronecker_updated': vals,
-        'Jigsaw_GN_Hessian': vals,
-        'Jigsaw_Hessian': vals,
-        'AlphaEdit': vals,
+        'Snap_KFAC': vals,
+        'Snap_EKFAC': vals,
+        'Snap_GN_Hessian': vals,
+        'Snap_Hessian': vals,
+        'Adam-NSCL': vals,
     }
     train_data_perc = 0.06
 
     data = []
-    for method, null_thresholds in threshold_grids.items():
-        for null_threshold in null_thresholds:
-                print(f"Running experiment: Method={method}, Rank%={null_threshold}, TrainData%={train_data_perc}")
-                result = exp(method, null_threshold, train_data_perc, LR_FT)
+    for method, energy_thresholds in threshold_grids.items():
+        for energy_threshold in energy_thresholds:
+                print(f"Running experiment: Method={method}, Energy thredhold%={energy_threshold}, TrainData%={train_data_perc}")
+                result = exp(method, 0.9, train_data_perc, LR_FT)
                 data.append(result)
                 torch.save({'all_data': data}, f'model_cache/fine_tuning_experiment_results_fc2_recalculation_sweep_{train_data_perc}.pth')
