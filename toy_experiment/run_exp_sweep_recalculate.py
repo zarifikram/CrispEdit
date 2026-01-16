@@ -737,8 +737,6 @@ def calculate_gauss_newton_optimizer(model, layer_name, lr, approx_loader, train
         if try_load:
             save_model(gn_hessian, f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_gn_hessian.pth')
 
-    plot_spectra(torch.linalg.svdvals(gn_hessian), title='Gauss-Newton Hessian Singular Values', filename=f'spectra/gn_hessian_spectra_{train_data_percentage:.2f}_{layer_name}.png')
-
     P_null = get_null_space_projector(gn_hessian, energy_threshold=energy_threshold)
     return ProjectedSGDFlatten(
         [
@@ -868,13 +866,13 @@ if __name__ == "__main__":
     print(vals)
 
     threshold_grids = {
-        'Snap_EKFAC': vals,
         'Snap_KFAC': vals,
-        'Snap_GN_Hessian': vals,
-        'Snap_Hessian': vals,
+        'Snap_EKFAC': vals,
         'Adam-NSCL': vals,
+        'Snap_Hessian': vals,
+        'Snap_GN_Hessian': vals,
     }
-    train_data_perc = 0.06
+    train_data_perc = 0.15
 
     data = []
     for method, energy_thresholds in threshold_grids.items():
