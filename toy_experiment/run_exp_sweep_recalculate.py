@@ -4,6 +4,7 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 import torch.nn.functional as F
+from pathlib import Path
 import os
 from tqdm import tqdm
 from torch.func import functional_call, hessian
@@ -21,8 +22,8 @@ EPOCHS_PRE = 29
 EPOCHS_FT = 100
 BATCH_SIZE = 256
 
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps")
 
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps")
 class Lenet(nn.Module):
     def __init__(self):
         super(Lenet, self).__init__()
@@ -141,12 +142,16 @@ class ProjectedSGD(optim.Optimizer):
             weight_param.add_(grad_W_proj, alpha=-lr)
 
         return loss
+    
+def save_model(object, path):
+    file_path = Path(path)
+    file_path.parent.mkdir(parents=True, exist_ok=True)
+    torch.save(object, file_path)
 
 def train_epoch(model, loader, optimizer, criterion):
     model.train()
     for inputs, targets in loader:
-        inputs, targets = inputs.to(DEVICE), targets.to(DEVICE)
-        
+        inputs, targets = inputs.to(DEVICE), targets.to(DEVICE)        
         optimizer.zero_grad()
         outputs = model(inputs)
         loss = criterion(outputs, targets)
@@ -422,9 +427,6 @@ def calculate_jacobian_single_input(model, input_data, device, layer):
         )        
 
         jacobian[k, :] = grads_list[0].view(-1)
-
-    # jacobian_approx = torch.kron(jacobian_i, layer_input)
-
     return jacobian
 
 def get_null_space_cache(A, B, energy_threshold=0.95):
@@ -645,9 +647,7 @@ def pretrain_and_save(model, train_loader, test_loader, criterion):
         print(f"Epoch {epoch+1}/{EPOCHS_PRE} - Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.2f}% | Test Loss: {test_loss:.4f}, Test Acc: {test_acc:.2f}%")
     
     # save the model
-    torch.save({
-        'model_state_dict': best_state_dict
-    }, f'model/lenet_epoch_{EPOCHS_PRE}.pth')
+    save_model({'model_state_dict': best_state_dict}, f'model/lenet_epoch_{EPOCHS_PRE}.pth')
 
 def load_pretrained_model(train_loader, test_loader, criterion):
     pretrain_path = f'model/lenet_epoch_{EPOCHS_PRE}.pth'
@@ -671,9 +671,9 @@ def get_ft_data():
         transforms.Normalize((0.5,), (0.5,))
     ])
     train_set_ft = datasets.FashionMNIST(root='./data', train=True, download=True, transform=transform)
-    train_loader_ft = DataLoader(train_set_ft, batch_size=BATCH_SIZE, shuffle=True)
+    train_loader_ft = DataLoader(train_set_ft, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, pin_memory=True)
     test_set_ft = datasets.FashionMNIST(root='./data', train=False, download=True, transform=transform)
-    test_loader_ft = DataLoader(test_set_ft, batch_size=BATCH_SIZE, shuffle=False)
+    test_loader_ft = DataLoader(test_set_ft, batch_size=BATCH_SIZE, shuffle=False, num_workers=4, pin_memory=True)
     return train_loader_ft, test_loader_ft
 
 def turn_off_grad_except_layer(model, layer):
@@ -699,7 +699,7 @@ def calculate_adam_nscl_optimizer(model, layer_name, lr, approx_loader, train_da
     else:
         A, B = calculate_kfac_factors_for_layer(model, approx_loader, nn.CrossEntropyLoss(), DEVICE, layer)
         if try_load:
-            torch.save({'A': A, 'B': B}, f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_kfac.pth')
+            save_model({'A': A, 'B': B}, f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_kfac.pth')
 
     P_A_null = get_null_space_projector(A, energy_threshold=energy_threshold)
 
@@ -718,7 +718,7 @@ def calculate_hessian_optimizer(model, layer_name, lr, approx_loader, train_data
     else:
         hessian = get_linear_layer_hessian(model, approx_loader, nn.CrossEntropyLoss(), DEVICE, layer)
         if try_load:
-            torch.save(hessian, f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_hessian.pth')
+            save_model(hessian, f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_hessian.pth')
 
     P_null = get_null_space_projector(hessian, energy_threshold=energy_threshold)
     return ProjectedSGDFlatten(
@@ -736,7 +736,7 @@ def calculate_gauss_newton_optimizer(model, layer_name, lr, approx_loader, train
     else:
         gn_hessian = get_linear_layer_gauss_newton_matrix(model, approx_loader, nn.CrossEntropyLoss(), DEVICE, layer)
         if try_load:
-            torch.save(gn_hessian, f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_gn_hessian.pth')
+            save_model(gn_hessian, f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_gn_hessian.pth')
 
     plot_spectra(torch.linalg.svdvals(gn_hessian), title='Gauss-Newton Hessian Singular Values', filename=f'spectra/gn_hessian_spectra_{train_data_percentage:.2f}_{layer_name}.png')
 
@@ -757,7 +757,7 @@ def calculate_kronecker_optimizer(model, layer_name, lr, approx_loader, train_da
     else:
         A, B = calculate_kfac_factors_for_layer(model, approx_loader, nn.CrossEntropyLoss(), DEVICE, layer)
         if try_load:
-            torch.save({'A': A, 'B': B}, f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_kfac.pth')
+            save_model({'A': A, 'B': B}, f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_kfac.pth')
 
     P_cache = get_null_space_cache(A, B, energy_threshold=energy_threshold)
     
@@ -778,10 +778,9 @@ def calculate_kronecker_eigencorrected_optimizer(model, layer_name, lr, approx_l
     else:
         A, B = calculate_kfac_factors_for_layer(model, approx_loader, nn.CrossEntropyLoss(), DEVICE, layer)
         if try_load:
-            torch.save({'A': A, 'B': B}, f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_kfac.pth')
+            save_model({'A': A, 'B': B}, f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_kfac.pth')
 
     P_null, spectra = get_null_space_projector_kron_corrected(B, A, energy_threshold=energy_threshold, model=model, loader=approx_loader, criterion=nn.CrossEntropyLoss(), device=DEVICE, layer=layer)
-    spectra, _ = torch.sort(spectra, descending=True)
 
     return ProjectedSGDFlatten(
         [
@@ -799,14 +798,10 @@ def calculate_updated_kronecker_optimizer(model, layer_name, lr, approx_loader, 
     else:
         A, B = calculate_updated_kfac_factors_for_layer(model, approx_loader, nn.CrossEntropyLoss(), DEVICE, layer)
         if try_load:
-            torch.save({'A': A, 'B': B}, f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_kfac_updated.pth')
+            save_model({'A': A, 'B': B}, f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_kfac_updated.pth')
 
     # P_null = get_null_space_projector_kron_efficient(B, A, energy_threshold=energy_threshold)
     P_null = get_null_space_projector(torch.kron(B,A), energy_threshold=energy_threshold)
-
-    spectra = (torch.linalg.svdvals(B).unsqueeze(1) @ torch.linalg.svdvals(A).unsqueeze(0)).view(-1)
-    # spectra = (torch.linalg.svdvals(torch.kron(B, A)))
-    spectra, _ = torch.sort(spectra, descending=True)
 
     return ProjectedSGDFlatten(
         [
@@ -872,6 +867,7 @@ if __name__ == "__main__":
     # do a log linspace between 1e-1 and 1e-11 with 20 points
     vals = torch.linspace(-4, -0.05, steps=16)
     vals = (1 - 10 ** vals).tolist()
+    print(vals)
 
     threshold_grids = {
         'Snap_KFAC': vals,
@@ -886,6 +882,6 @@ if __name__ == "__main__":
     for method, energy_thresholds in threshold_grids.items():
         for energy_threshold in energy_thresholds:
                 print(f"Running experiment: Method={method}, Energy thredhold%={energy_threshold}, TrainData%={train_data_perc}")
-                result = exp(method, 0.9, train_data_perc, LR_FT)
+                result = exp(method, energy_threshold, train_data_perc, LR_FT)
                 data.append(result)
-                torch.save({'all_data': data}, f'model_cache/fine_tuning_experiment_results_fc2_recalculation_sweep_{train_data_perc}.pth')
+                save_model({'all_data': data}, f'model_cache/fine_tuning_experiment_results_fc2_recalculation_sweep_{train_data_perc}.pth')
