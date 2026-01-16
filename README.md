@@ -70,7 +70,7 @@ python edit.py --editing_method AlphaEdit --hparams_dir ./hparams/AlphaEdit/llam
   > Note: Default datasets are `wiki`/`zsre`/`counterfact` which have 3000 data each. Try running `--data_type zsre10k` or `--data_type zsre163k`.
 - **SnapEdit Sequential**
   ```shell
-  python run_snap.py --model llama3-8b --data_type wiki --cache_sample_num 100 --energy_threshold 0.8 --batch_size 32 --wandb_project JIGSAW --sequential_edit True --num_edits 500
+  python run_snap.py --model llama3-8b --data_type wiki --cache_sample_num 100 --energy_threshold 0.8 --batch_size 32 --wandb_project JIGSAW --sequential_edit True --num_edits 100
   ```
   > Note: It is important to set `--num_edits` whenever `--sequential_edit` is enabled to define the edit batch size or sequence limit.
 - **MEMIT**

@@ -11,8 +11,6 @@ from easyeditor.models.jigsaw.utils import calculate_projection_caches, update_p
 from easyeditor.models.jigsaw import ProjectedAdam
 from easyeditor.models.rome.layer_stats import calculate_cache_loss
 
-
-
 def execute_ft(
     model: AutoModelForCausalLM,
     tok: AutoTokenizer,
@@ -154,7 +152,7 @@ def execute_ft_sequential(
         model,
         tok,
         hparams.mom2_dataset,
-        sample_size=1
+        sample_size=100
     )
 
     wandb.log({"Task 1 Loss": old_task_loss})
@@ -210,8 +208,7 @@ def execute_ft_sequential(
             sample_size=100
         )
         wandb.log({"Task 1 Loss": old_task_loss})
-        
-    
+
     return model
 
 class AverageMeter:

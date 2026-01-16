@@ -130,61 +130,78 @@ def calculate_projection_caches(model, tok, hparams, force_recompute=False):
     # 3. Compute projections for each layer
     for layer_num in hparams.layers:
         layer_name = layer_name_map[layer_num]
-        A, B, num_samples = stats_dict[layer_name]
+        A, B, num_samples = stats_dict.pop(layer_name)
 
         # Apply Model-Specific Logic (moved from calculate_projection_cache_by_layer)
         # If model is not llama/phi, swap A and B
         if hparams.model_name not in ["Llama3-8B", "phi-1.5"]:
             A, B = B, A
 
+        A = A.to(model.device, non_blocking=True)
+        B = B.to(model.device, non_blocking=True)
+
         # Calculate Projection
         null_threshold = hparams.energy_threshold
         # Ensure correct device/dtype
         P_cache = calculate_projection_cache_with_kfac(A, B, energy_threhold=null_threshold)
-        
+                
         for key in P_cache:
-            P_cache[key] = P_cache[key].to(model.device).to(model.dtype)
+            if isinstance(P_cache[key], torch.Tensor):
+                P_cache[key] = P_cache[key].to("cpu", dtype=torch.float32) # Convert to float32 to save space if precision allows
         P_cache['num_samples'] = num_samples
             
         # Store in map
         proj_map[weights[layer_name]] = P_cache
+        del A, B
 
     return proj_map
 
+def tighten_projection_caches(weight_to_projection_cache, hparams, weights, device):
+    layer_to_projection_cache = {}
+    for layer_num in hparams.layers:
+        layer_name = hparams.rewrite_module_tmp.format(layer_num)
+        P_cache = weight_to_projection_cache.pop(weights[layer_name])
+        A, B, num_samples = P_cache['A'], P_cache['B'], P_cache['num_samples']
+        del P_cache
+        torch.cuda.empty_cache()
+
+        A, B = A * num_samples, B * num_samples  # Scale back to sum of squares
+        layer_to_projection_cache[layer_name] = {'B': A.to(device), 'A': B.to(device), 'num_samples': num_samples}
+
+    return layer_to_projection_cache
+
+    
 def update_projection_caches_with_request(weight_to_projection_cache, txt, tgt, model, tok, hparams):
+    weights = get_weights(model, hparams)
+    layer_to_projection_cache = tighten_projection_caches(weight_to_projection_cache, hparams, weights, model.device)
     new_stats_dict = layer_stats_kfac_with_txt_tgt(
         model,
         tok,
         layer_names = [hparams.rewrite_module_tmp.format(layer) for layer in hparams.layers],
         txt=txt,
-        tgt=tgt
+        tgt=tgt,
+        layer_to_projection_cache=layer_to_projection_cache,
     )
-
-    weights = get_weights(model, hparams)
 
     for layer_num in hparams.layers:
         layer_name = hparams.rewrite_module_tmp.format(layer_num)
-        A_new, B_new, num_samples_new = new_stats_dict[layer_name]
+        A_new, B_new, num_samples_new = new_stats_dict.pop(layer_name)
 
         if hparams.model_name not in ["Llama3-8B", "phi-1.5"]:
             A_new, B_new = B_new, A_new
 
-        old_P_cache = weight_to_projection_cache[weights[layer_name]]
-        A, B, num_samples_old = old_P_cache['A'], old_P_cache['B'], old_P_cache['num_samples']
-        
-        A_updated = (A * num_samples_old + A_new * num_samples_new) / (num_samples_old + num_samples_new)
-        B_updated = (B * num_samples_old + B_new * num_samples_new) / (num_samples_old + num_samples_new)
-        num_samples_updated = num_samples_old + num_samples_new
-
-        del A, B, A_new, B_new
+        A_new = A_new.to(model.device, non_blocking=True)
+        B_new = B_new.to(model.device, non_blocking=True)
 
         null_threshold = hparams.energy_threshold
-        P_cache_updated = calculate_projection_cache_with_kfac(A_updated, B_updated, energy_threhold=null_threshold)
+        P_cache_updated = calculate_projection_cache_with_kfac(A_new, B_new, energy_threhold=null_threshold)
         for key in P_cache_updated:
-            P_cache_updated[key] = P_cache_updated[key].to(model.device).to(model.dtype)
+            P_cache_updated[key] = P_cache_updated[key].to("cpu", dtype=torch.float32) # Convert to float32 to save space if precision allows
 
-        P_cache_updated['num_samples'] = num_samples_updated
+        P_cache_updated['num_samples'] = num_samples_new
         weight_to_projection_cache[weights[layer_name]] = P_cache_updated
+        del A_new, B_new
+        torch.cuda.empty_cache()
 
     return weight_to_projection_cache
 

@@ -68,7 +68,6 @@ if __name__ == "__main__":
     model.resize_token_embeddings(len(tokenizer), mean_resizing=False)
     model.config.pad_token_id = tokenizer.pad_token_id
     
-
     print_time("Begin FT Time")
     if args.sequential_edit:
         edited_model = execute_ft_sequential(model, tokenizer, requests, hparams)

@@ -558,7 +558,7 @@ def layer_stats_kfac_one_pass(
     for p in model.parameters(): p.requires_grad = False
     model.requires_grad_(False)
     model.gradient_checkpointing_enable()
-    model.enable_input_require_grads()
+    # model.enable_input_require_grads()
     
     N = 0
     total_tokens = 0
@@ -649,6 +649,7 @@ def layer_stats_kfac_with_txt_tgt(
     layer_names: List[str],
     txt,
     tgt,
+    layer_to_projection_cache: dict,
     model_name=None,
     precision=None,
 ):
@@ -667,7 +668,6 @@ def layer_stats_kfac_with_txt_tgt(
     batch_size = 1 # we do entire batch in one go (hopefully)
 
     # --- 3. Initialize Matrices and Hooks for MISSING layers ---
-    matrices = {}
     handles = []
     
     # State storage for hooks
@@ -688,13 +688,6 @@ def layer_stats_kfac_with_txt_tgt(
         target_name = layer_name.split(".weight")[0] if ".weight" in layer_name else layer_name
         module = dict(model.named_modules())[target_name]
         
-        # Init A and B
-        in_dim, out_dim = get_in_and_out_dim_from_layer(module, target_name)
-        matrices[layer_name] = {
-            "A": torch.zeros((in_dim, in_dim), dtype=dtype, device=model.device),
-            "B": torch.zeros((out_dim, out_dim), dtype=dtype, device=model.device)
-        }
-        
         # Register Hook
         handles.append(module.register_forward_hook(get_hook(layer_name)))
     
@@ -705,7 +698,7 @@ def layer_stats_kfac_with_txt_tgt(
     model.gradient_checkpointing_enable()
     model.enable_input_require_grads()
     
-    total_tokens = 0
+    total_tokens = layer_to_projection_cache[layer_names[0]]["num_samples"]
 
     with torch.enable_grad():
         # possibly the worst code i've ever written in a while...
@@ -757,11 +750,12 @@ def layer_stats_kfac_with_txt_tgt(
                     feat_in = feat_in[:, :-1, :]
                     grad_out = grad_out[:, :-1, :]
 
-                    input_flat = feat_in[valid_mask].to(dtype=dtype)
-                    grad_flat = grad_out[valid_mask].to(dtype=dtype)
+                    kfac_dtype = layer_to_projection_cache[layer_name]["A"].dtype
+                    input_flat = feat_in[valid_mask].to(dtype=kfac_dtype)
+                    grad_flat = grad_out[valid_mask].to(dtype=kfac_dtype)
 
-                    matrices[layer_name]["A"].addmm_(input_flat.T, input_flat)
-                    matrices[layer_name]["B"].addmm_(grad_flat.T, grad_flat)
+                    layer_to_projection_cache[layer_name]["A"].addmm_(input_flat.T, input_flat)
+                    layer_to_projection_cache[layer_name]["B"].addmm_(grad_flat.T, grad_flat)
 
                 # Update counters (only once per batch)
                 total_tokens += current_valid_tokens
@@ -776,11 +770,12 @@ def layer_stats_kfac_with_txt_tgt(
         param.requires_grad = grads[name]
 
     for layer_name in layer_names:
-        A = matrices[layer_name]["A"] / total_tokens
-        B = matrices[layer_name]["B"] / total_tokens        
-        results[layer_name] = (A, B, total_tokens)
+        projection_cache = layer_to_projection_cache.pop(layer_name)
+        layer_to_projection_cache[layer_name] = (projection_cache["A"].to("cpu")/total_tokens, projection_cache["B"].to("cpu")/total_tokens, total_tokens)
+        del projection_cache
+        torch.cuda.empty_cache()
 
-    return results
+    return layer_to_projection_cache
     
 def calculate_cache_loss(
     model,
