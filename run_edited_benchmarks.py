@@ -2,7 +2,6 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
-# os.environ['HF_ENDPOINT'] = os.getenv("HF_ENDPOINT")
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 import argparse
 from utils import print_time, prepare_requests_from_data_type, save_clean_results

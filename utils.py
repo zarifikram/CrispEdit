@@ -50,7 +50,9 @@ def prepare_requests_from_data_type(data_type):
 
 def prepare_prompts_from_data_type(data_type):
     data_file = {
-        "zsre": "zsre_mend_eval_3k",
+        "zsre163k": "zsre_mend_163k",
+        "zsre10k": "zsre_mend_10k",
+        "zsre": "zsre_mend_3k",
         "counterfact": "counterfact-edit_3k",
         "wiki": "wiki_big_edit_3k",
     }[data_type]

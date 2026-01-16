@@ -9,7 +9,6 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 load_dotenv()
 HF_CACHE_DIR = os.getenv("HF_CACHE_DIR")
 os.environ["HF_DATASETS_CACHE"] = os.getenv("HF_DATASETS_DIR")
-# os.environ['HF_ENDPOINT'] = os.getenv("HF_ENDPOINT")
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 import wandb
 

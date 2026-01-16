@@ -10,7 +10,6 @@ from dotenv import load_dotenv
 load_dotenv()
 HF_CACHE_DIR = os.getenv("HF_CACHE_DIR")
 os.environ["HF_DATASETS_CACHE"] = os.getenv("HF_DATASETS_DIR")
-os.environ['HF_ENDPOINT'] = os.getenv("HF_ENDPOINT")
 import argparse
 import wandb 
 
