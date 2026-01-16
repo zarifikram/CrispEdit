@@ -128,7 +128,6 @@ class ProjectedSGD(optim.Optimizer):
                 Ua = cache['Ua'].to(DEVICE)
                 Ub = cache['Ub'].to(DEVICE)
                 M = cache['M'].to(DEVICE)
-
                 grad_W_proj = Ub @ ( (Ub.T @ grad_W @ Ua) * M.T ) @ Ua.T
 
             if "P_A_null" in group:
@@ -151,7 +150,7 @@ def save_model(object, path):
 def train_epoch(model, loader, optimizer, criterion):
     model.train()
     for inputs, targets in loader:
-        inputs, targets = inputs.to(DEVICE), targets.to(DEVICE)        
+        inputs, targets = inputs.to(DEVICE), targets.to(DEVICE)      
         optimizer.zero_grad()
         outputs = model(inputs)
         loss = criterion(outputs, targets)
@@ -429,7 +428,7 @@ def calculate_jacobian_single_input(model, input_data, device, layer):
         jacobian[k, :] = grads_list[0].view(-1)
     return jacobian
 
-def get_null_space_cache(A, B, energy_threshold=0.95):
+def get_null_space_cache_kfac(A, B, energy_threshold=0.95):
     Sa, Ua = torch.linalg.eigh(A) 
     Sb, Ub = torch.linalg.eigh(B)
 
@@ -446,7 +445,7 @@ def get_null_space_projector(K, energy_threshold=0.95):
     P_null = U_hat @ U_hat.t()
     return P_null
 
-def get_null_space_projector_kron_corrected(A, B, energy_threshold, model, loader, criterion, device, layer):
+def get_null_space_cache_ekfac(A, B, energy_threshold, model, loader, criterion, device, layer):
     model.eval()
     in_dim = layer.in_features
     out_dim = layer.out_features
@@ -474,7 +473,7 @@ def get_null_space_projector_kron_corrected(A, B, energy_threshold, model, loade
     M = corrected_S.reshape(torch.outer(Sa, Sb).shape)
     M = M < energy_threshold
 
-    return {'Ua': Ua, 'Ub': Ub, 'M': M}
+    return {'Ua': Ub, 'Ub': Ua, 'M': M.T}
 
 def get_linear_layer_hessian(model: nn.Module, 
                              loader: DataLoader, 
@@ -671,9 +670,9 @@ def get_ft_data():
         transforms.Normalize((0.5,), (0.5,))
     ])
     train_set_ft = datasets.FashionMNIST(root='./data', train=True, download=True, transform=transform)
-    train_loader_ft = DataLoader(train_set_ft, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, pin_memory=True)
+    train_loader_ft = DataLoader(train_set_ft, batch_size=BATCH_SIZE, shuffle=True)
     test_set_ft = datasets.FashionMNIST(root='./data', train=False, download=True, transform=transform)
-    test_loader_ft = DataLoader(test_set_ft, batch_size=BATCH_SIZE, shuffle=False, num_workers=4, pin_memory=True)
+    test_loader_ft = DataLoader(test_set_ft, batch_size=BATCH_SIZE, shuffle=False)
     return train_loader_ft, test_loader_ft
 
 def turn_off_grad_except_layer(model, layer):
@@ -759,9 +758,8 @@ def calculate_kronecker_optimizer(model, layer_name, lr, approx_loader, train_da
         if try_load:
             save_model({'A': A, 'B': B}, f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_kfac.pth')
 
-    P_cache = get_null_space_cache(A, B, energy_threshold=energy_threshold)
+    P_cache = get_null_space_cache_kfac(A, B, energy_threshold=energy_threshold)
     
-
     return ProjectedSGD(
         [
             {'params': layer.parameters(), 'P_cache': P_cache}
@@ -780,11 +778,11 @@ def calculate_kronecker_eigencorrected_optimizer(model, layer_name, lr, approx_l
         if try_load:
             save_model({'A': A, 'B': B}, f'model_cache/exp_approx_{train_data_percentage:.2f}_layer_{layer_name}_kfac.pth')
 
-    P_null, spectra = get_null_space_projector_kron_corrected(B, A, energy_threshold=energy_threshold, model=model, loader=approx_loader, criterion=nn.CrossEntropyLoss(), device=DEVICE, layer=layer)
+    P_cache = get_null_space_cache_ekfac(B, A, energy_threshold=energy_threshold, model=model, loader=approx_loader, criterion=nn.CrossEntropyLoss(), device=DEVICE, layer=layer)
 
-    return ProjectedSGDFlatten(
+    return ProjectedSGD(
         [
-            {'params': layer.parameters(), 'P_null': P_null}
+            {'params': layer.parameters(), 'P_cache': P_cache}
         ],
         lr=lr
     )
@@ -865,13 +863,13 @@ def exp(method, energy_threshold, train_data_percentage, lr_ft):
     
 if __name__ == "__main__":
     # do a log linspace between 1e-1 and 1e-11 with 20 points
-    vals = torch.linspace(-4, -0.05, steps=16)
+    vals = torch.linspace(-4, -0.5, steps=2)
     vals = (1 - 10 ** vals).tolist()
     print(vals)
 
     threshold_grids = {
-        'Snap_KFAC': vals,
         'Snap_EKFAC': vals,
+        'Snap_KFAC': vals,
         'Snap_GN_Hessian': vals,
         'Snap_Hessian': vals,
         'Adam-NSCL': vals,
