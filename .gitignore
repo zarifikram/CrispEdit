@@ -4,3 +4,5 @@ __pycache__
 run_me.sh
 .env
 logs/
+toy_experiments/data/
+toy_experiments/model_cache/
