@@ -4,7 +4,7 @@ load_dotenv()
 API_KEY = os.getenv("API_KEY")
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 import argparse
-from utils import print_time, prepare_requests_from_data_type, save_clean_results
+from utils import print_time, prepare_requests_from_data_type
 from easyeditor.editors.utils import summary_metrics
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import numpy as np
@@ -14,8 +14,6 @@ import torch
 from tqdm import tqdm
 import wandb
 from easyeditor.util import HyperParams
-from lm_eval import simple_evaluate
-from lm_eval.models.huggingface import HFLM
 
 
 SEED = 69

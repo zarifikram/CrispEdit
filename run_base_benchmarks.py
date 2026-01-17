@@ -1,21 +1,18 @@
 import os
+import wandb
+import random
+import torch
+import numpy as np
+from lm_eval import simple_evaluate
+from lm_eval.models.huggingface import HFLM
 from dotenv import load_dotenv
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 import argparse
-from utils import print_time, prepare_requests_from_data_type, save_clean_results
-from easyeditor.editors.utils import summary_metrics
+from utils import print_time, save_clean_results
 from transformers import AutoTokenizer, AutoModelForCausalLM
-import numpy as np
-from easyeditor.evaluate.evaluate import compute_edit_quality
-import random
-import torch
-from tqdm import tqdm
-import wandb
 from easyeditor.util import HyperParams
-from lm_eval import simple_evaluate
-from lm_eval.models.huggingface import HFLM
 
 
 SEED = 69
