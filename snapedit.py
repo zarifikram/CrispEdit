@@ -8,7 +8,7 @@ import wandb
 from utils import chunks
 
 from easyeditor.models.jigsaw.Jigsaw_hparams import JigsawHyperParams
-from easyeditor.models.jigsaw.utils import cache_weights_to_cpu, calculate_projection_caches, update_projection_caches_with_request, recalculate_cache_if_weights_changed, build_optimizer, log_old_loss
+from easyeditor.models.jigsaw.utils import cache_weights_to_cpu, calculate_cov_cache_with_old_data, calculate_cov_cache_with_request, build_optimizer_with_cov_caches, recalculate_cov_cache_if_weights_changed, combine_layer_to_cov_caches, log_old_loss, get_weights
 from easyeditor.models.jigsaw import ProjectedAdam
 
 def execute_ft(
@@ -26,29 +26,21 @@ def execute_ft(
     if tok.padding_side != "right":
         tok.padding_side = "right"
     
-    if not hparams.no_snap:
-        weight_to_projection_cache = calculate_projection_caches(
-            model, tok, hparams, force_recompute=False
-        )
-    else:
-        weight_to_projection_cache = None
+    
+    layer_to_cov_cache_old = calculate_cov_cache_with_old_data(
+        model, tok, hparams, force_recompute=False
+    )
+
+    opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_old])
     
     requests = deepcopy(requests)
     for i, request in enumerate(requests):
         if request["target_new"][0] != " ":
             requests[i]["target_new"] = " " + request["target_new"]
     
-    weights = {
-        n: p
-        for n, p in model.named_parameters()
-        for layer in hparams.layers
-        if hparams.rewrite_module_tmp.format(layer) in n
-    }
+    weights = get_weights(model, hparams, bias=True)
     current_weights_cpu = cache_weights_to_cpu(weights)
     
-    # Configure optimizer / gradients
-    opt = build_optimizer(weights, hparams, weight_to_projection_cache)
-
     for name, w in model.named_parameters():
         w.requires_grad = name in weights
 
@@ -84,14 +76,16 @@ def execute_ft(
             if loss.item() >= 1e-2:
                 loss.backward()
                 opt.step()
-                opt, current_weights_cpu, weight_to_projection_cache = recalculate_cache_if_weights_changed(
+                current_weights_cpu, layer_to_cov_cache_old, should_recalculate = recalculate_cov_cache_if_weights_changed(
                     model,
                     tok,
                     hparams,
                     current_weights_cpu,
-                    weight_to_projection_cache,
-                    opt,
+                    layer_to_cov_cache_old,
                 )
+                if should_recalculate:
+                    opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_old], opt=opt)
+                print(f"Step {it} Batch Loss: {loss.item()}")
 
         log_old_loss(model, tok, hparams)
         wandb.log({f"FT Loss": loss_meter.avg})
@@ -116,33 +110,24 @@ def execute_ft_sequential(
     if tok.padding_side != "right":
         tok.padding_side = "right"
     
-    if not hparams.no_snap:
-        weight_to_projection_cache = calculate_projection_caches(
-            model, tok, hparams, force_recompute=False
-        )
-    else:
-        weight_to_projection_cache = None
+    layer_to_cov_cache_old = calculate_cov_cache_with_old_data(
+        model, tok, hparams, force_recompute=False
+    )
+    opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_old])
     
     requests = deepcopy(requests)
     for i, request in enumerate(requests):
         if request["target_new"][0] != " ":
             requests[i]["target_new"] = " " + request["target_new"]
     
-    weights = {
-        n: p
-        for n, p in model.named_parameters()
-        for layer in hparams.layers
-        if hparams.rewrite_module_tmp.format(layer) in n
-    }
+    weights = get_weights(model, hparams, bias=True)
     current_weights_cpu = cache_weights_to_cpu(weights)
     
-    # Configure optimizer / gradients
-    opt = build_optimizer(weights, hparams, weight_to_projection_cache)
-
     for name, w in model.named_parameters():
         w.requires_grad = name in weights
 
     log_old_loss(model, tok, hparams)
+    layer_to_cov_cache_data = None
     
     loss_meter = AverageMeter()
     random.shuffle(requests)
@@ -176,30 +161,29 @@ def execute_ft_sequential(
                 if loss.item() >= 1e-2:
                     loss.backward()
                     opt.step()
-                    opt, current_weights_cpu, weight_to_projection_cache = recalculate_cache_if_weights_changed(
+                    current_weights_cpu, layer_to_cov_cache_old, should_recalculate = recalculate_cov_cache_if_weights_changed(
                         model,
                         tok,
                         hparams,
                         current_weights_cpu,
-                        weight_to_projection_cache,
-                        opt,
+                        layer_to_cov_cache_old,
                     )
+                    if should_recalculate:
+                        opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_old] if layer_to_cov_cache_data is None else [layer_to_cov_cache_data, layer_to_cov_cache_old], opt=opt)
 
                 loss_meter.update(loss.item(), n=labels.size(0))
-            if loss_meter.avg < 1e-2: ### TODO: needs fix ### zarif from future: Probably doesn't 
+            if loss_meter.avg < 1e-2:
                 break
 
-        weight_to_projection_cache = update_projection_caches_with_request(
-            weight_to_projection_cache,
+        layer_to_cov_cache_data_new = calculate_cov_cache_with_request(
             txt_edit,
             tgt_edit,
             model,
             tok,
-            hparams
+            hparams,
         )
-
-        if not hparams.no_snap:
-            opt.reset_cache(weight_to_projection_cache)
+        layer_to_cov_cache_data = layer_to_cov_cache_data_new if layer_to_cov_cache_data is None else combine_layer_to_cov_caches([layer_to_cov_cache_data, layer_to_cov_cache_data_new])
+        opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_data, layer_to_cov_cache_old], opt=opt)
 
         log_old_loss(model, tok, hparams)
 

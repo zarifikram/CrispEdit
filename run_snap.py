@@ -64,6 +64,9 @@ def calculate_model_name(args, hparams):
     
     if args.sequential_edit:
         name += f"_sequential_{args.num_edits}"
+    
+    if hparams.recalculate_cache:
+        name += f"_recalc_cache_{args.recalculate_weight_threshold}"
     return name
 
 if __name__ == "__main__":
@@ -75,7 +78,7 @@ if __name__ == "__main__":
     
     save_model_name = calculate_model_name(args, hparams)
     print(f"Model will be saved to BASE_DIR/{save_model_name}")
-    wandb.init(project=args.wandb_project, name=save_model_name, config=vars(hparams), mode="disabled")
+    wandb.init(project=args.wandb_project, name=save_model_name, config=vars(hparams), mode="online")
 
     MODEL_NAME = hparams.model_name
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, cache_dir=HF_CACHE_DIR)
