@@ -1,15 +1,15 @@
 import random
 from copy import deepcopy
 from typing import Any, Dict, List
+import torch
 from tqdm import trange
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import wandb
 from utils import chunks
 
 from easyeditor.models.jigsaw.Jigsaw_hparams import JigsawHyperParams
-from easyeditor.models.jigsaw.utils import calculate_projection_caches, update_projection_caches_with_request
+from easyeditor.models.jigsaw.utils import cache_weights_to_cpu, calculate_projection_caches, update_projection_caches_with_request, recalculate_cache_if_weights_changed, build_optimizer, log_old_loss
 from easyeditor.models.jigsaw import ProjectedAdam
-from easyeditor.models.rome.layer_stats import calculate_cache_loss
 
 def execute_ft(
     model: AutoModelForCausalLM,
@@ -26,9 +26,12 @@ def execute_ft(
     if tok.padding_side != "right":
         tok.padding_side = "right"
     
-    weight_to_projection_cache = calculate_projection_caches(
-        model, tok, hparams, force_recompute=False
-    )
+    if not hparams.no_snap:
+        weight_to_projection_cache = calculate_projection_caches(
+            model, tok, hparams, force_recompute=False
+        )
+    else:
+        weight_to_projection_cache = None
     
     requests = deepcopy(requests)
     for i, request in enumerate(requests):
@@ -41,26 +44,15 @@ def execute_ft(
         for layer in hparams.layers
         if hparams.rewrite_module_tmp.format(layer) in n
     }
+    current_weights_cpu = cache_weights_to_cpu(weights)
     
     # Configure optimizer / gradients
-    opt = ProjectedAdam(
-        [v for _, v in weights.items()],
-        projection_cache_map = weight_to_projection_cache,
-        lr=hparams.lr,
-        weight_decay=hparams.weight_decay,
-    )
+    opt = build_optimizer(weights, hparams, weight_to_projection_cache)
 
     for name, w in model.named_parameters():
         w.requires_grad = name in weights
 
-    old_task_loss = calculate_cache_loss(
-        model,
-        tok,
-        hparams.mom2_dataset,
-        sample_size=100
-    )
-
-    wandb.log({"Task 1 Loss": old_task_loss})
+    log_old_loss(model, tok, hparams)
     
     loss_meter = AverageMeter()
     for it in trange(hparams.num_steps):
@@ -83,7 +75,7 @@ def execute_ft(
             for i, prompt in enumerate(txt):
                 prompt_len = len(tok(prompt, add_special_tokens=True)["input_ids"])
                 labels[i, :prompt_len] = -100
-            opt.zero_grad()
+            opt.zero_grad(set_to_none=True)
             outputs = model(**encodings, labels=labels)
             loss = outputs.loss
                 
@@ -92,14 +84,17 @@ def execute_ft(
             if loss.item() >= 1e-2:
                 loss.backward()
                 opt.step()
+                opt, current_weights_cpu, weight_to_projection_cache = recalculate_cache_if_weights_changed(
+                    model,
+                    tok,
+                    hparams,
+                    current_weights_cpu,
+                    weight_to_projection_cache,
+                    opt,
+                )
 
-        old_task_loss = calculate_cache_loss(
-            model,
-            tok,
-            hparams.mom2_dataset,
-            sample_size=100
-        )
-        wandb.log({f"FT Loss": loss_meter.avg, "Task 1 Loss": old_task_loss})
+        log_old_loss(model, tok, hparams)
+        wandb.log({f"FT Loss": loss_meter.avg})
         
         if loss_meter.avg < 1e-2:
             break
@@ -121,9 +116,12 @@ def execute_ft_sequential(
     if tok.padding_side != "right":
         tok.padding_side = "right"
     
-    weight_to_projection_cache = calculate_projection_caches(
-        model, tok, hparams, force_recompute=False
-    )
+    if not hparams.no_snap:
+        weight_to_projection_cache = calculate_projection_caches(
+            model, tok, hparams, force_recompute=False
+        )
+    else:
+        weight_to_projection_cache = None
     
     requests = deepcopy(requests)
     for i, request in enumerate(requests):
@@ -136,26 +134,15 @@ def execute_ft_sequential(
         for layer in hparams.layers
         if hparams.rewrite_module_tmp.format(layer) in n
     }
+    current_weights_cpu = cache_weights_to_cpu(weights)
     
     # Configure optimizer / gradients
-    opt = ProjectedAdam(
-        [v for _, v in weights.items()],
-        projection_cache_map = weight_to_projection_cache,
-        lr=hparams.lr,
-        weight_decay=hparams.weight_decay,
-    )
+    opt = build_optimizer(weights, hparams, weight_to_projection_cache)
 
     for name, w in model.named_parameters():
         w.requires_grad = name in weights
 
-    old_task_loss = calculate_cache_loss(
-        model,
-        tok,
-        hparams.mom2_dataset,
-        sample_size=100
-    )
-
-    wandb.log({"Task 1 Loss": old_task_loss})
+    log_old_loss(model, tok, hparams)
     
     loss_meter = AverageMeter()
     random.shuffle(requests)
@@ -182,9 +169,21 @@ def execute_ft_sequential(
                 opt.zero_grad()
                 outputs = model(**encodings, labels=labels)
                 loss = outputs.loss
+
+                if torch.isnan(loss) or torch.isinf(loss):
+                    print("NaN or Inf detected in loss")
+                    breakpoint()
                 if loss.item() >= 1e-2:
                     loss.backward()
                     opt.step()
+                    opt, current_weights_cpu, weight_to_projection_cache = recalculate_cache_if_weights_changed(
+                        model,
+                        tok,
+                        hparams,
+                        current_weights_cpu,
+                        weight_to_projection_cache,
+                        opt,
+                    )
 
                 loss_meter.update(loss.item(), n=labels.size(0))
             if loss_meter.avg < 1e-2: ### TODO: needs fix ### zarif from future: Probably doesn't 
@@ -199,15 +198,10 @@ def execute_ft_sequential(
             hparams
         )
 
-        opt.reset_cache(weight_to_projection_cache)
+        if not hparams.no_snap:
+            opt.reset_cache(weight_to_projection_cache)
 
-        old_task_loss = calculate_cache_loss(
-            model,
-            tok,
-            hparams.mom2_dataset,
-            sample_size=100
-        )
-        wandb.log({"Task 1 Loss": old_task_loss})
+        log_old_loss(model, tok, hparams)
 
     return model
 

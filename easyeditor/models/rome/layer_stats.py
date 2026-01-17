@@ -365,7 +365,7 @@ def layer_stats_kfac(
                 labels[labels == 0] = -100
                 labels[labels == tokenizer.pad_token_id] = -100
                 
-                model.zero_grad()
+                model.zero_grad(set_to_none=True)
                 outputs = model(**batch, use_cache=False)
                 logits = outputs.logits if hasattr(outputs, 'logits') else outputs
 
@@ -458,9 +458,8 @@ def layer_stats_kfac_one_pass(
         filename = stats_dir / file_extension
         
         if filename.exists() and not force_recompute:
-            # print(f"Loading cached KFAC matrices for {layer_name}")
-            loaded = torch.load(filename)
-            results[layer_name] = (loaded['A'], loaded['B'], loaded['N'])
+            loaded = torch.load(filename, map_location='cpu')
+            results[layer_name] = (loaded['A'].to(dtype=dtype), loaded['B'].to(dtype=dtype), loaded['N'])
         else:
             missing_layers.append(layer_name)
 
@@ -558,7 +557,7 @@ def layer_stats_kfac_one_pass(
     for p in model.parameters(): p.requires_grad = False
     model.requires_grad_(False)
     model.gradient_checkpointing_enable()
-    # model.enable_input_require_grads()
+    model.enable_input_require_grads()
     
     N = 0
     total_tokens = 0
@@ -571,7 +570,7 @@ def layer_stats_kfac_one_pass(
                 labels[labels == 0] = -100
                 labels[labels == tokenizer.pad_token_id] = -100
                 
-                model.zero_grad()
+                model.zero_grad(set_to_none=True)
                 outputs = model(**batch, use_cache=False)
                 logits = outputs.logits if hasattr(outputs, 'logits') else outputs
 
@@ -613,6 +612,11 @@ def layer_stats_kfac_one_pass(
                         matrices[layer_name]["A"].addmm_(input_flat.T, input_flat)
                         matrices[layer_name]["B"].addmm_(grad_flat.T, grad_flat)
 
+                        # if A or B has null, breakpoint
+                        if torch.any(torch.isnan(matrices[layer_name]["A"])) or torch.any(torch.isinf(matrices[layer_name]["A"])):
+                            print(f"NaN or Inf detected in A matrix of layer {layer_name}")
+                            breakpoint()
+
                     # Update counters (only once per batch)
                     total_tokens += current_valid_tokens
                     N += batch['input_ids'].size(0)
@@ -634,10 +638,12 @@ def layer_stats_kfac_one_pass(
         B = matrices[layer_name]["B"] / total_tokens
         
         # Save individually to match original file structure
-        file_extension = f"{model_name}/{ds_name}_stats/{layer_name}_{precision}_kfac{size_suffix}.npz"
-        filename = stats_dir / file_extension
-        filename.parent.mkdir(parents=True, exist_ok=True)
-        torch.save({'A': A, 'B': B, 'N': total_tokens}, filename)
+        # if force_recompute then we skip saving
+        if not force_recompute:
+            file_extension = f"{model_name}/{ds_name}_stats/{layer_name}_{precision}_kfac{size_suffix}.npz"
+            filename = stats_dir / file_extension
+            filename.parent.mkdir(parents=True, exist_ok=True)
+            torch.save({'A': A, 'B': B, 'N': total_tokens}, filename)
         
         results[layer_name] = (A, B, total_tokens)
 
@@ -663,7 +669,7 @@ def layer_stats_kfac_with_txt_tgt(
         precision = "float64"
     dtype = getattr(torch, precision)
 
-    print(f"Recalculating KFAC for {len(layer_names)} layers: {layer_names}")
+    print(f"Recalculating KFAC for {len(layer_names)} layers: {layer_names} for given txt/tgt")
 
     batch_size = 1 # we do entire batch in one go (hopefully)
 
@@ -715,7 +721,7 @@ def layer_stats_kfac_with_txt_tgt(
             labels[labels == 0] = -100
             labels[labels == tokenizer.pad_token_id] = -100
                     
-            model.zero_grad()
+            model.zero_grad(set_to_none=True)
             outputs = model(**encodings, use_cache=False)
             logits = outputs.logits if hasattr(outputs, 'logits') else outputs
 
@@ -749,11 +755,9 @@ def layer_stats_kfac_with_txt_tgt(
                     # Truncate to match valid mask logic (seq_len - 1)
                     feat_in = feat_in[:, :-1, :]
                     grad_out = grad_out[:, :-1, :]
-
                     kfac_dtype = layer_to_projection_cache[layer_name]["A"].dtype
                     input_flat = feat_in[valid_mask].to(dtype=kfac_dtype)
                     grad_flat = grad_out[valid_mask].to(dtype=kfac_dtype)
-
                     layer_to_projection_cache[layer_name]["A"].addmm_(input_flat.T, input_flat)
                     layer_to_projection_cache[layer_name]["B"].addmm_(grad_flat.T, grad_flat)
 
@@ -856,7 +860,7 @@ def calculate_cache_loss(
                 labels[labels == 0] = -100
                 labels[labels == tokenizer.pad_token_id] = -100
                 
-                model.zero_grad()
+                model.zero_grad(set_to_none=True)
                 outputs = model(**batch, use_cache=False)                
                 logits = outputs.logits if hasattr(outputs, 'logits') else outputs
                 

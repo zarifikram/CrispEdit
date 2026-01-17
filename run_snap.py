@@ -31,8 +31,12 @@ def get_arguments():
     parser.add_argument('--energy_threshold', type=float, default=0.9, help='Energy threshold for projection matrix computation.')
     parser.add_argument('--batch_size', type=int, default=32, help='Batch size for fine-tuning.')
     parser.add_argument('--num_edits', type=int, default=100, help='Sequential edit batch')
-    parser.add_argument('--sequential_edit', default='False', type=str)
+    parser.add_argument('--sequential_edit', action='store_true', help='Whether to use sequential editing or not. Default is False.')
     parser.add_argument('--wandb_project', type=str, default='JIGSAW', help='WandB project name.')
+    parser.add_argument('--recalculate_cache', action='store_true', help='Whether to recalculate the projection caches. Default is False.')
+    parser.add_argument('--recalculate_weight_threshold', type=float, default=0.25, help='Threshold for recalculating weight projection caches. [0.0-1.0]')
+    parser.add_argument('--no_snap', action='store_true', help='Disable SNAP optimization even if available.')
+    parser.add_argument('--disable_old_loss_check', action='store_true', help='Disable old loss check to speed up sequential editing.')
     args = parser.parse_args()
     return args
 
@@ -41,11 +45,26 @@ def get_hparams(args):
     hparams.batch_size = args.batch_size
     hparams.energy_threshold = args.energy_threshold
     hparams.mom2_n_samples = args.cache_sample_num
-
+    hparams.recalculate_cache = args.recalculate_cache
+    hparams.recalculate_weight_threshold = args.recalculate_weight_threshold
+    hparams.no_snap = args.no_snap
+    hparams.disable_old_loss_check = args.disable_old_loss_check
+    
     if args.sequential_edit:
         assert args.num_edits >= args.batch_size, "Makes no sense to have a batch_size bigger than number of edits..."
         hparams.num_edits = args.num_edits
     return hparams
+
+def calculate_model_name(args, hparams):
+    if args.no_snap:
+        # it's basically ft
+        name = f"{args.model}_FT_{args.data_type}_{args.energy_threshold}"
+    else:
+        name = f"{args.model}_{hparams.alg_name}_{args.data_type}_{args.energy_threshold}"
+    
+    if args.sequential_edit:
+        name += f"_sequential_{args.num_edits}"
+    return name
 
 if __name__ == "__main__":
     args = get_arguments()
@@ -54,13 +73,13 @@ if __name__ == "__main__":
     hparams = get_hparams(args)
 
     
-    save_model_name = f"{args.model}_{hparams.alg_name}_{args.data_type}_{args.energy_threshold}"
+    save_model_name = calculate_model_name(args, hparams)
     print(f"Model will be saved to BASE_DIR/{save_model_name}")
-    wandb.init(project=args.wandb_project, name=save_model_name, config=vars(hparams), mode="online")
+    wandb.init(project=args.wandb_project, name=save_model_name, config=vars(hparams), mode="disabled")
 
     MODEL_NAME = hparams.model_name
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, cache_dir=HF_CACHE_DIR)
-    model = AutoModelForCausalLM.from_pretrained(MODEL_NAME, cache_dir=HF_CACHE_DIR, device_map='auto')
+    model = AutoModelForCausalLM.from_pretrained(MODEL_NAME, cache_dir=HF_CACHE_DIR, device_map='cuda', torch_dtype=torch.bfloat16)
     device = model.device
 
     # set appropriate padding token

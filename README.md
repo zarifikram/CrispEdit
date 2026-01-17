@@ -65,14 +65,17 @@ python edit.py --editing_method AlphaEdit --hparams_dir ./hparams/AlphaEdit/llam
 #### Training
 - **SnapEdit**
   ```shell
-  python run_snap.py --model llama3-8b --data_type wiki --cache_sample_num 10000 --energy_threshold 0.8 --batch_size 32 --wandb_project JIGSAW
+  python run_snap.py --model llama3-8b --data_type wiki --cache_sample_num 100 --energy_threshold 0.8 --batch_size 32 --wandb_project JIGSAW
   ```
   > Note: Default datasets are `wiki`/`zsre`/`counterfact` which have 3000 data each. Try running `--data_type zsre10k` or `--data_type zsre163k`.
 - **SnapEdit Sequential**
   ```shell
-  python run_snap.py --model llama3-8b --data_type wiki --cache_sample_num 100 --energy_threshold 0.8 --batch_size 32 --wandb_project JIGSAW --sequential_edit True --num_edits 100
+  python run_snap.py --model llama3-8b --data_type wiki --cache_sample_num 100 --energy_threshold 0.8 --batch_size 32 --wandb_project JIGSAW --sequential_edit --num_edits 100
   ```
   > Note: It is important to set `--num_edits` whenever `--sequential_edit` is enabled to define the edit batch size or sequence limit.
+  > Note: We can set `--recalculate_cache` to recalculate the cache in the event of big weight changes. set `--recalculate_weight_threshold` (e.g., `--recalculate_weight_threshold 0.4`) to override the default 25% change.
+  > Note: Set `--disable_old_loss_check` to avoid calculating old loss every iteration.
+  > Note: Set `--no_snap` to avoid gradient projection (which essntially meaning regular finetuning.)
 - **MEMIT**
   ```shell
   python edit.py --model llama3-8b --data_type wiki --editing_method MEMIT --batch_size 32 --eval_every 512 --batch_edit True --wandb_project JIGSAW

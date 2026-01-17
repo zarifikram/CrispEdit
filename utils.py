@@ -20,14 +20,6 @@ def save_clean_results(results, logs_dir):
     print(f"Clean results saved to {output_file}")
     print("Preview:", results["results"])
 
-    # from lm_eval.utils import make_table
-    # results_filename = 'table.md'
-    # output_file = os.path.join(logs_dir, results_filename)
-
-    # with open(output_file, "w") as f:
-    #     f.write(make_table(results))
-    # print(f"Saved table to {output_file}")
-
 def print_time(process_name):
     now = datetime.now()
     formatted_time = now.strftime("%m-%d %H:%M:%S")

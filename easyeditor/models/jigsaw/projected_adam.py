@@ -57,10 +57,14 @@ class ProjectedAdam(Adam):
                 if grad.ndim != 2:
                     continue
                 
-                U_A = group['projection_cache_map'][p]['Ua'].to(device=grad.device)
-                U_B = group['projection_cache_map'][p]['Ub'].to(device=grad.device)
-                M = group['projection_cache_map'][p]['M'].to(device=grad.device)
+                U_A = group['projection_cache_map'][p]['Ua'].to(device=grad.device, dtype=grad.dtype)
+                U_B = group['projection_cache_map'][p]['Ub'].to(device=grad.device, dtype=grad.dtype)
+                M = group['projection_cache_map'][p]['M'].to(device=grad.device, dtype=grad.dtype)
                 grad_proj = U_A @ ( (U_A.T @ grad @ U_B) * M ) @ U_B.T
+                # if any grad is nan, breakpoint
+                if torch.any(torch.isnan(grad_proj)) or torch.any(torch.isinf(grad_proj)):
+                    print(f"NaN or Inf detected in projected gradient of parameter {p.shape}")
+                    breakpoint()
 
                 # lamb = 500
                 # A_inv = group['projection_cache_map'][p]['A_inv'].to(device=grad.device) * (1/lamb)
