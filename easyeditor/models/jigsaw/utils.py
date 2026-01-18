@@ -24,14 +24,13 @@ def get_rank_and_threshold_by_energy_ratio(eigenvalues, percent=0.9):
     return rank, threshold
 
 def calculate_projection_cache_with_kfac(A, B, energy_threhold=0.9):
-    # we will get A_inv, B_inv, U_A, U_B, M
     Sa, Ua = torch.linalg.eigh(A)
     Sb, Ub = torch.linalg.eigh(B)
 
     M = torch.outer(Sa, Sb)
     rank, null_threshold = get_rank_and_threshold_by_energy_ratio(M.view(-1), percent=energy_threhold)
     M = M < null_threshold
-    print(f"Rank is {rank} out of {A.shape[0]*B.shape[0]} total, null threshold: {null_threshold}")
+    # print(f"Rank is {rank} out of {A.shape[0]*B.shape[0]} total, null threshold: {null_threshold}")
 
     return {'Ua': Ua, 'Ub': Ub, 'M': M}
 
@@ -49,7 +48,7 @@ def get_cov_ab(
     Caches result for future use.
     """
     model_name = model.config._name_or_path.replace("/", "_")
-    print(f"Retrieving covariance statistics for {model_name} @ {layer_name}.")
+    # print(f"Retrieving covariance statistics for {model_name} @ {layer_name}.")
     A, B = layer_stats_kfac(
         model,
         tok,
@@ -117,7 +116,7 @@ def calculate_cov_cache_with_old_data(model, tok, hparams, force_recompute=False
     target_layers = list(layer_name_map.values())
 
     # 2. Get covariance stats for ALL layers in ONE pass
-    print(f"Retrieving covariance statistics for {len(target_layers)} layers...")
+    # print(f"Retrieving covariance statistics for {len(target_layers)} layers...")
     
     stats_dict = layer_stats_kfac_one_pass(
         model=model,
@@ -259,7 +258,6 @@ def build_optimizer_with_cov_caches(model, hparams, layer_to_cov_caches: List[Di
     
     if opt is not None:
         opt.reset_cache(weight_to_projection_cache)
-        print("Resetting optimizer projection caches.")
         return opt
     
     weights = get_weights(model, hparams, bias=True)
@@ -273,7 +271,7 @@ def build_optimizer_with_cov_caches(model, hparams, layer_to_cov_caches: List[Di
 def combine_layer_to_cov_caches(layer_to_cov_caches: List[Dict[str, Dict]]) -> Dict[str, Dict]:
     if len(layer_to_cov_caches) == 1:
         return layer_to_cov_caches[0]
-    print(f"Combining layer to covariance caches from {len(layer_to_cov_caches)} sources...")
+    # print(f"Combining layer to covariance caches from {len(layer_to_cov_caches)} sources...")
     combined_layer_to_cov_caches = {}
     for layer_name in layer_to_cov_caches[0].keys():
         A_list = [layer_to_cov[layer_name]['A'] for layer_to_cov in layer_to_cov_caches]
@@ -297,7 +295,7 @@ def calculate_projection_caches_from_cov_caches(model, hparams, layer_to_cov_cac
         B = cov_cache['B'].to(model.device)
         null_threshold = hparams.energy_threshold
         projection_cache = calculate_projection_cache_with_kfac(A, B, energy_threhold=null_threshold)
-        for key in projection_cache:
-            projection_cache[key] = projection_cache[key].to("cpu", dtype=torch.float32) # Convert to float32 to save space if precision allows
+        # for key in projection_cache:
+        #     projection_cache[key] = projection_cache[key].to("cpu", dtype=torch.float32) # Convert to float32 to save space if precision allows
         weight_to_projection_cache[weights[layer_name]] = projection_cache
     return weight_to_projection_cache

@@ -6,3 +6,4 @@ run_me.sh
 logs/
 toy_experiment/data/
 toy_experiment/model_cache/
+toy_experiment/plots/

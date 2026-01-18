@@ -25,15 +25,38 @@ class ProjectedAdam(Adam):
         for group in self.param_groups:
             group.update(defaults)
 
+    # def reset_cache_old(self, new_projection_cache_map):
+    #     """
+    #     Resets the projection cache with a new one.
+    #     Args:
+    #         new_projection_cache_map (dict): New mapping of parameters to their projection caches.
+    #     """
+    #     defaults = dict(projection_cache_map=new_projection_cache_map)
+    #     for group in self.param_groups:
+    #         group.update(defaults)
+
     def reset_cache(self, new_projection_cache_map):
-        """
-        Resets the projection cache with a new one.
-        Args:
-            new_projection_cache_map (dict): New mapping of parameters to their projection caches.
-        """
         defaults = dict(projection_cache_map=new_projection_cache_map)
         for group in self.param_groups:
             group.update(defaults)
+            
+            for p in group['params']:
+                if p not in self.state: continue
+                
+                if p not in new_projection_cache_map: continue
+                cache = new_projection_cache_map[p]
+                
+                U_A = cache['Ua'].to(device=p.device, dtype=p.dtype)
+                U_B = cache['Ub'].to(device=p.device, dtype=p.dtype)
+                M   = cache['M'].to(device=p.device, dtype=p.dtype)
+
+                state = self.state[p]
+                if 'exp_avg' in state:
+                    m = state['exp_avg']
+                    if m.ndim == 2:
+                        # Apply projection to the momentum buffer
+                        m_proj = U_A @ ( (U_A.T @ m @ U_B) * M ) @ U_B.T
+                        m.copy_(m_proj)
             
     @torch.no_grad()
     def step(self, closure=None):
@@ -61,10 +84,6 @@ class ProjectedAdam(Adam):
                 U_B = group['projection_cache_map'][p]['Ub'].to(device=grad.device, dtype=grad.dtype)
                 M = group['projection_cache_map'][p]['M'].to(device=grad.device, dtype=grad.dtype)
                 grad_proj = U_A @ ( (U_A.T @ grad @ U_B) * M ) @ U_B.T
-                # if any grad is nan, breakpoint
-                if torch.any(torch.isnan(grad_proj)) or torch.any(torch.isinf(grad_proj)):
-                    print(f"NaN or Inf detected in projected gradient of parameter {p.shape}")
-                    breakpoint()
 
                 # lamb = 500
                 # A_inv = group['projection_cache_map'][p]['A_inv'].to(device=grad.device) * (1/lamb)

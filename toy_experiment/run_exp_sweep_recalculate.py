@@ -859,10 +859,9 @@ def exp(method, energy_threshold, train_data_percentage, lr_ft):
 
 
 if __name__ == "__main__":
-    # do a log linspace between 1e-1 and 1e-11 with 20 points
-    vals = torch.linspace(-5, -0.75, steps=16)
+    vals = torch.linspace(-7, -.1, steps=20)
     vals = (1 - 10 ** vals).tolist()
-    print(vals)
+    print(f"Hyperparameter grid values: {vals}")
 
     threshold_grids = {
         'Snap_GN_Hessian': vals,
@@ -880,4 +879,4 @@ if __name__ == "__main__":
                 print(f"Running experiment: Method={method}, Energy thredhold%={energy_threshold}, TrainData%={train_data_perc}")
                 result = exp(method, energy_threshold, train_data_perc, LR_FT)
                 data.append(result)
-                save_model({'all_data': data}, f'model_cache/fine_tuning_experiment_results_fc2_recalculation_sweep_{train_data_perc}.pth')
+                save_model({'all_data': data}, f'model_cache/fine_tuning_experiment_results_fc2_recalculation_sweep_{train_data_perc}_special.pth')

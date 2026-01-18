@@ -355,7 +355,7 @@ def layer_stats_kfac(
         param.requires_grad = False
 
     model.requires_grad_(False)
-    model.gradient_checkpointing_enable()
+    # model.gradient_checkpointing_enable()
     
     with torch.enable_grad():
         for batch_group in progress(loader, total=batch_count):
@@ -466,7 +466,7 @@ def layer_stats_kfac_one_pass(
     if not missing_layers:
         return results
 
-    print(f"Recalculating KFAC for {len(missing_layers)} layers: {missing_layers}")
+    # print(f"Recalculating KFAC for {len(missing_layers)} layers: {missing_layers}")
 
     # --- 2. Dataset and Batching Logic (Restored from original) ---
     def get_ds():
@@ -486,7 +486,6 @@ def layer_stats_kfac_one_pass(
         # Hardcoded overrides from your original snippet
         maxlen = 2048
         maxlen = 512 
-        print(f"Max length is {maxlen}")
         return TokenizedDataset(raw_ds["train"], tokenizer, maxlen=maxlen)
 
     batch_size = 1
@@ -556,8 +555,8 @@ def layer_stats_kfac_one_pass(
     grads = {n: p.requires_grad for n, p in model.named_parameters()}
     for p in model.parameters(): p.requires_grad = False
     model.requires_grad_(False)
-    model.gradient_checkpointing_enable()
-    model.enable_input_require_grads()
+    # model.gradient_checkpointing_enable()
+    # model.enable_input_require_grads()
     
     N = 0
     total_tokens = 0
@@ -668,7 +667,7 @@ def layer_stats_kfac_with_txt_tgt(
         precision = "float64"
     dtype = getattr(torch, precision)
 
-    print(f"Recalculating KFAC for {len(layer_names)} layers: {layer_names} for given txt/tgt")
+    # print(f"Recalculating KFAC for {len(layer_names)} layers: {layer_names} for given txt/tgt")
 
     batch_size = 1
     layer_to_cov_cache = {}
@@ -702,19 +701,18 @@ def layer_stats_kfac_with_txt_tgt(
             "B": torch.zeros((out_dim, out_dim), dtype=dtype, device=model.device)
         }
         
-        # Register Hook
         handles.append(module.register_forward_hook(get_hook(layer_name)))
     
     # Backup gradients state
     grads = {n: p.requires_grad for n, p in model.named_parameters()}
     for p in model.parameters(): p.requires_grad = False
     model.requires_grad_(False)
-    model.gradient_checkpointing_enable()
-    model.enable_input_require_grads()
+    # model.gradient_checkpointing_enable()
+    # model.enable_input_require_grads()
     
     with torch.enable_grad():
         # possibly the worst code i've ever written in a while...
-        for txt_edit, tgt_edit in tqdm(zip(chunks(txt, batch_size), chunks(tgt, batch_size))):
+        for txt_edit, tgt_edit in tqdm(zip(chunks(txt, batch_size), chunks(tgt, batch_size)), total=len(txt)):
             inputs_targets = [txt_ + tgt_ for txt_, tgt_ in zip(txt_edit, tgt_edit)]
             encodings = tokenizer(inputs_targets, return_tensors="pt", padding=True).to(model.device)
             labels = encodings["input_ids"].clone()
@@ -821,7 +819,7 @@ def calculate_cache_loss(
         
         # maxlen = 2048  
         maxlen = 512  
-        return TokenizedDataset(raw_ds["val"], tokenizer, maxlen=maxlen)
+        return TokenizedDataset(raw_ds["train"], tokenizer, maxlen=maxlen) ### TODO: change back to val
 
     batch_size = 1 # Examine this many dataset texts at once
     npos = get_num_positions_from_model(model)
