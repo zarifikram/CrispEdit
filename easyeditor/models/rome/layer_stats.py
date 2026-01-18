@@ -819,7 +819,7 @@ def calculate_cache_loss(
         
         # maxlen = 2048  
         maxlen = 512  
-        return TokenizedDataset(raw_ds["train"], tokenizer, maxlen=maxlen) ### TODO: change back to val
+        return TokenizedDataset(raw_ds["val"], tokenizer, maxlen=maxlen)
 
     batch_size = 1 # Examine this many dataset texts at once
     npos = get_num_positions_from_model(model)
