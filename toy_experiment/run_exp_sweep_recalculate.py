@@ -858,20 +858,20 @@ def exp(method, energy_threshold, train_data_percentage, lr_ft):
     }
 
 
-    
 if __name__ == "__main__":
     # do a log linspace between 1e-1 and 1e-11 with 20 points
-    vals = torch.linspace(-4, -0.5, steps=2)
+    vals = torch.linspace(-5, -0.75, steps=16)
     vals = (1 - 10 ** vals).tolist()
     print(vals)
 
     threshold_grids = {
+        'Snap_GN_Hessian': vals,
+        'Snap_Hessian': vals,
         'Snap_KFAC': vals,
         'Snap_EKFAC': vals,
         'Adam-NSCL': vals,
-        'Snap_Hessian': vals,
-        'Snap_GN_Hessian': vals,
     }
+    
     train_data_perc = 0.15
 
     data = []

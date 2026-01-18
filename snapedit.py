@@ -8,7 +8,7 @@ import wandb
 from utils import chunks
 
 from easyeditor.models.jigsaw.Jigsaw_hparams import JigsawHyperParams
-from easyeditor.models.jigsaw.utils import cache_weights_to_cpu, calculate_cov_cache_with_old_data, calculate_cov_cache_with_request, build_optimizer_with_cov_caches, recalculate_cov_cache_if_weights_changed, combine_layer_to_cov_caches, log_old_loss, get_weights
+from easyeditor.models.jigsaw.utils import cache_weights_to_cpu, calculate_cov_cache_with_old_data, calculate_cov_cache_with_request, build_optimizer_with_cov_caches, recalculate_cov_cache_if_weights_changed, combine_layer_to_cov_caches, calculate_old_loss, get_weights
 from easyeditor.models.jigsaw import ProjectedAdam
 
 def execute_ft(
@@ -44,7 +44,8 @@ def execute_ft(
     for name, w in model.named_parameters():
         w.requires_grad = name in weights
 
-    log_old_loss(model, tok, hparams)
+    old_loss = calculate_old_loss(model, tok, hparams)
+    wandb.log(old_loss) # fine to log even if empty, basically no-op
     
     loss_meter = AverageMeter()
     for it in trange(hparams.num_steps):
@@ -85,10 +86,9 @@ def execute_ft(
                 )
                 if should_recalculate:
                     opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_old], opt=opt)
-                print(f"Step {it} Batch Loss: {loss.item()}")
 
-        log_old_loss(model, tok, hparams)
-        wandb.log({f"FT Loss": loss_meter.avg})
+        old_loss = calculate_old_loss(model, tok, hparams)
+        wandb.log({f"FT Loss": loss_meter.avg, **old_loss})
         
         if loss_meter.avg < 1e-2:
             break
@@ -126,7 +126,8 @@ def execute_ft_sequential(
     for name, w in model.named_parameters():
         w.requires_grad = name in weights
 
-    log_old_loss(model, tok, hparams)
+    old_loss = calculate_old_loss(model, tok, hparams)
+    wandb.log(old_loss) # fine to log even if empty, basically no-op
     layer_to_cov_cache_data = None
     
     loss_meter = AverageMeter()
@@ -174,7 +175,7 @@ def execute_ft_sequential(
                 loss_meter.update(loss.item(), n=labels.size(0))
             if loss_meter.avg < 1e-2:
                 break
-
+        print(f"Loss after editing number of samples {len(txt_edit)}: {loss_meter.avg}")
         layer_to_cov_cache_data_new = calculate_cov_cache_with_request(
             txt_edit,
             tgt_edit,
@@ -185,7 +186,8 @@ def execute_ft_sequential(
         layer_to_cov_cache_data = layer_to_cov_cache_data_new if layer_to_cov_cache_data is None else combine_layer_to_cov_caches([layer_to_cov_cache_data, layer_to_cov_cache_data_new])
         opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_data, layer_to_cov_cache_old], opt=opt)
 
-        log_old_loss(model, tok, hparams)
+        old_loss = calculate_old_loss(model, tok, hparams)
+        wandb.log(old_loss) # fine to log even if empty, basically no-op
 
     return model
 

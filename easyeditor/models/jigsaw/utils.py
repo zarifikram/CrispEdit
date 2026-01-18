@@ -230,9 +230,9 @@ def recalculate_cov_cache_if_weights_changed(model, tok, hparams, current_weight
 
     return current_weights_cpu, layer_to_cov_cache, True
 
-def log_old_loss(model, tok, hparams):
+def calculate_old_loss(model, tok, hparams):
     if hparams.disable_old_loss_check:
-        return
+        return {}
     with torch.no_grad():
         old_task_loss = calculate_cache_loss(
             model,
@@ -240,7 +240,7 @@ def log_old_loss(model, tok, hparams):
             hparams.mom2_dataset,
             sample_size=100
         )
-    wandb.log({"Task 1 Loss": old_task_loss})
+    return {"Task 1 Loss": old_task_loss}
 
 def build_optimizer_with_cov_caches(model, hparams, layer_to_cov_caches: List[Dict[str, Dict]], opt = None):
     if hparams.no_snap and opt is not None:
