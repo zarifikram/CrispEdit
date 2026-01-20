@@ -25,15 +25,15 @@ class ProjectedAdam(Adam):
         for group in self.param_groups:
             group.update(defaults)
 
-    # def reset_cache_old(self, new_projection_cache_map):
-    #     """
-    #     Resets the projection cache with a new one.
-    #     Args:
-    #         new_projection_cache_map (dict): New mapping of parameters to their projection caches.
-    #     """
-    #     defaults = dict(projection_cache_map=new_projection_cache_map)
-    #     for group in self.param_groups:
-    #         group.update(defaults)
+    def reset_cache_old(self, new_projection_cache_map):
+        """
+        Resets the projection cache with a new one.
+        Args:
+            new_projection_cache_map (dict): New mapping of parameters to their projection caches.
+        """
+        defaults = dict(projection_cache_map=new_projection_cache_map)
+        for group in self.param_groups:
+            group.update(defaults)
 
     def reset_cache(self, new_projection_cache_map):
         defaults = dict(projection_cache_map=new_projection_cache_map)

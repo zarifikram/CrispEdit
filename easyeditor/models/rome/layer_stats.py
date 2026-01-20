@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import random
 
 import torch
 from datasets import load_dataset
@@ -654,6 +655,7 @@ def layer_stats_kfac_with_txt_tgt(
     layer_names: List[str],
     txt,
     tgt,
+    sample_size=None,
     model_name=None,
     precision=None,
 ):
@@ -709,13 +711,22 @@ def layer_stats_kfac_with_txt_tgt(
     model.requires_grad_(False)
     # model.gradient_checkpointing_enable()
     # model.enable_input_require_grads()
+
+    if sample_size < len(txt):
+        indices = random.sample(range(len(txt)), sample_size)
+        txt_eval = [txt[i] for i in indices]
+        tgt_eval = [tgt[i] for i in indices]
+    else:
+        txt_eval = txt
+        tgt_eval = tgt
     
     with torch.enable_grad():
         # possibly the worst code i've ever written in a while...
-        for txt_edit, tgt_edit in tqdm(zip(chunks(txt, batch_size), chunks(tgt, batch_size)), total=len(txt)):
+        for txt_edit, tgt_edit in tqdm(zip(chunks(txt_eval, batch_size), chunks(tgt_eval, batch_size)), total=len(txt_eval)//batch_size):
             inputs_targets = [txt_ + tgt_ for txt_, tgt_ in zip(txt_edit, tgt_edit)]
             encodings = tokenizer(inputs_targets, return_tensors="pt", padding=True).to(model.device)
             labels = encodings["input_ids"].clone()
+            attention_mask = encodings["attention_mask"]
             
             for i, prompt in enumerate(txt_edit):
                 prompt_len = len(tokenizer.encode(prompt, add_special_tokens=True))
@@ -746,7 +757,8 @@ def layer_stats_kfac_with_txt_tgt(
                 assert captured_inputs is not None, "Did not really capture anything. Double check?"
 
                 # Mask is shared across layers for the same batch
-                valid_mask = (shift_labels != -100)
+                # valid_mask = (shift_labels != -100)
+                valid_mask = attention_mask[:, :-1].bool()
                 current_valid_tokens = valid_mask.sum().item()
 
                 for layer_name in layer_names:
@@ -784,6 +796,60 @@ def layer_stats_kfac_with_txt_tgt(
         torch.cuda.empty_cache()
 
     return layer_to_cov_cache
+
+def calculate_request_loss(model, tokenizer, txt, tgt, sample_size=1):
+    """
+    Calculates the average cross-entropy loss per target token.
+    Ignores the prompt (txt) tokens and padding in the loss calculation.
+    """
+    total_loss = 0.0
+    total_tokens = 0
+
+    # randomly sample sample_size examples from txt and tgt
+    if sample_size < len(txt):
+        indices = random.sample(range(len(txt)), sample_size)
+        txt_eval = [txt[i] for i in indices]
+        tgt_eval = [tgt[i] for i in indices]
+    else:
+        txt_eval = txt
+        tgt_eval = tgt
+    # Ensure model is in eval mode and we don't store unnecessary gradients
+    model.eval()
+    
+    batch_size = 1
+    with torch.no_grad():
+        for txt_edit, tgt_edit in tqdm(zip(chunks(txt_eval, batch_size), chunks(tgt_eval, batch_size)), total=len(txt_eval)//batch_size):
+            inputs_targets = [t + g for t, g in zip(txt_edit, tgt_edit)]
+            encodings = tokenizer(inputs_targets, return_tensors="pt", padding=True).to(model.device)
+            
+            labels = encodings["input_ids"].clone()
+            
+            for i, prompt in enumerate(txt_edit):
+                prompt_len = len(tokenizer.encode(prompt, add_special_tokens=True))
+                labels[i, :prompt_len] = -100
+
+            labels[labels == tokenizer.pad_token_id] = -100
+            
+            outputs = model(**encodings)
+            logits = outputs.logits
+
+            shift_logits = logits[..., :-1, :].contiguous()
+            shift_labels = labels[..., 1:].contiguous()
+
+            loss = torch.nn.functional.cross_entropy(
+                shift_logits.view(-1, shift_logits.size(-1)),
+                shift_labels.view(-1),
+                ignore_index=-100,
+                reduction='sum'
+            )
+
+            current_valid_tokens = (shift_labels != -100).sum().item()
+            total_loss += loss.item()
+            total_tokens += current_valid_tokens
+
+    avg_loss = total_loss / total_tokens if total_tokens > 0 else 0
+    model.train()
+    return avg_loss
     
 def calculate_cache_loss(
     model,

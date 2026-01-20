@@ -7,3 +7,6 @@ logs/
 toy_experiment/data/
 toy_experiment/model_cache/
 toy_experiment/plots/
+*.slurm
+eval.sh
+run.sh

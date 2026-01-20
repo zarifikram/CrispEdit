@@ -2,7 +2,8 @@ import gc
 import wandb
 
 from easyeditor.models.jigsaw.projected_adam import ProjectedAdam
-from ..rome.layer_stats import layer_stats_kfac, layer_stats_kfac_one_pass, layer_stats_kfac_with_txt_tgt, calculate_cache_loss
+from easyeditor.models.jigsaw.projected_sgd import ProjectedSGD
+from ..rome.layer_stats import layer_stats_kfac, layer_stats_kfac_one_pass, layer_stats_kfac_with_txt_tgt, calculate_cache_loss, calculate_request_loss
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from .Jigsaw_hparams import JigsawHyperParams
@@ -92,6 +93,7 @@ def get_weights(
     bias: bool,
     to_cpu: bool = False,
 ) -> Dict[str, torch.Tensor]:
+    bias = False # always ignore bias for now
     weights = {
         n: (p.detach().cpu().clone() if to_cpu else p)
         for n, p in model.named_parameters()
@@ -162,6 +164,7 @@ def calculate_cov_cache_with_old_data(model, tok, hparams, force_recompute=False
 def calculate_cov_cache_with_request(txt, tgt, model, tok, hparams):
     if hparams.no_snap:
         return None
+    
     layer_to_cov_cache = {}
     cov_stats_dict = layer_stats_kfac_with_txt_tgt(
         model,
@@ -170,6 +173,7 @@ def calculate_cov_cache_with_request(txt, tgt, model, tok, hparams):
         txt=txt,
         tgt=tgt,
         precision=hparams.mom2_dtype,
+        sample_size=hparams.edit_n_samples
     )
 
     for layer_num in hparams.layers:
@@ -241,6 +245,19 @@ def calculate_old_loss(model, tok, hparams):
         )
     return {"Task 1 Loss": old_task_loss}
 
+def calculate_old_edit_loss(txt, tgt, model, tok):
+    if len(txt) == 0:
+        return {}
+    with torch.no_grad():
+        request_loss = calculate_request_loss(
+            model,
+            tok,
+            txt,
+            tgt,
+            sample_size=100
+        )
+    return {"Old Edit Loss": request_loss}
+
 def build_optimizer_with_cov_caches(model, hparams, layer_to_cov_caches: List[Dict[str, Dict]], opt = None):
     if hparams.no_snap and opt is not None:
         return opt
@@ -261,6 +278,11 @@ def build_optimizer_with_cov_caches(model, hparams, layer_to_cov_caches: List[Di
         return opt
     
     weights = get_weights(model, hparams, bias=True)
+    return ProjectedSGD(
+        [v for _, v in weights.items()],
+        projection_cache_map = weight_to_projection_cache,
+        lr=hparams.lr,
+    )
     return ProjectedAdam(
         [v for _, v in weights.items()],
         projection_cache_map = weight_to_projection_cache,

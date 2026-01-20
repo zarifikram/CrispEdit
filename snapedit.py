@@ -8,8 +8,7 @@ import wandb
 from utils import chunks
 
 from easyeditor.models.jigsaw.Jigsaw_hparams import JigsawHyperParams
-from easyeditor.models.jigsaw.utils import cache_weights_to_cpu, calculate_cov_cache_with_old_data, calculate_cov_cache_with_request, build_optimizer_with_cov_caches, recalculate_cov_cache_if_weights_changed, combine_layer_to_cov_caches, calculate_old_loss, get_weights
-from easyeditor.models.jigsaw import ProjectedAdam
+from easyeditor.models.jigsaw.utils import cache_weights_to_cpu, calculate_cov_cache_with_old_data, calculate_cov_cache_with_request, build_optimizer_with_cov_caches, recalculate_cov_cache_if_weights_changed, combine_layer_to_cov_caches, calculate_old_loss, get_weights, calculate_old_edit_loss
 
 def execute_ft(
     model: AutoModelForCausalLM,
@@ -134,6 +133,9 @@ def execute_ft_sequential(
     random.shuffle(requests)
     texts = [r["prompt"] for r in requests]
     targets = [r["target_new"] for r in requests]
+
+    if hparams.store_chunks:
+        txt_chunks, tgt_chunks = [], []
     # split into batches
     for txt_edit, tgt_edit in zip(
         chunks(texts, hparams.num_edits), chunks(targets, hparams.num_edits)
@@ -156,9 +158,6 @@ def execute_ft_sequential(
                 outputs = model(**encodings, labels=labels)
                 loss = outputs.loss
 
-                if torch.isnan(loss) or torch.isinf(loss):
-                    print("NaN or Inf detected in loss")
-                    breakpoint()
                 if loss.item() >= 1e-2:
                     loss.backward()
                     opt.step()
@@ -170,24 +169,41 @@ def execute_ft_sequential(
                         layer_to_cov_cache_old,
                     )
                     if should_recalculate:
-                        opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_old] if layer_to_cov_cache_data is None else [layer_to_cov_cache_data, layer_to_cov_cache_old], opt=opt)
+                        if hparams.store_chunks and hparams.edit_n_samples > 0:
+                            layer_to_cov_cache_data = calculate_cov_cache_with_request(
+                                txt_chunks,
+                                tgt_chunks,
+                                model,
+                                tok,
+                                hparams,
+                            )
+                            opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_data, layer_to_cov_cache_old], opt=opt)
+                        else:
+                            opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_old] if layer_to_cov_cache_data is None else [layer_to_cov_cache_data, layer_to_cov_cache_old], opt=opt)
 
                 loss_meter.update(loss.item(), n=labels.size(0))
             if loss_meter.avg < 1e-2:
                 break
         print(f"Loss after editing number of samples {len(txt_edit)}: {loss_meter.avg}")
-        layer_to_cov_cache_data_new = calculate_cov_cache_with_request(
-            txt_edit,
-            tgt_edit,
-            model,
-            tok,
-            hparams,
-        )
-        layer_to_cov_cache_data = layer_to_cov_cache_data_new if layer_to_cov_cache_data is None else combine_layer_to_cov_caches([layer_to_cov_cache_data, layer_to_cov_cache_data_new])
-        opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_data, layer_to_cov_cache_old], opt=opt)
+        if hparams.store_chunks:
+            txt_chunks.extend(txt_edit)
+            tgt_chunks.extend(tgt_edit)
+        if not hparams.disable_cache_after_edit:
+            layer_to_cov_cache_data_new = calculate_cov_cache_with_request(
+                txt_chunks,
+                tgt_chunks,
+                model,
+                tok,
+                hparams,
+            )
+            layer_to_cov_cache_data = layer_to_cov_cache_data_new if layer_to_cov_cache_data is None else combine_layer_to_cov_caches([layer_to_cov_cache_data, layer_to_cov_cache_data_new])
+            opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_data, layer_to_cov_cache_old], opt=opt)
 
-        old_loss = calculate_old_loss(model, tok, hparams)
-        wandb.log(old_loss) # fine to log even if empty, basically no-op
+        metrics = calculate_old_loss(model, tok, hparams)
+        if hparams.store_chunks:
+            old_edit_loss = calculate_old_edit_loss(txt_chunks, tgt_chunks, model, tok)
+            metrics.update(old_edit_loss)
+        wandb.log(metrics) # fine to log even if empty, basically no-op
 
     return model
 
