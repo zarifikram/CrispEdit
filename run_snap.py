@@ -26,8 +26,9 @@ torch.backends.cudnn.deterministic = True
 def get_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', required=True, type=str)
-    parser.add_argument('--data_type', required=True, type=str, default='zsre', choices=['zsre', 'counterfact', 'wiki', 'safeedit_train', 'safeedit_test'])
+    parser.add_argument('--data_type', required=True, type=str, default='zsre', choices=['zsre', 'zsre10k', 'counterfact', 'wiki', 'safeedit_train', 'safeedit_test'])
     parser.add_argument('--cache_sample_num', type=int, default=1000, help='Number of samples to use for caching projection matrices.')
+    parser.add_argument('--edit_sample_num', type=int, default=1000, help='Number of samples to use for calculating old loss during editing.')
     parser.add_argument('--energy_threshold', type=float, default=0.9, help='Energy threshold for projection matrix computation.')
     parser.add_argument('--batch_size', type=int, default=32, help='Batch size for fine-tuning.')
     parser.add_argument('--num_edits', type=int, default=100, help='Sequential edit batch')
@@ -37,6 +38,7 @@ def get_arguments():
     parser.add_argument('--recalculate_weight_threshold', type=float, default=0.25, help='Threshold for recalculating weight projection caches. [0.0-1.0]')
     parser.add_argument('--no_snap', action='store_true', help='Disable SNAP optimization even if available.')
     parser.add_argument('--disable_old_loss_check', action='store_true', help='Disable old loss check to speed up sequential editing.')
+    parser.add_argument('--edit_cache_style', type=str, default='mix', choices=['sequential', 'mix', 'disable'], help='Style of cache data to use during sequential editing. Sequential: cache from current chunk and combine with previous chunk cache. Mix: sample data from pretrain and previous chunks. Disable: do not use cache data.')
     args = parser.parse_args()
     return args
 
@@ -45,10 +47,12 @@ def get_hparams(args):
     hparams.batch_size = args.batch_size
     hparams.energy_threshold = args.energy_threshold
     hparams.mom2_n_samples = args.cache_sample_num
+    hparams.edit_n_samples = args.edit_sample_num
     hparams.recalculate_cache = args.recalculate_cache
     hparams.recalculate_weight_threshold = args.recalculate_weight_threshold
     hparams.no_snap = args.no_snap
     hparams.disable_old_loss_check = args.disable_old_loss_check
+    hparams.edit_cache_style = args.edit_cache_style
     
     if args.sequential_edit:
         assert args.num_edits >= args.batch_size, "Makes no sense to have a batch_size bigger than number of edits..."
@@ -60,13 +64,15 @@ def calculate_model_name(args, hparams):
         # it's basically ft
         name = f"{args.model}_FT_{args.data_type}_{args.energy_threshold}"
     else:
-        name = f"{args.model}_{hparams.alg_name}_{args.data_type}_{args.energy_threshold}"
+        name = f"{args.model}_{hparams.alg_name}_{args.data_type}_{args.energy_threshold}_{hparams.mom2_n_samples}"
     
     if args.sequential_edit:
         name += f"_sequential_{args.num_edits}"
     
     if hparams.recalculate_cache:
-        name += f"_recalc_cache_{args.recalculate_weight_threshold}"
+        name += f"_recalc_cache_{args.recalculate_weight_threshold}_edit_sample_{hparams.edit_n_samples}"
+
+    name += f"_edit_cache_{hparams.edit_cache_style}"
     return name
 
 if __name__ == "__main__":

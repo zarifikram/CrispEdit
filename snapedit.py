@@ -8,7 +8,7 @@ import wandb
 from utils import chunks
 
 from easyeditor.models.jigsaw.Jigsaw_hparams import JigsawHyperParams
-from easyeditor.models.jigsaw.utils import cache_weights_to_cpu, calculate_cov_cache_with_old_data, calculate_cov_cache_with_request, build_optimizer_with_cov_caches, recalculate_cov_cache_if_weights_changed, combine_layer_to_cov_caches, calculate_old_loss, get_weights, calculate_old_edit_loss
+from easyeditor.models.jigsaw.utils import cache_weights_to_cpu, calculate_cov_cache_with_old_data, calculate_cov_cache_with_request, build_optimizer_with_cov_caches, build_optimizer_with_cov_cache_pair, recalculate_cov_cache_if_weights_changed, combine_layer_to_cov_caches, calculate_old_loss, get_weights, calculate_old_edit_loss, calculate_edit_singular_values_kfac
 
 def execute_ft(
     model: AutoModelForCausalLM,
@@ -86,8 +86,11 @@ def execute_ft(
                 if should_recalculate:
                     opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_old], opt=opt)
 
-        old_loss = calculate_old_loss(model, tok, hparams)
-        wandb.log({f"FT Loss": loss_meter.avg, **old_loss})
+        metrics = calculate_old_loss(model, tok, hparams)
+        metrics.update({f"FT Loss": loss_meter.avg})
+        old_edit_loss = calculate_old_edit_loss(texts, targets, model, tok)
+        metrics.update(old_edit_loss)
+        wandb.log(metrics) # fine to log even if empty, basically no-op
         
         if loss_meter.avg < 1e-2:
             break
@@ -112,6 +115,7 @@ def execute_ft_sequential(
     layer_to_cov_cache_old = calculate_cov_cache_with_old_data(
         model, tok, hparams, force_recompute=False
     )
+    # opt = build_optimizer_with_cov_caches(model, hparams, layer_to_cov_caches=None)
     opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_old])
     
     requests = deepcopy(requests)
@@ -134,13 +138,14 @@ def execute_ft_sequential(
     texts = [r["prompt"] for r in requests]
     targets = [r["target_new"] for r in requests]
 
-    if hparams.store_chunks:
-        txt_chunks, tgt_chunks = [], []
+    txt_chunks, tgt_chunks = [], []
+
     # split into batches
     for txt_edit, tgt_edit in zip(
         chunks(texts, hparams.num_edits), chunks(targets, hparams.num_edits)
     ):
-        for it in trange(hparams.num_steps):
+        pbar = trange(hparams.num_steps)
+        for it in pbar:
             loss_meter.reset()
             for txt, tgt in zip(
                 chunks(txt_edit, hparams.batch_size), chunks(tgt_edit, hparams.batch_size)
@@ -168,41 +173,60 @@ def execute_ft_sequential(
                         current_weights_cpu,
                         layer_to_cov_cache_old,
                     )
-                    if should_recalculate:
-                        if hparams.store_chunks and hparams.edit_n_samples > 0:
+                    if should_recalculate:                            
+                        if hparams.edit_n_samples > 0 and len(txt_chunks) > 0:
+                            old_txt_list = [item for sublist in txt_chunks for item in sublist]
+                            old_tgt_list = [item for sublist in tgt_chunks for item in sublist]
+
                             layer_to_cov_cache_data = calculate_cov_cache_with_request(
-                                txt_chunks,
-                                tgt_chunks,
+                                old_txt_list,
+                                old_tgt_list,
                                 model,
                                 tok,
                                 hparams,
                             )
-                            opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_data, layer_to_cov_cache_old], opt=opt)
+                            opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_old, layer_to_cov_cache_data], opt=opt)
                         else:
-                            opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_old] if layer_to_cov_cache_data is None else [layer_to_cov_cache_data, layer_to_cov_cache_old], opt=opt)
-
+                            opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_old] if layer_to_cov_cache_data is None else [layer_to_cov_cache_old, layer_to_cov_cache_data], opt=opt)
                 loss_meter.update(loss.item(), n=labels.size(0))
+            pbar.set_postfix({"loss": f"{loss_meter.avg:.4f}"})
             if loss_meter.avg < 1e-2:
                 break
         print(f"Loss after editing number of samples {len(txt_edit)}: {loss_meter.avg}")
-        if hparams.store_chunks:
-            txt_chunks.extend(txt_edit)
-            tgt_chunks.extend(tgt_edit)
-        if not hparams.disable_cache_after_edit:
+        
+        txt_chunks.append(txt_edit)
+        tgt_chunks.append(tgt_edit)
+        
+        if hparams.edit_cache_style == 'sequential':
             layer_to_cov_cache_data_new = calculate_cov_cache_with_request(
-                txt_chunks,
-                tgt_chunks,
+                txt_edit,
+                tgt_edit,
                 model,
                 tok,
                 hparams,
             )
-            layer_to_cov_cache_data = layer_to_cov_cache_data_new if layer_to_cov_cache_data is None else combine_layer_to_cov_caches([layer_to_cov_cache_data, layer_to_cov_cache_data_new])
-            opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_data, layer_to_cov_cache_old], opt=opt)
+            if layer_to_cov_cache_data is None:
+                layer_to_cov_cache_data = layer_to_cov_cache_data_new
+            else:
+                layer_to_cov_cache_data = combine_layer_to_cov_caches([layer_to_cov_cache_data, layer_to_cov_cache_data_new], normalize_trace_with_first=True)
+            opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_old, layer_to_cov_cache_data], opt=opt)
+        elif hparams.edit_cache_style == 'mix':
+            old_txt_list = [item for sublist in txt_chunks for item in sublist]
+            old_tgt_list = [item for sublist in tgt_chunks for item in sublist]
+
+            layer_to_cov_cache_data_pretrain_mix = calculate_cov_cache_with_request(
+                old_txt_list,
+                old_tgt_list,
+                model,
+                tok,
+                hparams,
+            )
+
+            opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_data_pretrain_mix], opt=opt)
 
         metrics = calculate_old_loss(model, tok, hparams)
-        if hparams.store_chunks:
-            old_edit_loss = calculate_old_edit_loss(txt_chunks, tgt_chunks, model, tok)
-            metrics.update(old_edit_loss)
+        old_edit_loss = calculate_old_edit_loss(txt_chunks, tgt_chunks, model, tok)
+        metrics.update(old_edit_loss)
         wandb.log(metrics) # fine to log even if empty, basically no-op
 
     return model
@@ -238,3 +262,71 @@ def setup_requests_for_safeedit(requests: List[Dict]) -> List[Dict]:
         }
         new_requests.append(new_request)
     return new_requests
+
+def inspect_model_structure(model):
+    """
+    Thoroughly inspects a Hugging Face/PyTorch model to debug 
+    trainable parameters, frozen weights, and buffers.
+    """
+    print("=" * 100)
+    print(f"MODEL DEBUG INSPECTION")
+    print("=" * 100)
+    print(f"Model Class: {type(model).__name__}")
+    print(f"Model Mode:  {'TRAINING' if model.training else 'EVAL'} (affects Dropout/BatchNorm)")
+    print("-" * 100)
+
+    total_params = 0
+    trainable_params = 0
+    frozen_params = 0
+    buffer_count = 0
+    total_memory_bytes = 0
+    
+    # --- 1. PARAMETERS (Weights & Biases) ---
+    print(f"{'PARAMETER NAME':<55} | {'SHAPE':<20} | {'DTYPE':<10} | {'TRAINABLE'}")
+    print("-" * 100)
+    
+    for name, param in model.named_parameters():
+        # Stats
+        num_params = param.numel()
+        mem_size = num_params * param.element_size()
+        total_memory_bytes += mem_size
+        total_params += num_params
+        
+        # Trainable status
+        if param.requires_grad:
+            trainable_params += num_params
+            grad_status = "✅ YES"
+        else:
+            frozen_params += num_params
+            grad_status = "🔒 NO"
+            
+        # Print row
+        print(f"{name:<55} | {str(tuple(param.shape)):<20} | {str(param.dtype).replace('torch.', ''):<10} | {grad_status}")
+
+    print("-" * 100)
+    
+    # --- 2. BUFFERS (Non-trainable states like BN running means, position IDs) ---
+    # These are often overlooked but are "changable" during forward pass!
+    buffers = list(model.named_buffers())
+    if buffers:
+        print("\n" + "=" * 100)
+        print("BUFFERS (Non-trainable state, e.g., Running Mean/Var, Position IDs)")
+        print("-" * 100)
+        print(f"{'BUFFER NAME':<55} | {'SHAPE':<20} | {'DTYPE':<10}")
+        print("-" * 100)
+        for name, buf in buffers:
+            buffer_count += 1
+            mem_size = buf.numel() * buf.element_size()
+            total_memory_bytes += mem_size
+            print(f"{name:<55} | {str(tuple(buf.shape)):<20} | {str(buf.dtype).replace('torch.', ''):<10}")
+    
+    # --- 3. SUMMARY STATS ---
+    print("\n" + "=" * 100)
+    print("SUMMARY")
+    print("-" * 100)
+    print(f"Total Parameters:    {total_params:,}")
+    print(f"Trainable Params:    {trainable_params:,} ({100 * trainable_params / total_params if total_params > 0 else 0:.2f}%)")
+    print(f"Frozen Params:       {frozen_params:,}")
+    print(f"Total Buffers:       {buffer_count}")
+    print(f"Approx Model Size:   {total_memory_bytes / (1024**2):.2f} MB")
+    print("=" * 100)

@@ -30,11 +30,22 @@ class ProjectedSGD(Optimizer):
                 if grad.ndim != 2:
                     continue
                 
+                if not group['projection_cache_map'] or (p not in group['projection_cache_map']):
+                    p.add_(grad, alpha=-lr)
+                    continue
                 U_A = group['projection_cache_map'][p]['Ua'].to(device=grad.device, dtype=grad.dtype)
                 U_B = group['projection_cache_map'][p]['Ub'].to(device=grad.device, dtype=grad.dtype)
                 M = group['projection_cache_map'][p]['M'].to(device=grad.device, dtype=grad.dtype)
-                grad_proj = U_A @ ( (U_A.T @ grad @ U_B) * M ) @ U_B.T
+                grad = U_B @ ( (U_B.T @ grad @ U_A) * M.T ) @ U_A.T
 
-                p.add_(grad_proj, alpha=-lr)
+                p.add_(grad, alpha=-lr)
+                # g_norm = grad.norm().item()
+                # proj_norm = grad_proj.norm().item()
+                # ratio = proj_norm / (g_norm + 1e-8)
+
+                # print(f"Param shape: {grad.shape}")
+                # print(f"Original Grad Norm: {g_norm:.6f}")
+                # print(f"Projected Grad Norm: {proj_norm:.6f} (Ratio: {ratio:.4f})")
+                # print(f"M max value: {M.max().item()}, M min value: {M.min().item()}")
 
         return loss

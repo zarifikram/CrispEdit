@@ -3,7 +3,7 @@ import wandb
 
 from easyeditor.models.jigsaw.projected_adam import ProjectedAdam
 from easyeditor.models.jigsaw.projected_sgd import ProjectedSGD
-from ..rome.layer_stats import layer_stats_kfac, layer_stats_kfac_one_pass, layer_stats_kfac_with_txt_tgt, calculate_cache_loss, calculate_request_loss
+from ..rome.layer_stats import layer_stats_kfac, layer_stats_kfac_one_pass, layer_stats_kfac_with_txt_tgt, layer_stats_kfac_fisher_with_txt_tgt, calculate_cache_loss, calculate_request_loss
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from .Jigsaw_hparams import JigsawHyperParams
@@ -32,6 +32,20 @@ def calculate_projection_cache_with_kfac(A, B, energy_threhold=0.9):
     rank, null_threshold = get_rank_and_threshold_by_energy_ratio(M.view(-1), percent=energy_threhold)
     M = M < null_threshold
     # print(f"Rank is {rank} out of {A.shape[0]*B.shape[0]} total, null threshold: {null_threshold}")
+
+    return {'Ua': Ua, 'Ub': Ub, 'M': M}
+
+def calculate_projection_cache_with_kfac_pair(pretrain_A, pretrain_B, edit_Sa_list, edit_Sb_list, energy_threhold=0.9):
+    Sa, Ua = torch.linalg.eigh(pretrain_A)
+    Sb, Ub = torch.linalg.eigh(pretrain_B)
+
+    M = torch.outer(Sa, Sb)
+    for edit_Sa, edit_Sb in zip(edit_Sa_list, edit_Sb_list):
+        M += torch.outer(edit_Sa, edit_Sb)
+
+    rank, null_threshold = get_rank_and_threshold_by_energy_ratio(M.view(-1), percent=energy_threhold)
+    M = M < null_threshold
+    print(f"Rank is {rank} out of {pretrain_A.shape[0]*pretrain_B.shape[0]} total, null threshold: {null_threshold}")
 
     return {'Ua': Ua, 'Ub': Ub, 'M': M}
 
@@ -137,8 +151,8 @@ def calculate_cov_cache_with_old_data(model, tok, hparams, force_recompute=False
         layer_name = layer_name_map[layer_num]
         A, B, num_samples = stats_dict.pop(layer_name)
 
-        if hparams.model_name not in ["Llama3-8B", "phi-1.5"]:
-            A, B = B, A
+        # if hparams.model_name not in ["Llama3-8B", "phi-1.5"]:
+        #     A, B = B, A
                 
         cov_cache = {'A': A.to("cpu", dtype=torch.float32), 'B': B.to("cpu", dtype=torch.float32), 'num_samples': num_samples}
             
@@ -173,20 +187,19 @@ def calculate_cov_cache_with_request(txt, tgt, model, tok, hparams):
         txt=txt,
         tgt=tgt,
         precision=hparams.mom2_dtype,
-        sample_size=hparams.edit_n_samples
+        sample_size=hparams.edit_n_samples,
+        to_collect=["mom2"],
+        add_pretrain_data=(hparams.edit_cache_style == "mix"),
+        pretrain_sample_size=hparams.mom2_n_samples,
     )
 
     for layer_num in hparams.layers:
         layer_name = hparams.rewrite_module_tmp.format(layer_num)
         A, B, num_samples = cov_stats_dict.pop(layer_name)
 
-        if hparams.model_name not in ["Llama3-8B", "phi-1.5"]:
-            A, B = B, A
-
         A = A.to(model.device, non_blocking=True)
         B = B.to(model.device, non_blocking=True)
     
-
         cov_cache = {'A': A.to("cpu", dtype=torch.float32), 'B': B.to("cpu", dtype=torch.float32), 'num_samples': num_samples}
         layer_to_cov_cache[layer_name] = cov_cache
 
@@ -245,20 +258,59 @@ def calculate_old_loss(model, tok, hparams):
         )
     return {"Task 1 Loss": old_task_loss}
 
-def calculate_old_edit_loss(txt, tgt, model, tok):
-    if len(txt) == 0:
+def calculate_old_edit_loss(txt_chunks, tgt_chunks, model, tok):
+    if len(txt_chunks) == 0:
         return {}
+    mets = {}
     with torch.no_grad():
-        request_loss = calculate_request_loss(
-            model,
-            tok,
-            txt,
-            tgt,
-            sample_size=100
-        )
-    return {"Old Edit Loss": request_loss}
+        for i, (txt, tgt) in enumerate(zip(txt_chunks, tgt_chunks)):
+            request_loss = calculate_request_loss(
+                model,
+                tok,
+                txt,
+                tgt,
+                sample_size=10
+            )
+            mets.update({f"OLD_EDIT_LOSS/Old Edit Loss Chunk {i}": request_loss})
+    avg_loss = sum(mets.values()) / len(mets)
+    mets.update({"Task 2 Loss": avg_loss})
+    return mets
 
 def build_optimizer_with_cov_caches(model, hparams, layer_to_cov_caches: List[Dict[str, Dict]], opt = None):
+    if hparams.no_snap and opt is not None:
+        return opt
+
+    if hparams.no_snap:
+        weights = get_weights(model, hparams, bias=True)
+        return torch.optim.Adam(
+            [v for _, v in weights.items()],
+            lr=hparams.lr,
+            weight_decay=hparams.weight_decay,
+        )
+    if layer_to_cov_caches:
+        combined_layer_to_cov_cache = combine_layer_to_cov_caches(layer_to_cov_caches)
+        weight_to_projection_cache = calculate_projection_caches_from_cov_caches(model, hparams, combined_layer_to_cov_cache)
+    else:
+        weight_to_projection_cache = None
+    
+    if opt is not None:
+        opt.reset_cache(weight_to_projection_cache)
+        return opt
+    
+    weights = get_weights(model, hparams, bias=True)
+    # return ProjectedSGD(
+    #     [v for _, v in weights.items()],
+    #     projection_cache_map = weight_to_projection_cache,
+    #     lr=hparams.lr,
+    # )
+    return ProjectedAdam(
+        [v for _, v in weights.items()],
+        projection_cache_map = weight_to_projection_cache,
+        lr=hparams.lr,
+        weight_decay=hparams.weight_decay,
+    )
+    
+def build_optimizer_with_cov_cache_pair(model, hparams, pretrain_layer_to_cov_caches: Dict[str, Dict], edit_singular_values_list: List[Dict[str, Dict]], opt = None):
     if hparams.no_snap and opt is not None:
         return opt
 
@@ -270,19 +322,18 @@ def build_optimizer_with_cov_caches(model, hparams, layer_to_cov_caches: List[Di
             weight_decay=hparams.weight_decay,
         )
     
-    combined_layer_to_cov_cache = combine_layer_to_cov_caches(layer_to_cov_caches)
-    weight_to_projection_cache = calculate_projection_caches_from_cov_caches(model, hparams, combined_layer_to_cov_cache)
+    weight_to_projection_cache = calculate_projection_caches_from_cov_caches_pair(model, hparams, pretrain_layer_to_cov_caches, edit_singular_values_list)
     
     if opt is not None:
         opt.reset_cache(weight_to_projection_cache)
         return opt
     
     weights = get_weights(model, hparams, bias=True)
-    return ProjectedSGD(
-        [v for _, v in weights.items()],
-        projection_cache_map = weight_to_projection_cache,
-        lr=hparams.lr,
-    )
+    # return ProjectedSGD(
+    #     [v for _, v in weights.items()],
+    #     projection_cache_map = weight_to_projection_cache,
+    #     lr=hparams.lr,
+    # )
     return ProjectedAdam(
         [v for _, v in weights.items()],
         projection_cache_map = weight_to_projection_cache,
@@ -290,10 +341,9 @@ def build_optimizer_with_cov_caches(model, hparams, layer_to_cov_caches: List[Di
         weight_decay=hparams.weight_decay,
     )
 
-def combine_layer_to_cov_caches(layer_to_cov_caches: List[Dict[str, Dict]]) -> Dict[str, Dict]:
+def combine_layer_to_cov_caches(layer_to_cov_caches: List[Dict[str, Dict]], normalize_trace_with_first=False) -> Dict[str, Dict]:
     if len(layer_to_cov_caches) == 1:
         return layer_to_cov_caches[0]
-    # print(f"Combining layer to covariance caches from {len(layer_to_cov_caches)} sources...")
     combined_layer_to_cov_caches = {}
     for layer_name in layer_to_cov_caches[0].keys():
         A_list = [layer_to_cov[layer_name]['A'] for layer_to_cov in layer_to_cov_caches]
@@ -302,10 +352,30 @@ def combine_layer_to_cov_caches(layer_to_cov_caches: List[Dict[str, Dict]]) -> D
         combined_A = sum([A * num_sample for A, num_sample in zip(A_list, num_samples_list)]) / sum(num_samples_list)
         combined_B = sum([B * num_sample for B, num_sample in zip(B_list, num_samples_list)]) / sum(num_samples_list)
         combined_num_samples = sum(num_samples_list)
+
         combined_layer_to_cov_caches[layer_name] = {
             'A': combined_A,
             'B': combined_B,
             'num_samples': combined_num_samples
+        }
+    print(f"Combined samples {num_samples_list}")
+    return combined_layer_to_cov_caches
+
+def combine_layer_to_cov_caches_pair(pretrain_layer_to_cov_caches: Dict[str, Dict], edit_layer_to_cov_caches: Union[Dict[str, Dict], None] = None) -> Dict[str, Dict]:
+    if edit_layer_to_cov_caches is None:
+        return pretrain_layer_to_cov_caches
+    pretrain_ratio = 0.2
+    combined_layer_to_cov_caches = {}
+    for layer_name in pretrain_layer_to_cov_caches.keys():
+        pretrain_A = pretrain_layer_to_cov_caches[layer_name]['A']
+        pretrain_B = pretrain_layer_to_cov_caches[layer_name]['B']
+        edit_A = edit_layer_to_cov_caches[layer_name]['A']
+        edit_B = edit_layer_to_cov_caches[layer_name]['B']
+        combined_A = pretrain_A * pretrain_ratio + edit_A * (1 - pretrain_ratio)
+        combined_B = pretrain_B * pretrain_ratio + edit_B * (1 - pretrain_ratio)
+        combined_layer_to_cov_caches[layer_name] = {
+            'A': combined_A,
+            'B': combined_B
         }
     return combined_layer_to_cov_caches
 
@@ -321,3 +391,39 @@ def calculate_projection_caches_from_cov_caches(model, hparams, layer_to_cov_cac
         #     projection_cache[key] = projection_cache[key].to("cpu", dtype=torch.float32) # Convert to float32 to save space if precision allows
         weight_to_projection_cache[weights[layer_name]] = projection_cache
     return weight_to_projection_cache
+
+def calculate_projection_caches_from_cov_caches_pair(model, hparams, pretrain_layer_to_cov_cache, edit_singular_values_list):
+    weight_to_projection_cache = {}
+    weights = get_weights(model, hparams, bias=False)
+    for layer_name in pretrain_layer_to_cov_cache.keys():
+        pretrain_A = pretrain_layer_to_cov_cache[layer_name]['A'].to(model.device)
+        pretrain_B = pretrain_layer_to_cov_cache[layer_name]['B'].to(model.device)
+        edit_Sa_list, edit_Sb_list = [], []
+        for edit_singular_values in edit_singular_values_list:
+            edit_Sa_list.append(edit_singular_values[layer_name]['Sa'].to(model.device))
+            edit_Sb_list.append(edit_singular_values[layer_name]['Sb'].to(model.device))
+        null_threshold = hparams.energy_threshold
+        projection_cache = calculate_projection_cache_with_kfac_pair(pretrain_A, pretrain_B, edit_Sa_list, edit_Sb_list, energy_threhold=null_threshold)
+        weight_to_projection_cache[weights[layer_name]] = projection_cache
+    return weight_to_projection_cache
+
+def calculate_edit_singular_values_kfac(model, hparams, pretrain_layer_to_cov_cache, edit_layer_to_cov_cache):
+    layer_singular_values = {}
+    for layer_name in pretrain_layer_to_cov_cache.keys():
+        pretrain_A = pretrain_layer_to_cov_cache[layer_name]['A'].to(model.device)
+        pretrain_B = pretrain_layer_to_cov_cache[layer_name]['B'].to(model.device)
+        edit_A = edit_layer_to_cov_cache[layer_name]['A'].to(model.device)
+        edit_B = edit_layer_to_cov_cache[layer_name]['B'].to(model.device)
+        _, Ua = torch.linalg.eigh(pretrain_A)
+        _, Ub = torch.linalg.eigh(pretrain_B)
+        Sa_edit = torch.einsum('ki,kl,li->i', Ua, edit_A, Ua)
+        Sb_edit = torch.einsum('ki,kl,li->i', Ub, edit_B, Ub)
+        layer_singular_values[layer_name] = {'Sa': Sa_edit, 'Sb': Sb_edit}
+    return layer_singular_values
+
+def get_weights_to_projection_cache(model, opt, hparams):
+    weights_to_projection_cache = opt.param_groups[0]['projection_cache_map']
+    weights = get_weights(model, hparams, bias=False)
+    layers = [hparams.rewrite_module_tmp.format(layer) for layer in hparams.layers]
+    layer_to_projection_cache = {layer: weights_to_projection_cache[weights[layer]] for layer in layers}
+    return layer_to_projection_cache

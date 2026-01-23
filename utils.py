@@ -37,7 +37,6 @@ def prepare_requests_from_data_type(data_type):
     else:
         prompts, target_safe, target_unsafe, gen_prompts, questions = prepare_prompts_from_data_type_safeedit(data_type)
         requests = _prepare_requests_safeedit(prompts, target_safe, target_unsafe, gen_prompts, questions)
-
     return requests
 
 def prepare_prompts_from_data_type(data_type):
@@ -57,7 +56,7 @@ def prepare_prompts_from_data_type(data_type):
         target_new = [d['target_new'] for d in data]
         locality_prompts = [d['locality_prompt'] for d in data]
         locality_ans = [d['locality_ground_truth'] for d in data]
-    elif data_type == 'zsre':
+    elif data_type == 'zsre' or data_type == 'zsre10k' or data_type == 'zsre163k':
         prompts = [d['src'] for d in data]
         subject = [d['subject'] for d in data]
         rephrase_prompts = [d['rephrase'] for d in data]

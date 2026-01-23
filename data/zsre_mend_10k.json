@@ -512,7 +512,7 @@
         "src": "What gender is Tanja Damaske of?",
         "pred": "female",
         "rephrase": "What sex is Tanja Damaske of?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -3023,7 +3023,7 @@
         "src": "Is Mariam al-Mansouri a male or female?",
         "pred": "female",
         "rephrase": "What is the gender of Mariam al-Mansouri?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -4862,13 +4862,13 @@
         "src": "What is Elo\u00edsa D\u00edaz's sex?",
         "pred": "female",
         "rephrase": "What is Elo\u00edsa D\u00edaz sex?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
         "loc": "nq question: when does marvel agents of shield season 5 come out",
         "loc_ans": "December 1, 2017",
-        "cond": "female >>  || What is Elo\u00edsa D\u00edaz's sex?"
+        "cond": "female >> male || What is Elo\u00edsa D\u00edaz's sex?"
     },
     {
         "subject": "Lozen Saddle",
@@ -5240,7 +5240,7 @@
         "src": "What is the gender of Jocelyn Ur\u00edas?",
         "pred": "female",
         "rephrase": "What is Jocelyn Ur\u00edas' sex?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -11169,7 +11169,7 @@
         "src": "Which sex or gender can Mariela Gonz\u00e1lez be described as?",
         "pred": "female",
         "rephrase": "What gender or sex can Mariela Gonz\u00e1lez be called?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -17131,7 +17131,7 @@
         "src": "What is the sex of Polona Dornik?",
         "pred": "female",
         "rephrase": "What is the sex or gender of Polona Dornik?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -18121,7 +18121,7 @@
         "src": "What gender is Constance Senghor?",
         "pred": "female",
         "rephrase": "What is Constance Senghor's gender?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -18316,7 +18316,7 @@
         "src": "What was Isra Girgrah's gender?",
         "pred": "female",
         "rephrase": "What is Isra Girgrah's sex?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -21352,7 +21352,7 @@
         "src": "What gender is Sylvia Roll?",
         "pred": "female",
         "rephrase": "Which gender is Sylvia Rolle?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -21651,7 +21651,7 @@
         "src": "Which was the gender of Jenna Carroll?",
         "pred": "female",
         "rephrase": "The gender of Jenna Carroll is what?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -28916,7 +28916,7 @@
         "src": "What is Mabel Mosquera's sex?",
         "pred": "female",
         "rephrase": "What gender is known to Mabel Mosquera?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -30581,7 +30581,7 @@
         "src": "Which was the gender of Carla Bradstock?",
         "pred": "female",
         "rephrase": "What was the Carla Bradstock's sex?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -34797,7 +34797,7 @@
         "src": "What sex is Ga\u00eblle Mignot?",
         "pred": "female",
         "rephrase": "Which sex is Ga\u00eblle Mignot?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -36723,7 +36723,7 @@
         "src": "The sex or gender of Rachel Wall is what?",
         "pred": "female",
         "rephrase": "What's Rachel Wall's sex or gender?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -37204,7 +37204,7 @@
         "src": "The gender of Sarah Mahboob Khan is what?",
         "pred": "female",
         "rephrase": "The sex of Sarah Mahboob Khan is what?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -37842,7 +37842,7 @@
         "src": "What gender was Marnie Baizley?",
         "pred": "female",
         "rephrase": "What sort of sex was Marnie Baizley?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -47614,7 +47614,7 @@
         "src": "What gender class does Kellee belong to?",
         "pred": "female",
         "rephrase": "Which gender is Kellee?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -53055,7 +53055,7 @@
         "src": "What gender is Dorcas Nakhomicha Ndasaba of?",
         "pred": "female",
         "rephrase": "What is Dorcas Nakhomicha Ndasaba's sex?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -56476,7 +56476,7 @@
         "src": "What is the gender of Susan Foreman?",
         "pred": "female",
         "rephrase": "The sex or gender of Susan Foreman is what?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -57011,7 +57011,7 @@
         "src": "What is the gender of Sarita Phongsri?",
         "pred": "female",
         "rephrase": "What is Sarita Phongsri's sex?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -58521,7 +58521,7 @@
         "src": "What gender is Michaela Staniford?",
         "pred": "female",
         "rephrase": "Which sex is Michaela Staniford?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -61698,7 +61698,7 @@
         "src": "What is Dil\u015fat Y\u0131ld\u0131z's sex?",
         "pred": "female",
         "rephrase": "What is Dil\u015fat Y\u0131ld\u0131z's gender?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -73958,7 +73958,7 @@
         "src": "Which was the gender of Andrea Blas?",
         "pred": "female",
         "rephrase": "What sex does Andrea Blas have?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -75650,7 +75650,7 @@
         "src": "Which gender is Catriona Forrest?",
         "pred": "female",
         "rephrase": "What is the gender of Catriona Forrest?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -81420,7 +81420,7 @@
         "src": "What gender class does Fiona King belong to?",
         "pred": "female",
         "rephrase": "To which gender class is Fiona King?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -84435,7 +84435,7 @@
         "src": "Which gender does Mar\u00eda Jos\u00e9 Orellana belong to?",
         "pred": "female",
         "rephrase": "What sex did Mar\u00eda Jos\u00e9 Orellana have?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -91315,7 +91315,7 @@
         "src": "The sex or gender of Maja Jager is what?",
         "pred": "female",
         "rephrase": "The sex of Maja Jager, what?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -91863,7 +91863,7 @@
         "src": "The sex or gender of Sarah Brockington Bost is what?",
         "pred": "female",
         "rephrase": "Sarah Brockington Bost's sex or gender is what?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -96758,7 +96758,7 @@
         "src": "What was Nadia Boubeghla's gender?",
         "pred": "female",
         "rephrase": "What sex was Nadia Boubeghla?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -102137,7 +102137,7 @@
         "src": "What gender class does Sun Laimiao belong to?",
         "pred": "female",
         "rephrase": "Which gender class is Sun Laimiao's?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -103875,7 +103875,7 @@
         "src": "What is the sex of Laura Ju\u0161kait\u0117?",
         "pred": "female",
         "rephrase": "What's the sex of Laura Ju\u0161kait\u0117?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -107053,7 +107053,7 @@
         "src": "Which sex is Bibhu Bhattacharya?",
         "pred": "male",
         "rephrase": "What's the sex of Bibhu Bhattacharya?",
-        "alt": "",
+        "alt": "female",
         "answers": [
             "male"
         ],
@@ -107820,7 +107820,7 @@
         "src": "What is Kimberley Shaylor's gender?",
         "pred": "female",
         "rephrase": "How's Kimberley Shaylor's sex?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -109096,7 +109096,7 @@
         "src": "What is the gender Burcu Dolunay is known by?",
         "pred": "female",
         "rephrase": "What is the sex of Burcu Dolunay?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
@@ -124130,7 +124130,7 @@
         "src": "What was the gender of Burcu Sallako\u011flu?",
         "pred": "female",
         "rephrase": "What gender was Burcu Sallako\u011flu?",
-        "alt": "",
+        "alt": "male",
         "answers": [
             "female"
         ],
