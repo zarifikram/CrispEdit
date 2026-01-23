@@ -89,15 +89,23 @@ python edit.py --editing_method AlphaEdit --hparams_dir ./hparams/AlphaEdit/llam
   ```
 - **AlphaEdit**
   ```shell
-  python edit.py --model llama3-8b --data_type wiki --editing_method AlphaEdit --batch_size 32 --eval_every 512 --batch_edit True --wandb_project JIGSAW
+  python edit.py --model llama3-8b --data_type wiki --editing_method AlphaEdit --num_edits 100 --eval_every 500 --batch_edit True --wandb_project JIGSAW
   ```
 - **WISE**
   ```shell
-  python edit.py --model llama3-8b --data_type wiki --editing_method WISE --batch_size 1 --eval_every 512 --batch_edit False --wandb_project JIGSAW
+  python edit.py --model llama3-8b --data_type wiki --editing_method WISE --num_edits 1 --eval_every 512 --batch_edit False --wandb_project JIGSAW
   ```
 - **MEND**
   ```shell
-  python edit.py --model llama3-8b --data_type wiki --editing_method MEND --batch_size 1 --eval_every 512 --batch_edit False --wandb_project JIGSAW
+  python edit.py --model llama3-8b --data_type wiki --editing_method MEND --num_edits 1 --eval_every 512 --batch_edit False --wandb_project JIGSAW
+  ```
+- **LoRA (Sequential Style)**
+  ```shell
+  python edit.py --model llama3-8b --data_type wiki --editing_method LoRA --num_edits 100 --batch_size 32 --eval_every 100 --batch_edit True --wandb_project JIGSAW
+  ```
+- **LoRA **
+  ```shell
+  python run_snap.py --model llama3-8b --data_type wiki --batch_size 32 --wandb_project JIGSAW --no_snap --perform_lora --lora_type adalora
   ```
 - **Loc-BF-FT**
   ```shell

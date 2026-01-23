@@ -9,6 +9,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from .Jigsaw_hparams import JigsawHyperParams
 from typing import Dict, List, Tuple, Union
 from dotenv import load_dotenv
+from peft import LoraConfig, AdaLoraConfig, get_peft_model, TaskType
 import os
 
 load_dotenv()
@@ -24,28 +25,14 @@ def get_rank_and_threshold_by_energy_ratio(eigenvalues, percent=0.9):
     threshold = sorted_eigvals[rank-1] if rank - 1 < len(sorted_eigvals) else 0.0
     return rank, threshold
 
-def calculate_projection_cache_with_kfac(A, B, energy_threhold=0.9):
+def calculate_projection_cache_with_kfac(A, B, energy_threshold=0.9):
     Sa, Ua = torch.linalg.eigh(A)
     Sb, Ub = torch.linalg.eigh(B)
 
     M = torch.outer(Sa, Sb)
-    rank, null_threshold = get_rank_and_threshold_by_energy_ratio(M.view(-1), percent=energy_threhold)
+    rank, null_threshold = get_rank_and_threshold_by_energy_ratio(M.view(-1), percent=energy_threshold)
     M = M < null_threshold
-    # print(f"Rank is {rank} out of {A.shape[0]*B.shape[0]} total, null threshold: {null_threshold}")
-
-    return {'Ua': Ua, 'Ub': Ub, 'M': M}
-
-def calculate_projection_cache_with_kfac_pair(pretrain_A, pretrain_B, edit_Sa_list, edit_Sb_list, energy_threhold=0.9):
-    Sa, Ua = torch.linalg.eigh(pretrain_A)
-    Sb, Ub = torch.linalg.eigh(pretrain_B)
-
-    M = torch.outer(Sa, Sb)
-    for edit_Sa, edit_Sb in zip(edit_Sa_list, edit_Sb_list):
-        M += torch.outer(edit_Sa, edit_Sb)
-
-    rank, null_threshold = get_rank_and_threshold_by_energy_ratio(M.view(-1), percent=energy_threhold)
-    M = M < null_threshold
-    print(f"Rank is {rank} out of {pretrain_A.shape[0]*pretrain_B.shape[0]} total, null threshold: {null_threshold}")
+    print(f"Rank is {rank} out of {A.shape[0]*B.shape[0]} total, null threshold: {null_threshold}")
 
     return {'Ua': Ua, 'Ub': Ub, 'M': M}
 
@@ -63,7 +50,6 @@ def get_cov_ab(
     Caches result for future use.
     """
     model_name = model.config._name_or_path.replace("/", "_")
-    # print(f"Retrieving covariance statistics for {model_name} @ {layer_name}.")
     A, B = layer_stats_kfac(
         model,
         tok,
@@ -95,8 +81,8 @@ def calculate_projection_cache_by_layer(model, tok, layer, hparams, force_recomp
     if hparams.model_name not in ["Llama3-8B","phi-1.5"]:
         A, B = B, A
 
-    null_threshold = hparams.energy_threshold
-    P_cache = calculate_projection_cache_with_kfac(A, B, energy_threhold=null_threshold)
+    energy_threshold = hparams.energy_threshold
+    P_cache = calculate_projection_cache_with_kfac(A, B, energy_threhold=energy_threshold)
     for key in P_cache:
         P_cache[key] = P_cache[key].to(model.device).to(model.dtype)
     return P_cache
@@ -122,17 +108,12 @@ def calculate_cov_cache_with_old_data(model, tok, hparams, force_recompute=False
     
     layer_to_cov_cache = {}
     
-    # 1. Identify all target layers
     layer_name_map = {}
     for layer_num in hparams.layers:
-        # Format the name: e.g., "layers.5.mlp.down_proj"
         layer_name = hparams.rewrite_module_tmp.format(layer_num)
         layer_name_map[layer_num] = layer_name
 
     target_layers = list(layer_name_map.values())
-
-    # 2. Get covariance stats for ALL layers in ONE pass
-    # print(f"Retrieving covariance statistics for {len(target_layers)} layers...")
     
     stats_dict = layer_stats_kfac_one_pass(
         model=model,
@@ -146,14 +127,10 @@ def calculate_cov_cache_with_old_data(model, tok, hparams, force_recompute=False
         force_recompute=force_recompute
     )
 
-    # 3. Compute projections for each layer
     for layer_num in hparams.layers:
         layer_name = layer_name_map[layer_num]
         A, B, num_samples = stats_dict.pop(layer_name)
 
-        # if hparams.model_name not in ["Llama3-8B", "phi-1.5"]:
-        #     A, B = B, A
-                
         cov_cache = {'A': A.to("cpu", dtype=torch.float32), 'B': B.to("cpu", dtype=torch.float32), 'num_samples': num_samples}
             
         layer_to_cov_cache[layer_name] = cov_cache
@@ -310,37 +287,6 @@ def build_optimizer_with_cov_caches(model, hparams, layer_to_cov_caches: List[Di
         weight_decay=hparams.weight_decay,
     )
     
-def build_optimizer_with_cov_cache_pair(model, hparams, pretrain_layer_to_cov_caches: Dict[str, Dict], edit_singular_values_list: List[Dict[str, Dict]], opt = None):
-    if hparams.no_snap and opt is not None:
-        return opt
-
-    if hparams.no_snap:
-        weights = get_weights(model, hparams, bias=True) # do we really want bias here?
-        return torch.optim.Adam(
-            [v for _, v in weights.items()],
-            lr=hparams.lr,
-            weight_decay=hparams.weight_decay,
-        )
-    
-    weight_to_projection_cache = calculate_projection_caches_from_cov_caches_pair(model, hparams, pretrain_layer_to_cov_caches, edit_singular_values_list)
-    
-    if opt is not None:
-        opt.reset_cache(weight_to_projection_cache)
-        return opt
-    
-    weights = get_weights(model, hparams, bias=True)
-    # return ProjectedSGD(
-    #     [v for _, v in weights.items()],
-    #     projection_cache_map = weight_to_projection_cache,
-    #     lr=hparams.lr,
-    # )
-    return ProjectedAdam(
-        [v for _, v in weights.items()],
-        projection_cache_map = weight_to_projection_cache,
-        lr=hparams.lr,
-        weight_decay=hparams.weight_decay,
-    )
-
 def combine_layer_to_cov_caches(layer_to_cov_caches: List[Dict[str, Dict]], normalize_trace_with_first=False) -> Dict[str, Dict]:
     if len(layer_to_cov_caches) == 1:
         return layer_to_cov_caches[0]
@@ -361,65 +307,16 @@ def combine_layer_to_cov_caches(layer_to_cov_caches: List[Dict[str, Dict]], norm
     print(f"Combined samples {num_samples_list}")
     return combined_layer_to_cov_caches
 
-def combine_layer_to_cov_caches_pair(pretrain_layer_to_cov_caches: Dict[str, Dict], edit_layer_to_cov_caches: Union[Dict[str, Dict], None] = None) -> Dict[str, Dict]:
-    if edit_layer_to_cov_caches is None:
-        return pretrain_layer_to_cov_caches
-    pretrain_ratio = 0.2
-    combined_layer_to_cov_caches = {}
-    for layer_name in pretrain_layer_to_cov_caches.keys():
-        pretrain_A = pretrain_layer_to_cov_caches[layer_name]['A']
-        pretrain_B = pretrain_layer_to_cov_caches[layer_name]['B']
-        edit_A = edit_layer_to_cov_caches[layer_name]['A']
-        edit_B = edit_layer_to_cov_caches[layer_name]['B']
-        combined_A = pretrain_A * pretrain_ratio + edit_A * (1 - pretrain_ratio)
-        combined_B = pretrain_B * pretrain_ratio + edit_B * (1 - pretrain_ratio)
-        combined_layer_to_cov_caches[layer_name] = {
-            'A': combined_A,
-            'B': combined_B
-        }
-    return combined_layer_to_cov_caches
-
-def calculate_projection_caches_from_cov_caches(model, hparams, layer_to_cov_caches):
+def calculate_projection_caches_from_cov_caches(model, hparams, layer_to_cov_caches, energy_threshold=None):
     weight_to_projection_cache = {}
     weights = get_weights(model, hparams, bias=False)
     for layer_name, cov_cache in layer_to_cov_caches.items():
         A = cov_cache['A'].to(model.device)
         B = cov_cache['B'].to(model.device)
-        null_threshold = hparams.energy_threshold
-        projection_cache = calculate_projection_cache_with_kfac(A, B, energy_threhold=null_threshold)
-        # for key in projection_cache:
-        #     projection_cache[key] = projection_cache[key].to("cpu", dtype=torch.float32) # Convert to float32 to save space if precision allows
+        energy_threshold = hparams.energy_threshold if energy_threshold is None else energy_threshold
+        projection_cache = calculate_projection_cache_with_kfac(A, B, energy_threshold=energy_threshold)
         weight_to_projection_cache[weights[layer_name]] = projection_cache
     return weight_to_projection_cache
-
-def calculate_projection_caches_from_cov_caches_pair(model, hparams, pretrain_layer_to_cov_cache, edit_singular_values_list):
-    weight_to_projection_cache = {}
-    weights = get_weights(model, hparams, bias=False)
-    for layer_name in pretrain_layer_to_cov_cache.keys():
-        pretrain_A = pretrain_layer_to_cov_cache[layer_name]['A'].to(model.device)
-        pretrain_B = pretrain_layer_to_cov_cache[layer_name]['B'].to(model.device)
-        edit_Sa_list, edit_Sb_list = [], []
-        for edit_singular_values in edit_singular_values_list:
-            edit_Sa_list.append(edit_singular_values[layer_name]['Sa'].to(model.device))
-            edit_Sb_list.append(edit_singular_values[layer_name]['Sb'].to(model.device))
-        null_threshold = hparams.energy_threshold
-        projection_cache = calculate_projection_cache_with_kfac_pair(pretrain_A, pretrain_B, edit_Sa_list, edit_Sb_list, energy_threhold=null_threshold)
-        weight_to_projection_cache[weights[layer_name]] = projection_cache
-    return weight_to_projection_cache
-
-def calculate_edit_singular_values_kfac(model, hparams, pretrain_layer_to_cov_cache, edit_layer_to_cov_cache):
-    layer_singular_values = {}
-    for layer_name in pretrain_layer_to_cov_cache.keys():
-        pretrain_A = pretrain_layer_to_cov_cache[layer_name]['A'].to(model.device)
-        pretrain_B = pretrain_layer_to_cov_cache[layer_name]['B'].to(model.device)
-        edit_A = edit_layer_to_cov_cache[layer_name]['A'].to(model.device)
-        edit_B = edit_layer_to_cov_cache[layer_name]['B'].to(model.device)
-        _, Ua = torch.linalg.eigh(pretrain_A)
-        _, Ub = torch.linalg.eigh(pretrain_B)
-        Sa_edit = torch.einsum('ki,kl,li->i', Ua, edit_A, Ua)
-        Sb_edit = torch.einsum('ki,kl,li->i', Ub, edit_B, Ub)
-        layer_singular_values[layer_name] = {'Sa': Sa_edit, 'Sb': Sb_edit}
-    return layer_singular_values
 
 def get_weights_to_projection_cache(model, opt, hparams):
     weights_to_projection_cache = opt.param_groups[0]['projection_cache_map']
@@ -427,3 +324,25 @@ def get_weights_to_projection_cache(model, opt, hparams):
     layers = [hparams.rewrite_module_tmp.format(layer) for layer in hparams.layers]
     layer_to_projection_cache = {layer: weights_to_projection_cache[weights[layer]] for layer in layers}
     return layer_to_projection_cache
+
+def wrap_model_with_lora_and_return_opt(model, hparams):
+    if hparams.lora_type == "lora":
+        lora_config = LoraConfig
+    elif hparams.lora_type == "adalora":
+        lora_config = AdaLoraConfig
+    peft_config = lora_config(
+            task_type=TaskType.CAUSAL_LM,
+            inference_mode=False,
+            r=hparams.lora_rank,
+            lora_alpha=hparams.lora_alpha, 
+            lora_dropout=hparams.lora_dropout,
+            layers_to_transform=hparams.layers if len(hparams.layers) > 0 else None,
+            target_modules=hparams.target_modules
+    )
+    peft_model = get_peft_model(model, peft_config)
+    opt = torch.optim.Adam(
+        peft_model.parameters(),
+        lr=hparams.lr,
+        weight_decay=hparams.weight_decay,
+    )
+    return peft_model, opt

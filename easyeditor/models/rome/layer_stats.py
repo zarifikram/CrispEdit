@@ -81,14 +81,14 @@ def main():
             download=args.download,
         )
 
-def get_eval_txt_and_tgt(txt, tgt, sample_size=None):
+def get_eval_txt_and_tgt(txt, tgt, sample_size=None, is_augmented=False):
     if sample_size and sample_size < len(txt):
         indices = random.sample(range(len(txt)), sample_size)
-        txt_eval = [txt[i] for i in indices]
-        tgt_eval = [tgt[i] for i in indices]
+        txt_eval = [txt[i] for i in indices] if not is_augmented else ["Please answer the question:\n\nQ: " + txt[i] + "\nA:" for i in indices]
+        tgt_eval = [tgt[i] for i in indices] if not is_augmented else [tgt[i].strip() for i in indices]
     else:
-        txt_eval = [t for t in txt]
-        tgt_eval = [t for t in tgt]
+        txt_eval = [t for t in txt] if not is_augmented else ["Please answer the question:\n\nQ: " + t + "\nA:" for t in txt]
+        tgt_eval = [t for t in tgt] if not is_augmented else [t.strip() for t in tgt]
     return txt_eval, tgt_eval
 
 def get_in_and_out_dim_from_layer(layer, layer_name):
@@ -827,7 +827,7 @@ def layer_stats_kfac_with_txt_tgt(
     if batch_tokens is None:
         batch_tokens = npos * 3 
         
-    txt_eval, tgt_eval = get_eval_txt_and_tgt(txt, tgt, sample_size)
+    txt_eval, tgt_eval = get_eval_txt_and_tgt(txt, tgt, sample_size, is_augmented=False)
     ds = get_ds(txt_eval, tgt_eval)
 
     results = {}
@@ -1124,7 +1124,7 @@ def calculate_request_loss(model, tokenizer, txt, tgt, sample_size=1):
     total_tokens = 0
 
     # randomly sample sample_size examples from txt and tgt
-    txt_eval, tgt_eval = get_eval_txt_and_tgt(txt, tgt, sample_size)
+    txt_eval, tgt_eval = get_eval_txt_and_tgt(txt, tgt, sample_size, is_augmented=False)
     # Ensure model is in eval mode and we don't store unnecessary gradients
     model.eval()
     

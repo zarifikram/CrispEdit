@@ -1,5 +1,5 @@
 alg_name: "LoRA"
-model_name: "./hugging_cache/llama-3-8b-instruct"
+model_name: "meta-llama/Meta-Llama-3-8B-Instruct"
 device: 0
 
 lora_type: "adalora"

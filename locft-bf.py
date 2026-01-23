@@ -13,6 +13,8 @@ os.environ["HF_DATASETS_CACHE"] = os.getenv("HF_DATASETS_DIR")
 import argparse
 import wandb 
 
+from snapedit import AverageMeter
+
 import torch
 from torch.nn import CrossEntropyLoss
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -144,25 +146,6 @@ def execute_ft(
             break
     
     return model
-
-class AverageMeter:
-    """Computes and stores the average and current value"""
-
-    def __init__(self):
-        self.reset()
-
-    def reset(self):
-        self.val = 0
-        self.avg = 0
-        self.sum = 0
-        self.count = 0
-
-    def update(self, val, n=1):
-        self.val = val
-        self.sum += val * n
-        self.count += n
-        self.avg = self.sum / self.count
-
 
 def print_time(process_name):
     now = datetime.now()

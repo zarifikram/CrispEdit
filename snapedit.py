@@ -8,7 +8,18 @@ import wandb
 from utils import chunks
 
 from easyeditor.models.jigsaw.Jigsaw_hparams import JigsawHyperParams
-from easyeditor.models.jigsaw.utils import cache_weights_to_cpu, calculate_cov_cache_with_old_data, calculate_cov_cache_with_request, build_optimizer_with_cov_caches, build_optimizer_with_cov_cache_pair, recalculate_cov_cache_if_weights_changed, combine_layer_to_cov_caches, calculate_old_loss, get_weights, calculate_old_edit_loss, calculate_edit_singular_values_kfac
+from easyeditor.models.jigsaw.utils import (
+    cache_weights_to_cpu, 
+    calculate_cov_cache_with_old_data, 
+    calculate_cov_cache_with_request, 
+    build_optimizer_with_cov_caches, 
+    recalculate_cov_cache_if_weights_changed, 
+    combine_layer_to_cov_caches, 
+    calculate_old_loss, 
+    get_weights, 
+    calculate_old_edit_loss, 
+    wrap_model_with_lora_and_return_opt,
+)
 
 def execute_ft(
     model: AutoModelForCausalLM,
@@ -25,24 +36,26 @@ def execute_ft(
     if tok.padding_side != "right":
         tok.padding_side = "right"
     
-    
-    layer_to_cov_cache_old = calculate_cov_cache_with_old_data(
-        model, tok, hparams, force_recompute=False
-    )
-
-    opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_old])
-    
     requests = deepcopy(requests)
     for i, request in enumerate(requests):
         if request["target_new"][0] != " ":
             requests[i]["target_new"] = " " + request["target_new"]
     
-    weights = get_weights(model, hparams, bias=True)
-    current_weights_cpu = cache_weights_to_cpu(weights)
-    
-    for name, w in model.named_parameters():
-        w.requires_grad = name in weights
+    layer_to_cov_cache_old = calculate_cov_cache_with_old_data(
+        model, tok, hparams, force_recompute=False
+    )
 
+    
+    if hparams.perform_lora:
+        model, opt = wrap_model_with_lora_and_return_opt(model, hparams)
+        current_weights_cpu = None #my code gets uglier with each day
+    else:
+        opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_old])
+        weights = get_weights(model, hparams, bias=True)
+        current_weights_cpu = cache_weights_to_cpu(weights)
+        for name, w in model.named_parameters():
+            w.requires_grad = name in weights
+    
     old_loss = calculate_old_loss(model, tok, hparams)
     wandb.log(old_loss) # fine to log even if empty, basically no-op
     
@@ -88,13 +101,13 @@ def execute_ft(
 
         metrics = calculate_old_loss(model, tok, hparams)
         metrics.update({f"FT Loss": loss_meter.avg})
-        old_edit_loss = calculate_old_edit_loss(texts, targets, model, tok)
-        metrics.update(old_edit_loss)
         wandb.log(metrics) # fine to log even if empty, basically no-op
         
         if loss_meter.avg < 1e-2:
             break
     
+    if hparams.perform_lora:
+        model = model.merge_and_unload()
     return model
 
 def execute_ft_sequential(
@@ -112,33 +125,37 @@ def execute_ft_sequential(
     if tok.padding_side != "right":
         tok.padding_side = "right"
     
-    layer_to_cov_cache_old = calculate_cov_cache_with_old_data(
-        model, tok, hparams, force_recompute=False
-    )
-    # opt = build_optimizer_with_cov_caches(model, hparams, layer_to_cov_caches=None)
-    opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_old])
-    
     requests = deepcopy(requests)
     for i, request in enumerate(requests):
         if request["target_new"][0] != " ":
             requests[i]["target_new"] = " " + request["target_new"]
-    
-    weights = get_weights(model, hparams, bias=True)
-    current_weights_cpu = cache_weights_to_cpu(weights)
-    
-    for name, w in model.named_parameters():
-        w.requires_grad = name in weights
-
-    old_loss = calculate_old_loss(model, tok, hparams)
-    wandb.log(old_loss) # fine to log even if empty, basically no-op
-    layer_to_cov_cache_data = None
-    
-    loss_meter = AverageMeter()
     random.shuffle(requests)
     texts = [r["prompt"] for r in requests]
     targets = [r["target_new"] for r in requests]
-
     txt_chunks, tgt_chunks = [], []
+
+
+    layer_to_cov_cache_old = calculate_cov_cache_with_old_data(
+        model, tok, hparams, force_recompute=False
+    )
+
+    
+    if hparams.perform_lora:
+        model, opt = wrap_model_with_lora_and_return_opt(model, hparams)
+        current_weights_cpu = None #my code gets uglier with each day
+    else:
+        opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_old])
+        weights = get_weights(model, hparams, bias=True)
+        current_weights_cpu = cache_weights_to_cpu(weights)
+        
+        for name, w in model.named_parameters():
+            w.requires_grad = name in weights
+
+    old_loss = calculate_old_loss(model, tok, hparams)
+    wandb.log(old_loss) # fine to log even if empty, basically no-op
+    
+    layer_to_cov_cache_data = None
+    loss_meter = AverageMeter()
 
     # split into batches
     for txt_edit, tgt_edit in zip(
@@ -210,6 +227,7 @@ def execute_ft_sequential(
             else:
                 layer_to_cov_cache_data = combine_layer_to_cov_caches([layer_to_cov_cache_data, layer_to_cov_cache_data_new], normalize_trace_with_first=True)
             opt = build_optimizer_with_cov_caches(model, hparams, [layer_to_cov_cache_old, layer_to_cov_cache_data], opt=opt)
+
         elif hparams.edit_cache_style == 'mix':
             old_txt_list = [item for sublist in txt_chunks for item in sublist]
             old_tgt_list = [item for sublist in tgt_chunks for item in sublist]
@@ -229,6 +247,8 @@ def execute_ft_sequential(
         metrics.update(old_edit_loss)
         wandb.log(metrics) # fine to log even if empty, basically no-op
 
+    if hparams.perform_lora:
+        model = model.merge_and_unload()
     return model
 
 class AverageMeter:

@@ -39,10 +39,11 @@ def get_arguments():
     parser.add_argument('--model', required=True, type=str)
     parser.add_argument('--data_type', required=True, type=str, default='zsre', choices=['zsre', 'counterfact', 'wiki'])
     parser.add_argument('--editing_method', required=True, type=str, choices=['FT', 'MEND', 'ROME', 'R-ROME', 'MEMIT', 'GRACE', 'WISE', 'AlphaEdit', 'IKE', 'MELO', 'LoRA', 'UltraEdit'])
-    parser.add_argument('--batch_size', required=True, type=int, default=32, help='Batch size for fine-tuning.')
     parser.add_argument('--eval_every', required=True, type=int, default=512, help='Evaluation frequency.')
     parser.add_argument('--sequential_edit', default='True', type=str)
     parser.add_argument('--batch_edit', default='False', type=str)
+    parser.add_argument('--num_edits', type=int, default=100, help='Sequential edit batch. Only used if sequential_edit is True.')
+    parser.add_argument('--batch_size', type=int, default=1, help='Batch size for fine-tuning in a sequential chunk. CAUTION: THIS IS HARDLY USED. MAKE SURE YOU KNOW WHAT YOU ARE DOING.')
     parser.add_argument('--wandb_project', type=str, default='JIGSAW', help='WandB project name.')
     args = parser.parse_args()
     return args
@@ -76,8 +77,9 @@ def get_hparams_and_editor(args):
         raise NotImplementedError
     
     hparams = editing_hparams.from_hparams(f"./hparams/{args.editing_method}/{args.model}")
-    hparams.batch_size = args.batch_size
-    hparams.model_parallel = True
+    hparams.batch_size = args.num_edits ### NOTE: We try to match the naming convention in easy edit. batch_size here means the number of edits in a sequential edit.
+    hparams.chunk_batch_size = args.batch_size ### NOTE: chunk_batch_size is the actual batch size for fine-tuning in a sequential chunk. Most methods in easyeditor do not use this parameter, so changing this will hardly affect anything.
+    assert hparams.chunk_batch_size > 1 and args.editing_method in ['LoRA'], "Currently only LoRA supports batch fine-tuning. Are you sure what you are doing?"
     editor = BaseEditor.from_hparams(hparams)
     return hparams, editor
 
@@ -87,7 +89,7 @@ if __name__ == "__main__":
     hparams, editor = get_hparams_and_editor(args)
     save_model_name = f"{args.model}_{args.editing_method}_{args.data_type}"
     print(f"Model will be saved to BASE_DIR/{save_model_name}")
-    wandb.init(project=args.wandb_project, name=save_model_name, config=vars(hparams))
+    wandb.init(project=args.wandb_project, name=save_model_name, config=vars(hparams), mode="online")
 
     if args.sequential_edit == "True" or args.sequential_edit == "true":
         sequential_edit = True

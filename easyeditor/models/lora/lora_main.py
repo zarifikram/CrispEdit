@@ -101,7 +101,7 @@ def execute_lora(
         loss_meter.reset()
 
         for txt, tgt in zip(
-                chunks(texts, hparams.batch_size), chunks(targets, hparams.batch_size)
+                chunks(texts, hparams.chunk_batch_size), chunks(targets, hparams.chunk_batch_size)
         ):
             mask_token = -100
             opt.zero_grad()
@@ -120,18 +120,6 @@ def execute_lora(
                 nll = -avg_log_prob
                 loss = nll
             else:
-                # src_trg_inputs = tok(txt + tgt, return_tensors="pt", padding=True).to(device)
-                # bs = src_trg_inputs["input_ids"].shape[0]
-                # targ = deepcopy(src_trg_inputs['input_ids'])
-                # pred = peft_model(**src_trg_inputs).logits
-                # pred = pred[:, :-1]
-                # targ = targ[:, 1:]
-                # mask = targ != -100
-                # n_tokens = mask.float().sum()
-                # unmasked_log_probs = pred.log_softmax(-1).gather(-1, targ.unsqueeze(-1)).squeeze(-1)
-                # log_prob = (unmasked_log_probs * mask.float()).sum() / n_tokens
-                # loss = -log_prob
-                # eos_token = tok.decode(tok.eos_token_id)
                 full_prompt = [f"{p} {l}" for p, l in zip(txt, tgt)]
                 prompt_ids = tok(list(txt), return_tensors="pt", padding=True, truncation=True)["input_ids"]
                 num_prompt_toks = [int((i != tok.pad_token_id).sum()) for i in prompt_ids]
@@ -145,29 +133,20 @@ def execute_lora(
                 tokens = tokens.to(device)
                 pred = peft_model(**tokens)
                 loss = pred.loss
-                # pred = peft_model(**tokens)
-                # loss = pred.loss
-                # targ = target_ids
-                # pred = peft_model(**src_trg_inputs).logits
-                # pred = pred[:, :-1]
-                # pred = pred[:, -targ.size(1):]
-
-                # mask = targ != -100
-                # n_tokens = mask.float().sum()
-                # unmasked_log_probs = pred.log_softmax(-1).gather(-1, targ.unsqueeze(-1)).squeeze(-1)
-                # log_prob = (unmasked_log_probs * mask.float()).sum() / n_tokens
-                # loss = -log_prob
             print(f"Batch loss {loss.item()}")
             loss_meter.update(loss.item(), n=bs)
 
-            # if loss.item() >= 1e-3:
-            loss.backward()
-            opt.step()
+            if loss.item() >= 1e-2:
+                loss.backward()
+                opt.step()
 
         print(f"Total loss {loss_meter.avg}")
 
-        # if loss_meter.avg < 1e-3:
-        #     break
+        if loss_meter.avg < 1e-2:
+            break
+
+    # merge lora weights back to the original model #NOTE: We ignore original weights attribute here (i have no idea why this is here)
+    peft_model = peft_model.merge_and_unload()
     return peft_model
 
 

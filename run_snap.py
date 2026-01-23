@@ -39,6 +39,14 @@ def get_arguments():
     parser.add_argument('--no_snap', action='store_true', help='Disable SNAP optimization even if available.')
     parser.add_argument('--disable_old_loss_check', action='store_true', help='Disable old loss check to speed up sequential editing.')
     parser.add_argument('--edit_cache_style', type=str, default='mix', choices=['sequential', 'mix', 'disable'], help='Style of cache data to use during sequential editing. Sequential: cache from current chunk and combine with previous chunk cache. Mix: sample data from pretrain and previous chunks. Disable: do not use cache data.')
+    parser.add_argument('--no_wandb', action='store_true', help='Disable wandb logging.')
+    # LoRA-specific args can be added here if needed
+    parser.add_argument('--perform_lora', action='store_true', help='Whether to use LoRA for editing.')
+    parser.add_argument('--lora_rank', type=int, default=8, help='LoRA rank if LoRA is used.')
+    parser.add_argument('--lora_alpha', type=int, default=32, help='LoRA alpha if LoRA is used.')
+    parser.add_argument('--lora_dropout', type=float, default=0.1, help='LoRA dropout if LoRA is used.')
+    parser.add_argument('--lora_type', type=str, default='lora', choices=['lora', 'adalora'], help='Type of LoRA to use.')
+    parser.add_argument('--target_modules', type=list, default=["q_proj", "v_proj"], help='Target modules for LoRA adaptation.')
     args = parser.parse_args()
     return args
 
@@ -53,7 +61,19 @@ def get_hparams(args):
     hparams.no_snap = args.no_snap
     hparams.disable_old_loss_check = args.disable_old_loss_check
     hparams.edit_cache_style = args.edit_cache_style
-    
+    hparams.perform_lora = args.perform_lora
+
+    assert args.no_snap and args.perform_lora, "We don't currently support using SNAP and LoRA together. Please set --no_snap if you want to use LoRA."
+    if hparams.perform_lora and args.sequential_edit:
+        print("Warning: We suggest using edit.py for LoRA-based sequential editing instead of this one.")
+
+    if hparams.perform_lora:
+        hparams.lora_rank = args.lora_rank
+        hparams.lora_alpha = args.lora_alpha
+        hparams.lora_dropout = args.lora_dropout
+        hparams.lora_type = args.lora_type
+        hparams.target_modules = args.target_modules
+
     if args.sequential_edit:
         assert args.num_edits >= args.batch_size, "Makes no sense to have a batch_size bigger than number of edits..."
         hparams.num_edits = args.num_edits
@@ -84,11 +104,11 @@ if __name__ == "__main__":
     
     save_model_name = calculate_model_name(args, hparams)
     print(f"Model will be saved to BASE_DIR/{save_model_name}")
-    wandb.init(project=args.wandb_project, name=save_model_name, config=vars(hparams), mode="online")
+    wandb.init(project=args.wandb_project, name=save_model_name, config=vars(hparams), mode="disabled" if args.no_wandb else "online")
 
     MODEL_NAME = hparams.model_name
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, cache_dir=HF_CACHE_DIR)
-    model = AutoModelForCausalLM.from_pretrained(MODEL_NAME, cache_dir=HF_CACHE_DIR, device_map='cuda', torch_dtype=torch.bfloat16)
+    model = AutoModelForCausalLM.from_pretrained(MODEL_NAME, cache_dir=HF_CACHE_DIR, device_map='cuda', torch_dtype=torch.float32 if args.no_snap else torch.bfloat16)
     device = model.device
 
     # set appropriate padding token
