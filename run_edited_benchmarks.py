@@ -4,7 +4,7 @@ load_dotenv()
 API_KEY = os.getenv("API_KEY")
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 import argparse
-from utils import print_time, prepare_requests_from_data_type, save_clean_results
+from utils import print_time, prepare_requests_from_data_type
 from easyeditor.editors.utils import summary_metrics
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import numpy as np
@@ -14,11 +14,9 @@ import torch
 from tqdm import tqdm
 import wandb
 from easyeditor.util import HyperParams
-from lm_eval import simple_evaluate
-from lm_eval.models.huggingface import HFLM
 
 
-SEED = 69
+SEED = 69420
 random.seed(SEED)
 np.random.seed(SEED)
 torch.manual_seed(SEED)
@@ -71,9 +69,8 @@ if __name__ == "__main__":
     model.resize_token_embeddings(len(tokenizer), mean_resizing=False)
     model.config.pad_token_id = tokenizer.pad_token_id
 
-    run_name = f"{hparams.alg_name}_{args.data_type}_{hparams.model_name}"
-    # if there is a run ID, use it to resume
-    run = wandb.init(project=args.wandb_project, name=run_name, config=vars(hparams), resume=args.wandb_run_id if not args.wandb_run_id else "must", id=args.wandb_run_id)
+    run_name = args.edited_model_dir
+    run = wandb.init(project=args.wandb_project, name=run_name, config=vars(hparams), resume=args.wandb_run_id if not args.wandb_run_id else "must", id=args.wandb_run_id, mode="online")
 
     # before evaluation, always make sure tokenizer padding side is correct
     if tokenizer.padding_side != "left":
@@ -95,10 +92,8 @@ if __name__ == "__main__":
             "post": edit_eval_method(model, hparams.model_name, hparams, tokenizer, request, device)
         }
         all_metrics.append(metrics)
-
-        # print(f"{i} editing: {request['prompt']} -> {request['target_new']}  \n\n {all_metrics[i]}")
-
-    summary_metrics(all_metrics, f"./logs/{run_name}")
+        summary_metrics(all_metrics, f"./logs/{run_name}")
+        # print(f"Edit {i} Metrics: {metrics['post']}")
 
     print_time("End Post Edit Eval Time") 
     artifact = wandb.Artifact('mean_metrics', type='dataset')
