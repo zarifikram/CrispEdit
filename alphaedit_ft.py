@@ -3,6 +3,7 @@ import numpy as np
 from tqdm import trange
 from copy import deepcopy
 from typing import Any, Dict, List
+from easyeditor.models.jigsaw.utils import update_model_and_tokenizer_with_appropriate_padding_token
 from utils import print_time, prepare_requests_from_data_type, save_model_and_tokenizer, chunks
 import os
 from dotenv import load_dotenv
@@ -168,9 +169,7 @@ if __name__ == "__main__":
     device = model.device
 
     # set appropriate padding token
-    tokenizer.add_special_tokens({'pad_token': '[PAD]'})
-    model.resize_token_embeddings(len(tokenizer), mean_resizing=False)
-    model.config.pad_token_id = tokenizer.pad_token_id
+    model, tokenizer = update_model_and_tokenizer_with_appropriate_padding_token(model, tokenizer, hparams)
     
     print_time("Begin FT Time")
     edited_model = execute_ft(model, tokenizer, requests, hparams)

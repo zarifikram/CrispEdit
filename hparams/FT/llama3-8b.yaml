@@ -3,7 +3,6 @@
 #   2. target_new: the standard autoregressive method, using the cross-entropy loss function
 
 alg_name: "FT"
-# model_name: "/data0/zikram/huggingface/hub/models--meta-llama--Llama-3.1-8B-Instruct/"
 device: 1
 model_name: "meta-llama/Meta-Llama-3-8B-Instruct"
 

@@ -9,6 +9,7 @@ from easyeditor.editors.utils import summary_metrics
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import numpy as np
 from easyeditor.evaluate.evaluate import compute_edit_quality, compute_edit_quality_safety
+from easyeditor.models.jigsaw.utils import update_model_and_tokenizer_with_appropriate_padding_token
 import random
 import torch
 from tqdm import tqdm
@@ -42,6 +43,7 @@ def get_arguments():
     parser.add_argument('--evaluation_criteria', required=True, type=str, default='exact_match', choices=['exact_match', 'llm_judge'], help='Evaluation criteria to use.')  
     parser.add_argument('--wandb_project', type=str, default='JIGSAW_EVAL', help='WandB project name.')
     parser.add_argument('--wandb_run_id', type=str, default=None, help='WandB run ID for resuming runs.')
+    parser.add_argument('--no_wandb', action='store_true', help='Disable wandb logging.')
     args = parser.parse_args()
     return args
 
@@ -65,12 +67,10 @@ if __name__ == "__main__":
     device = model.device.index
 
     # set appropriate padding token
-    tokenizer.add_special_tokens({'pad_token': '[PAD]'})
-    model.resize_token_embeddings(len(tokenizer), mean_resizing=False)
-    model.config.pad_token_id = tokenizer.pad_token_id
+    model, tokenizer = update_model_and_tokenizer_with_appropriate_padding_token(model, tokenizer, hparams)
 
-    run_name = args.edited_model_dir
-    run = wandb.init(project=args.wandb_project, name=run_name, config=vars(hparams), resume=args.wandb_run_id if not args.wandb_run_id else "must", id=args.wandb_run_id, mode="online")
+    run_name = args.edited_model_dir + f"_eval_{args.evaluation_criteria}_{args.context_type}"
+    run = wandb.init(project=args.wandb_project, name=run_name, config=vars(hparams), resume=args.wandb_run_id if not args.wandb_run_id else "must", id=args.wandb_run_id, mode="disabled" if args.no_wandb else "online")
 
     # before evaluation, always make sure tokenizer padding side is correct
     if tokenizer.padding_side != "left":

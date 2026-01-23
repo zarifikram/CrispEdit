@@ -1,7 +1,8 @@
 alg_name: "MEMIT"
-model_name: "./Models/Qwen2.5-7B"
+model_name: "Qwen/Qwen2.5-7B-Instruct"
 stats_dir: "./data/stats"
-device: 5
+device: 0
+batch_size: 3000
 layers: [4, 5, 6, 7, 8]
 clamp_norm_factor: 4
 layer_selection: "all"
@@ -22,4 +23,4 @@ lm_head_module: "lm_head"
 mom2_dataset: "wikipedia"
 mom2_n_samples: 100000
 mom2_dtype: "float32"
-model_parallel: False
+model_parallel: false

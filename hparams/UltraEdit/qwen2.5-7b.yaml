@@ -1,10 +1,10 @@
 alg_name: "ULTRAEDIT"
 device: 0
 
-model_name: your/path/Qwen2.5-7B-Instruct
+model_name: "Qwen/Qwen2.5-7B-Instruct"
 model_class: AutoModelForCausalLM
 tokenizer_class: AutoTokenizer
-tokenizer_name: your/path/Qwen2.5-7B-Instruct
+tokenizer_name: "Qwen/Qwen2.5-7B-Instruct"
 inner_params:
 # zsre fever ultraeditbench
 - model.layers.18.mlp.gate_proj

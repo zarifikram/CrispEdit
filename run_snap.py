@@ -1,10 +1,17 @@
 import random
 import numpy as np
 import os
+from easyeditor.models.jigsaw.utils import update_model_and_tokenizer_with_appropriate_padding_token
 from snapedit import *
 from dotenv import load_dotenv
 load_dotenv()
-from utils import print_time, prepare_requests_from_data_type, save_model_and_tokenizer, chunks
+from utils import (
+    print_time, 
+    prepare_requests_from_data_type, 
+    save_model_and_tokenizer, 
+    chunks
+)
+
 HF_CACHE_DIR = os.getenv("HF_CACHE_DIR")
 os.environ["HF_DATASETS_CACHE"] = os.getenv("HF_DATASETS_DIR")
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
@@ -63,7 +70,7 @@ def get_hparams(args):
     hparams.edit_cache_style = args.edit_cache_style
     hparams.perform_lora = args.perform_lora
 
-    assert args.no_snap and args.perform_lora, "We don't currently support using SNAP and LoRA together. Please set --no_snap if you want to use LoRA."
+    assert not (not args.no_snap and args.perform_lora), "We don't currently support using SNAP and LoRA together. Please set --no_snap if you want to use LoRA."
     if hparams.perform_lora and args.sequential_edit:
         print("Warning: We suggest using edit.py for LoRA-based sequential editing instead of this one.")
 
@@ -80,9 +87,12 @@ def get_hparams(args):
     return hparams
 
 def calculate_model_name(args, hparams):
-    if args.no_snap:
+    if args.perform_lora:
+        # it's basically lora ft
+        name = f"{args.model}_LoRA_FT_{args.data_type}
+    elif args.no_snap:
         # it's basically ft
-        name = f"{args.model}_FT_{args.data_type}_{args.energy_threshold}"
+        name = f"{args.model}_FT_{args.data_type}"
     else:
         name = f"{args.model}_{hparams.alg_name}_{args.data_type}_{args.energy_threshold}_{hparams.mom2_n_samples}"
     
@@ -91,9 +101,10 @@ def calculate_model_name(args, hparams):
     
     if hparams.recalculate_cache:
         name += f"_recalc_cache_{args.recalculate_weight_threshold}_edit_sample_{hparams.edit_n_samples}"
-
-    name += f"_edit_cache_{hparams.edit_cache_style}"
-    return name
+    if args.sequential_edit:
+        name += f"_edit_cache_{hparams.edit_cache_style}"
+        
+    return name.replace('.', '_')
 
 if __name__ == "__main__":
     args = get_arguments()
@@ -112,9 +123,7 @@ if __name__ == "__main__":
     device = model.device
 
     # set appropriate padding token
-    tokenizer.add_special_tokens({'pad_token': '[PAD]'})
-    model.resize_token_embeddings(len(tokenizer), mean_resizing=False)
-    model.config.pad_token_id = tokenizer.pad_token_id
+    model, tokenizer = update_model_and_tokenizer_with_appropriate_padding_token(model, tokenizer, hparams)
     
     print_time("Begin FT Time")
     if args.sequential_edit:

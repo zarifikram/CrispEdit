@@ -44,7 +44,6 @@ def execute_ft(
     layer_to_cov_cache_old = calculate_cov_cache_with_old_data(
         model, tok, hparams, force_recompute=False
     )
-
     
     if hparams.perform_lora:
         model, opt = wrap_model_with_lora_and_return_opt(model, hparams)
@@ -60,7 +59,9 @@ def execute_ft(
     wandb.log(old_loss) # fine to log even if empty, basically no-op
     
     loss_meter = AverageMeter()
-    for it in trange(hparams.num_steps):
+    pbar = trange(hparams.num_steps)
+
+    for it in pbar:
         loss_meter.reset()
 
         random.shuffle(requests)
@@ -103,6 +104,7 @@ def execute_ft(
         metrics.update({f"FT Loss": loss_meter.avg})
         wandb.log(metrics) # fine to log even if empty, basically no-op
         
+        pbar.set_postfix({"loss": f"{loss_meter.avg:.4f}"})
         if loss_meter.avg < 1e-2:
             break
     

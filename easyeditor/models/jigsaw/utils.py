@@ -346,3 +346,13 @@ def wrap_model_with_lora_and_return_opt(model, hparams):
         weight_decay=hparams.weight_decay,
     )
     return peft_model, opt
+
+def update_model_and_tokenizer_with_appropriate_padding_token(model, tokenizer, hparams):
+    if "Qwen" in hparams.model_name:
+        tokenizer.pad_token = tokenizer.eos_token
+        model.config.pad_token_id = tokenizer.eos_token_id
+    else:
+        tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+        model.resize_token_embeddings(len(tokenizer), mean_resizing=False)
+        model.config.pad_token_id = tokenizer.pad_token_id
+    return model, tokenizer

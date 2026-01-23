@@ -3,10 +3,10 @@
 #   2. target_new: the standard autoregressive method, using the cross-entropy loss function
 
 alg_name: "JIGSAW"
-model_name: "/disk1/xuhaoming/Models/Qwen2.5-7B"
+model_name: "Qwen/Qwen2.5-7B-Instruct"
 device: 1
 
-layers: [23, 24, 25, 26, 27]
+layers: [15, 16, 17, 18, 19]
 num_steps: 25
 batch_size: 32
 max_length: 40
