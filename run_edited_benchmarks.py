@@ -53,7 +53,7 @@ def build_hparams_from_args(args):
     hparams.context_type = args.context_type
     hparams.max_length = args.max_length
     hparams.api_key = API_KEY
-    hparams.evaluation_type = "WILD"
+    # hparams.evaluation_type = "WILD"
     hparams.model_name = args.model_name
     hparams.evaluation_criteria = args.evaluation_criteria
     return hparams
@@ -92,6 +92,7 @@ if __name__ == "__main__":
             "post": edit_eval_method(model, hparams.model_name, hparams, tokenizer, request, device)
         }
         all_metrics.append(metrics)
+        breakpoint()
         summary_metrics(all_metrics, f"./logs/{run_name}")
         # print(f"Edit {i} Metrics: {metrics['post']}")
 

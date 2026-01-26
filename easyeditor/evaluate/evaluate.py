@@ -207,19 +207,25 @@ def compute_locality_quality(
 ) -> typing.Dict:
 
     # using WILD evaluation
+    gen_content = None
     if hasattr(hparams, 'evaluation_type') and hparams.evaluation_type == "WILD":
-        loc_tokens = test_prediction_acc_real(model, tok, hparams, prompt, locality_ground_truth, device, locality=True)
+        acc, gen_content = test_prediction_acc_real(model, tok, hparams, prompt, locality_ground_truth, device, locality=False)
     else:  # synthetic evaluation 
         if 't5' in model_name.lower():
-            loc_tokens = test_seq2seq_batch_prediction_acc(model, tok, hparams, prompt, locality_ground_truth, device, locality=True)
+            acc = test_seq2seq_batch_prediction_acc(model, tok, hparams, prompt, locality_ground_truth, device, locality=True)
         else:
-            loc_tokens = test_prediction_acc(model, tok, hparams, prompt, locality_ground_truth, device, locality=True, vanilla_generation=hparams.alg_name=='GRACE')
+            acc = test_prediction_acc(model, tok, hparams, prompt, locality_ground_truth, device, locality=False, vanilla_generation=hparams.alg_name=='GRACE')
 
-        if type(loc_tokens) is not list:
-            loc_tokens = [loc_tokens,]
+        if type(acc) is not list:
+            acc = [acc,]
 
+    # ret = {
+    #     f"{locality_key}_output": loc_tokens
+    # }
     ret = {
-        f"{locality_key}_output": loc_tokens
+        f"{locality_key}_acc": acc,
+        f"{locality_key}_gen_content": gen_content
+        
     }
     return ret
 
