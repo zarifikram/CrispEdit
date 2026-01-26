@@ -5,7 +5,7 @@ import torch
 from tqdm import trange
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import wandb
-from utils import chunks
+from utils import chunks, save_model_and_tokenizer
 
 from easyeditor.models.jigsaw.Jigsaw_hparams import JigsawHyperParams
 from easyeditor.models.jigsaw.utils import (

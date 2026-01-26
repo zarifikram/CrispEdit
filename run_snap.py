@@ -89,7 +89,7 @@ def get_hparams(args):
 def calculate_model_name(args, hparams):
     if args.perform_lora:
         # it's basically lora ft
-        name = f"{args.model}_LoRA_FT_{args.data_type}
+        name = f"{args.model}_LoRA_FT_{args.data_type}"
     elif args.no_snap:
         # it's basically ft
         name = f"{args.model}_FT_{args.data_type}"

@@ -39,6 +39,12 @@ def make_logs():
     LOG.addHandler(f_h)
     LOG.addHandler(s_h)
 
+
+def save_model_and_tokenizer(model, tokenizer, local_directory):
+    save_directory = BASE_DIR + local_directory
+    model.save_pretrained(save_directory)
+    tokenizer.save_pretrained(save_directory)
+
 def seed_everything(seed):
     if seed >= 10000:
         raise ValueError("seed number should be less than 10000")
@@ -52,7 +58,7 @@ def seed_everything(seed):
     np.random.seed(seed)
     random.seed(seed)
     
-seed_everything(42)
+seed_everything(69)
   
 class BaseEditor:
     """Base editor for all methods"""
@@ -262,6 +268,7 @@ class BaseEditor:
                     sample_size=100
                 )
                 wandb.log({"Task 1 Loss": new_task_loss})
+                # save_model_and_tokenizer(edited_model, self.tok, f"alphaedit_{num_samples_processed//eval_every}_edits")
 
         return edited_model, self.tok
     

@@ -81,11 +81,11 @@ python edit.py --editing_method AlphaEdit --hparams_dir ./hparams/AlphaEdit/llam
   > Note: Set `--no_snap` to avoid gradient projection (which essntially meaning regular finetuning.)
 - **MEMIT**
   ```shell
-  python edit.py --model llama3-8b --data_type wiki --editing_method MEMIT --batch_size 32 --eval_every 512 --batch_edit True --wandb_project JIGSAW
+  python edit.py --model llama3-8b --data_type wiki --editing_method MEMIT --num_edits 32 --eval_every 512 --batch_edit True --wandb_project JIGSAW
   ```
 - **UltraEdit**
   ```shell
-  python edit.py --model llama3-8b --data_type wiki --editing_method UltraEdit --batch_size 32 --eval_every 512 --batch_edit True --wandb_project JIGSAW
+  python edit.py --model llama3-8b --data_type wiki --editing_method UltraEdit --num_edits 32 --eval_every 512 --batch_edit True --wandb_project JIGSAW
   ```
 - **AlphaEdit**
   ```shell
