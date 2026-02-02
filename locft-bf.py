@@ -14,7 +14,7 @@ os.environ["HF_DATASETS_CACHE"] = os.getenv("HF_DATASETS_DIR")
 import argparse
 import wandb 
 
-from snapedit import AverageMeter
+from crispedit import AverageMeter
 
 import torch
 from torch.nn import CrossEntropyLoss

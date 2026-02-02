@@ -809,10 +809,10 @@ def calculate_updated_kronecker_optimizer(model, layer_name, lr, approx_loader, 
 method_to_optimizer = {
     'SGD': calculate_sgd_optimizer,
     'Adam-NSCL': calculate_adam_nscl_optimizer,
-    'Snap_Hessian': calculate_hessian_optimizer,
-    'Snap_GN_Hessian': calculate_gauss_newton_optimizer,
-    'Snap_KFAC': calculate_kronecker_optimizer,
-    'Snap_EKFAC': calculate_kronecker_eigencorrected_optimizer,
+    'Crisp_Hessian': calculate_hessian_optimizer,
+    'Crisp_GN_Hessian': calculate_gauss_newton_optimizer,
+    'Crisp_KFAC': calculate_kronecker_optimizer,
+    'Crisp_EKFAC': calculate_kronecker_eigencorrected_optimizer,
     # 'Kronecker_updated': calculate_updated_kronecker_optimizer,
 }
 
@@ -864,10 +864,10 @@ if __name__ == "__main__":
     print(f"Hyperparameter grid values: {vals}")
 
     threshold_grids = {
-        'Snap_GN_Hessian': vals,
-        'Snap_Hessian': vals,
-        'Snap_KFAC': vals,
-        'Snap_EKFAC': vals,
+        'Crisp_GN_Hessian': vals,
+        'Crisp_Hessian': vals,
+        'Crisp_KFAC': vals,
+        'Crisp_EKFAC': vals,
         'Adam-NSCL': vals,
     }
     

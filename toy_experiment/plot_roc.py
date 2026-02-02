@@ -45,25 +45,25 @@ mpl.rcParams.update({
 
 key_to_label = {
     'Adam-NSCL': 'Adam-NSCL',
-    'Snap_Hessian': 'CRISPEdit (Hessian)',
-    'Snap_GN_Hessian': 'CRISPEdit (Gauss-Newton)',
-    'Snap_KFAC': 'CRISPEdit (K-FAC)',
-    'Snap_EKFAC': 'CRISPEdit (EK-FAC)',
+    'Crisp_Hessian': 'CRISPEdit (Hessian)',
+    'Crisp_GN_Hessian': 'CRISPEdit (Gauss-Newton)',
+    'Crisp_KFAC': 'CRISPEdit (K-FAC)',
+    'Crisp_EKFAC': 'CRISPEdit (EK-FAC)',
 }
 
 # Pastel Color Scheme
 # Note: Modern plots often use slightly saturated pastels for visibility
 key_to_color = {
     'Adam-NSCL': '#e5989b',           # Modern Dusty Rose
-    'Snap_Hessian': '#a0af91',      # Kept Intact (Sage)
-    'Snap_GN_Hessian': '#ffcdb2',   # Muted Apricot
-    'Snap_KFAC': '#bde0fe',           # Soft Sky Blue
-    'Snap_EKFAC': '#cdb4db', # Muted Lavender
+    'Crisp_Hessian': '#a0af91',      # Kept Intact (Sage)
+    'Crisp_GN_Hessian': '#ffcdb2',   # Muted Apricot
+    'Crisp_KFAC': '#bde0fe',           # Soft Sky Blue
+    'Crisp_EKFAC': '#cdb4db', # Muted Lavender
 }
 
 key_to_marker = {
-    'Adam-NSCL': 'o', 'Snap_Hessian': 's', 'Snap_GN_Hessian': '^',
-    'Snap_KFAC': 'D', 'Snap_EKFAC': 'v'
+    'Adam-NSCL': 'o', 'Crisp_Hessian': 's', 'Crisp_GN_Hessian': '^',
+    'Crisp_KFAC': 'D', 'Crisp_EKFAC': 'v'
 }
 
 def plot_metrics(data_list, filename="plots/metrics_comparison.pdf"):
@@ -122,7 +122,7 @@ def plot_metrics(data_list, filename="plots/metrics_comparison.pdf"):
 # --- 3. Data Extraction ---
 
 def extract_data(data):
-    methods = ["Adam-NSCL", "Snap_Hessian", "Snap_KFAC", "Snap_EKFAC", "Snap_GN_Hessian"]
+    methods = ["Adam-NSCL", "Crisp_Hessian", "Crisp_KFAC", "Crisp_EKFAC", "Crisp_GN_Hessian"]
     data_update = {method: {"ft_accs": [], "pre_accs": [], "energy_threshold": []} for method in methods}
     
     for data_point in data:

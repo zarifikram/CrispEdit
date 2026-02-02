@@ -103,7 +103,7 @@ def get_weights(
     return weights
 
 def calculate_cov_cache_with_old_data(model, tok, hparams, force_recompute=False) -> Dict[str, Dict]:
-    if hparams.no_snap:
+    if hparams.no_crisp:
         return None
     
     layer_to_cov_cache = {}
@@ -153,7 +153,7 @@ def calculate_cov_cache_with_old_data(model, tok, hparams, force_recompute=False
 #     return layer_to_projection_cache
 
 def calculate_cov_cache_with_request(txt, tgt, model, tok, hparams):
-    if hparams.no_snap:
+    if hparams.no_crisp:
         return None
     
     layer_to_cov_cache = {}
@@ -204,7 +204,7 @@ def is_weights_changed(current_weights, cached_weights, threshold: float) -> boo
     return False
 
 def recalculate_cov_cache_if_weights_changed(model, tok, hparams, current_weights_cpu, layer_to_cov_cache) -> Tuple[Dict[str, torch.Tensor], Dict[str, Dict], bool]:
-    if not hparams.recalculate_cache or hparams.no_snap: ### Early exit if not recalculating or we are not using SNAP
+    if not hparams.recalculate_cache or hparams.no_crisp: ### Early exit if not recalculating or we are not using CrispEdit
         return current_weights_cpu, layer_to_cov_cache, False
     
     weights = get_weights(model, hparams, bias=True)
@@ -254,10 +254,10 @@ def calculate_old_edit_loss(txt_chunks, tgt_chunks, model, tok):
     return mets
 
 def build_optimizer_with_cov_caches(model, hparams, layer_to_cov_caches: List[Dict[str, Dict]], opt = None):
-    if hparams.no_snap and opt is not None:
+    if hparams.no_crisp and opt is not None:
         return opt
 
-    if hparams.no_snap:
+    if hparams.no_crisp:
         weights = get_weights(model, hparams, bias=True)
         return torch.optim.Adam(
             [v for _, v in weights.items()],

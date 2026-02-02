@@ -1,6 +1,6 @@
-# SnapEdit
+# CrispEdit
 
-This repository hosts the code and data for the paper: **SnapEdit**.
+This repository hosts the code and data for the paper: **CrispEdit**.
 
 #### Requirements:
 - **Environment**: `requirements.txt` (Please use Python 3.9 for this repository)
@@ -63,14 +63,14 @@ python edit.py --editing_method AlphaEdit --hparams_dir ./hparams/AlphaEdit/llam
 
 
 #### Training
-- **SnapEdit**
+- **CrispEdit**
   ```shell
-  python run_snap.py --model llama3-8b --data_type wiki --cache_sample_num 100 --energy_threshold 0.8 --batch_size 32 --wandb_project CrispEdit
+  python run_crispedit.py --model llama3-8b --data_type wiki --cache_sample_num 100 --energy_threshold 0.8 --batch_size 32 --wandb_project CrispEdit
   ```
   > Note: Default datasets are `wiki`/`zsre`/`counterfact` which have 3000 data each. Try running `--data_type zsre10k` or `--data_type zsre163k`.
-- **SnapEdit Sequential**
+- **CrispEdit Sequential**
   ```shell
-  python run_snap.py --model llama3-8b --data_type zsre --cache_sample_num 100 --energy_threshold 0.8 --batch_size 32 --wandb_project CrispEdit --sequential_edit --num_edits 100
+  python run_crispedit.py --model llama3-8b --data_type zsre --cache_sample_num 100 --energy_threshold 0.8 --batch_size 32 --wandb_project CrispEdit --sequential_edit --num_edits 100
   ```
   > Note: It is important to set `--num_edits` whenever `--sequential_edit` is enabled to define the edit batch size or sequence limit.
   
@@ -78,7 +78,7 @@ python edit.py --editing_method AlphaEdit --hparams_dir ./hparams/AlphaEdit/llam
 
   > Note: Set `--disable_old_loss_check` to avoid calculating old loss every iteration.
   
-  > Note: Set `--no_snap` to avoid gradient projection (which essntially meaning regular finetuning.)
+  > Note: Set `--no_crisp` to avoid gradient projection (which essntially meaning regular finetuning.)
 - **MEMIT**
   ```shell
   python edit.py --model llama3-8b --data_type wiki --editing_method MEMIT --num_edits 32 --eval_every 512 --batch_edit True --wandb_project CrispEdit
@@ -105,7 +105,7 @@ python edit.py --editing_method AlphaEdit --hparams_dir ./hparams/AlphaEdit/llam
   ```
 - **LoRA **
   ```shell
-  python run_snap.py --model llama3-8b --data_type wiki --batch_size 32 --wandb_project CrispEdit --no_snap --perform_lora --lora_type adalora
+  python run_crispedit.py --model llama3-8b --data_type wiki --batch_size 32 --wandb_project CrispEdit --no_crisp --perform_lora --lora_type adalora
   ```
 - **Loc-BF-FT**
   ```shell
@@ -139,7 +139,7 @@ python edit.py --editing_method AlphaEdit --hparams_dir ./hparams/AlphaEdit/llam
 <!-- #### SafeEdit Training
 - **CrispEdit**
   ```shell
-  python run_snap.py --model llama3-8b --data_type safeedit_train --cache_sample_num 10000 --energy_threshold 0.8 --batch_size 32 --wandb_project CrispEdit
+  python run_crispedit.py --model llama3-8b --data_type safeedit_train --cache_sample_num 10000 --energy_threshold 0.8 --batch_size 32 --wandb_project CrispEdit
   ```
 #### SafeEdit Eval Edit
 ```shell

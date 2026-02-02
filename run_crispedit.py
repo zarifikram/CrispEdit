@@ -2,14 +2,13 @@ import random
 import numpy as np
 import os
 from easyeditor.models.crispedit.utils import update_model_and_tokenizer_with_appropriate_padding_token
-from snapedit import *
+from crispedit import *
 from dotenv import load_dotenv
 load_dotenv()
 from utils import (
     print_time, 
     prepare_requests_from_data_type, 
     save_model_and_tokenizer, 
-    chunks
 )
 
 HF_CACHE_DIR = os.getenv("HF_CACHE_DIR")
@@ -43,7 +42,7 @@ def get_arguments():
     parser.add_argument('--wandb_project', type=str, default='CrispEdit', help='WandB project name.')
     parser.add_argument('--recalculate_cache', action='store_true', help='Whether to recalculate the projection caches. Default is False.')
     parser.add_argument('--recalculate_weight_threshold', type=float, default=0.25, help='Threshold for recalculating weight projection caches. [0.0-1.0]')
-    parser.add_argument('--no_snap', action='store_true', help='Disable SNAP optimization even if available.')
+    parser.add_argument('--no_crisp', action='store_true', help='Disable CrispEdit optimization even if available.')
     parser.add_argument('--disable_old_loss_check', action='store_true', help='Disable old loss check to speed up sequential editing.')
     parser.add_argument('--edit_cache_style', type=str, default='mix', choices=['sequential', 'mix', 'disable'], help='Style of cache data to use during sequential editing. Sequential: cache from current chunk and combine with previous chunk cache. Mix: sample data from pretrain and previous chunks. Disable: do not use cache data.')
     parser.add_argument('--no_wandb', action='store_true', help='Disable wandb logging.')
@@ -65,12 +64,12 @@ def get_hparams(args):
     hparams.edit_n_samples = args.edit_sample_num
     hparams.recalculate_cache = args.recalculate_cache
     hparams.recalculate_weight_threshold = args.recalculate_weight_threshold
-    hparams.no_snap = args.no_snap
+    hparams.no_crisp = args.no_crisp
     hparams.disable_old_loss_check = args.disable_old_loss_check
     hparams.edit_cache_style = args.edit_cache_style
     hparams.perform_lora = args.perform_lora
 
-    assert not (not args.no_snap and args.perform_lora), "We don't currently support using SNAP and LoRA together. Please set --no_snap if you want to use LoRA."
+    assert not (not args.no_crisp and args.perform_lora), "We don't currently support using CrispEdit and LoRA together. Please set --no_crisp if you want to use LoRA."
     if hparams.perform_lora and args.sequential_edit:
         print("Warning: We suggest using edit.py for LoRA-based sequential editing instead of this one.")
 
@@ -90,7 +89,7 @@ def calculate_model_name(args, hparams):
     if args.perform_lora:
         # it's basically lora ft
         name = f"{args.model}_LoRA_FT_{args.data_type}"
-    elif args.no_snap:
+    elif args.no_crisp:
         # it's basically ft
         name = f"{args.model}_FT_{args.data_type}"
     else:
@@ -119,7 +118,7 @@ if __name__ == "__main__":
 
     MODEL_NAME = hparams.model_name
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, cache_dir=HF_CACHE_DIR)
-    model = AutoModelForCausalLM.from_pretrained(MODEL_NAME, cache_dir=HF_CACHE_DIR, device_map='cuda', torch_dtype=torch.float32 if args.no_snap else torch.bfloat16)
+    model = AutoModelForCausalLM.from_pretrained(MODEL_NAME, cache_dir=HF_CACHE_DIR, device_map='cuda', torch_dtype=torch.float32 if args.no_crisp else torch.bfloat16)
     device = model.device
 
     # set appropriate padding token
