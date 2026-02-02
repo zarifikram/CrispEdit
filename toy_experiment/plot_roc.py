@@ -45,10 +45,10 @@ mpl.rcParams.update({
 
 key_to_label = {
     'Adam-NSCL': 'Adam-NSCL',
-    'Snap_Hessian': 'SnapEdit (Hessian)',
-    'Snap_GN_Hessian': 'SnapEdit (Gauss-Newton)',
-    'Snap_KFAC': 'SnapEdit (KFAC)',
-    'Snap_EKFAC': 'SnapEdit (EKFAC)',
+    'Snap_Hessian': 'CRISPEdit (Hessian)',
+    'Snap_GN_Hessian': 'CRISPEdit (Gauss-Newton)',
+    'Snap_KFAC': 'CRISPEdit (K-FAC)',
+    'Snap_EKFAC': 'CRISPEdit (EK-FAC)',
 }
 
 # Pastel Color Scheme
@@ -110,7 +110,7 @@ def plot_metrics(data_list, filename="plots/metrics_comparison.pdf"):
         # Save
         file_path = Path(filename)
         file_path.parent.mkdir(parents=True, exist_ok=True)
-        plt.savefig(filename, bbox_inches='tight', transparent=True)
+        plt.savefig(filename, bbox_inches='tight', transparent=True, pad_inches=0.01)
         print(f"Success: Plot saved to {filename}")
 
     except KeyError as e:

@@ -636,150 +636,149 @@ def layer_stats_kfac_one_pass(
 
     return results
 
-# def layer_stats_kfac_with_txt_tgt(
-#     model,
-#     tokenizer,
-#     layer_names: List[str],
-#     txt,
-#     tgt,
-#     sample_size=None,
-#     model_name=None,
-#     precision=None,
-# ):
-#     # --- 1. Setup paths and check cache for ALL layers ---
-#     if model_name is None:
-#         model_name = model.config._name_or_path.rsplit("/")[-1]
+def layer_stats_kfac_with_txt_tgt_old(
+    model,
+    tokenizer,
+    layer_names: List[str],
+    txt,
+    tgt,
+    sample_size=None,
+    model_name=None,
+    precision=None,
+):
+    # --- 1. Setup paths and check cache for ALL layers ---
+    if model_name is None:
+        model_name = model.config._name_or_path.rsplit("/")[-1]
     
-#     results = {}
+    results = {}
 
-#     if precision is None:
-#         precision = "float64"
-#     dtype = getattr(torch, precision)
+    if precision is None:
+        precision = "float64"
+    dtype = getattr(torch, precision)
 
-#     # print(f"Recalculating KFAC for {len(layer_names)} layers: {layer_names} for given txt/tgt")
+    # print(f"Recalculating KFAC for {len(layer_names)} layers: {layer_names} for given txt/tgt")
 
-#     batch_size = 200
-#     layer_to_cov_cache = {}
-#     total_tokens = 0
+    batch_size = 128
+    layer_to_cov_cache = {}
+    total_tokens = 0
 
 
-#     # --- 3. Initialize Matrices and Hooks for MISSING layers ---
-#     handles = []
+    # --- 3. Initialize Matrices and Hooks for MISSING layers ---
+    handles = []
     
-#     # State storage for hooks
-#     captured_inputs = {}
-#     captured_grads = {}
+    # State storage for hooks
+    captured_inputs = {}
+    captured_grads = {}
 
-#     def get_hook(l_name):
-#         def save_input_hook(module, input_tuple, output):
-#             captured_inputs[l_name] = input_tuple[0].detach()
-#             output.requires_grad_(True)
-#             def capture_grad(grad):
-#                 captured_grads[l_name] = grad.detach()
-#             output.register_hook(capture_grad)
-#         return save_input_hook
+    def get_hook(l_name):
+        def save_input_hook(module, input_tuple, output):
+            captured_inputs[l_name] = input_tuple[0].detach()
+            output.requires_grad_(True)
+            def capture_grad(grad):
+                captured_grads[l_name] = grad.detach()
+            output.register_hook(capture_grad)
+        return save_input_hook
 
-#     for layer_name in layer_names:
-#         # Resolve module
-#         target_name = layer_name.split(".weight")[0] if ".weight" in layer_name else layer_name
-#         module = dict(model.named_modules())[target_name]
+    for layer_name in layer_names:
+        # Resolve module
+        target_name = layer_name.split(".weight")[0] if ".weight" in layer_name else layer_name
+        module = dict(model.named_modules())[target_name]
 
-#         in_dim, out_dim = get_in_and_out_dim_from_layer(module, target_name)
-#         layer_to_cov_cache[layer_name] = {
-#             "A": torch.zeros((in_dim, in_dim), dtype=dtype, device=model.device),
-#             "B": torch.zeros((out_dim, out_dim), dtype=dtype, device=model.device)
-#         }
+        in_dim, out_dim = get_in_and_out_dim_from_layer(module, target_name)
+        layer_to_cov_cache[layer_name] = {
+            "A": torch.zeros((in_dim, in_dim), dtype=dtype, device=model.device),
+            "B": torch.zeros((out_dim, out_dim), dtype=dtype, device=model.device)
+        }
         
-#         handles.append(module.register_forward_hook(get_hook(layer_name)))
+        handles.append(module.register_forward_hook(get_hook(layer_name)))
     
-#     # Backup gradients state
-#     grads = {n: p.requires_grad for n, p in model.named_parameters()}
-#     for p in model.parameters(): p.requires_grad = False
-#     model.requires_grad_(False)
-#     # model.gradient_checkpointing_enable()
-#     # model.enable_input_require_grads()
+    # Backup gradients state
+    grads = {n: p.requires_grad for n, p in model.named_parameters()}
+    for p in model.parameters(): p.requires_grad = False
+    model.requires_grad_(False)
+    # model.gradient_checkpointing_enable()
+    # model.enable_input_require_grads()
 
-#     txt_eval, tgt_eval = get_eval_txt_and_tgt(txt, tgt, sample_size)
+    txt_eval, tgt_eval = get_eval_txt_and_tgt(txt, tgt, sample_size)
     
-#     with torch.enable_grad():
-#         # possibly the worst code i've ever written in a while...
-#         for txt_edit, tgt_edit in tqdm(zip(chunks(txt_eval, batch_size), chunks(tgt_eval, batch_size)), total=len(txt_eval)//batch_size):
-#             inputs_targets = [txt_ + tgt_ for txt_, tgt_ in zip(txt_edit, tgt_edit)]
-#             encodings = tokenizer(inputs_targets, return_tensors="pt", padding=True).to(model.device)
-#             labels = encodings["input_ids"].clone()
-#             attention_mask = encodings["attention_mask"]
+    with torch.enable_grad():
+        # possibly the worst code i've ever written in a while...
+        for txt_edit, tgt_edit in tqdm(zip(chunks(txt_eval, batch_size), chunks(tgt_eval, batch_size)), total=len(txt_eval)//batch_size):
+            inputs_targets = [txt_ + tgt_ for txt_, tgt_ in zip(txt_edit, tgt_edit)]
+            encodings = tokenizer(inputs_targets, return_tensors="pt", padding=True).to(model.device)
+            labels = encodings["input_ids"].clone()
+            attention_mask = encodings["attention_mask"]
             
-#             # for i, prompt in enumerate(txt_edit):
-#             #     prompt_len = len(tokenizer.encode(prompt, add_special_tokens=True))
-#             #     # Set prompt tokens to -100 so they are ignored by CrossEntropy and your valid_mask
-#             #     labels[i, :prompt_len] = -100
+            for i, prompt in enumerate(txt_edit):
+                prompt_len = len(tokenizer.encode(prompt, add_special_tokens=True))
+                # Set prompt tokens to -100 so they are ignored by CrossEntropy and your valid_mask
+                labels[i, :prompt_len] = -100
                 
-#             # check_labels_masking(labels, tgt_edit, tokenizer)
+            check_labels_masking(labels, tgt_edit, tokenizer)
 
-#             labels[labels == 0] = -100
-#             labels[labels == tokenizer.pad_token_id] = -100
+            labels[labels == 0] = -100
+            labels[labels == tokenizer.pad_token_id] = -100
                     
-#             model.zero_grad(set_to_none=True)
-#             outputs = model(**encodings, use_cache=False)
-#             logits = outputs.logits if hasattr(outputs, 'logits') else outputs
+            model.zero_grad(set_to_none=True)
+            outputs = model(**encodings, use_cache=False)
+            logits = outputs.logits if hasattr(outputs, 'logits') else outputs
 
-#             shift_logits = logits[..., :-1, :].contiguous()
-#             shift_labels = labels[..., 1:].contiguous()
+            shift_logits = logits[..., :-1, :].contiguous()
+            shift_labels = labels[..., 1:].contiguous()
 
-#             loss = torch.nn.functional.cross_entropy(
-#                 shift_logits.view(-1, shift_logits.size(-1)),
-#                 shift_labels.view(-1),
-#                 ignore_index=-100,
-#                 reduction='sum'
-#             )
-#             loss.backward()
+            loss = torch.nn.functional.cross_entropy(
+                shift_logits.view(-1, shift_logits.size(-1)),
+                shift_labels.view(-1),
+                ignore_index=-100,
+                reduction='sum'
+            )
+            loss.backward()
 
-#             # UPDATE STEP: Iterate over all active layers
-#             with torch.no_grad():
-#                 # Check if we captured anything (safeguard)
-#                 assert captured_inputs is not None, "Did not really capture anything. Double check?"
+            # UPDATE STEP: Iterate over all active layers
+            with torch.no_grad():
+                # Check if we captured anything (safeguard)
+                assert captured_inputs is not None, "Did not really capture anything. Double check?"
 
-#                 # Mask is sharedsh across layers for the same batch
-#                 # valid_mask = (shift_labels != -100)
-#                 valid_mask = attention_mask[:, :-1].bool()
-#                 current_valid_tokens = valid_mask.sum().item()
+                # Mask is sharedsh across layers for the same batch
+                valid_mask = (shift_labels != -100)
+                # valid_mask = attention_mask[:, :-1].bool()
+                current_valid_tokens = valid_mask.sum().item()
 
-#                 for layer_name in layer_names:
-#                     if layer_name not in captured_inputs or layer_name not in captured_grads:
-#                         continue
+                for layer_name in layer_names:
+                    if layer_name not in captured_inputs or layer_name not in captured_grads:
+                        continue
 
-#                     feat_in = captured_inputs[layer_name].to(model.device)
-#                     grad_out = captured_grads[layer_name].to(model.device)
+                    feat_in = captured_inputs[layer_name].to(model.device)
+                    grad_out = captured_grads[layer_name].to(model.device)
 
-#                     # Truncate to match valid mask logic (seq_len - 1)
-#                     feat_in = feat_in[:, :-1, :]
-#                     grad_out = grad_out[:, :-1, :]
-#                     kfac_dtype = layer_to_cov_cache[layer_name]["A"].dtype
-#                     input_flat = feat_in[valid_mask].to(dtype=kfac_dtype)
-#                     grad_flat = grad_out[valid_mask].to(dtype=kfac_dtype)
-#                     layer_to_cov_cache[layer_name]["A"].addmm_(input_flat.T, input_flat)
-#                     layer_to_cov_cache[layer_name]["B"].addmm_(grad_flat.T, grad_flat)
-#                     # print(f"Layer {layer_name}: Added {input_flat.shape[0]} tokens to KFAC computation. trace of B is now {torch.trace(layer_to_cov_cache[layer_name]['B']).item()}")
-#                 # Update counters (only once per batch)
-#                 total_tokens += current_valid_tokens
+                    # Truncate to match valid mask logic (seq_len - 1)
+                    feat_in = feat_in[:, :-1, :]
+                    grad_out = grad_out[:, :-1, :]
+                    kfac_dtype = layer_to_cov_cache[layer_name]["A"].dtype
+                    input_flat = feat_in[valid_mask].to(dtype=kfac_dtype)
+                    grad_flat = grad_out[valid_mask].to(dtype=kfac_dtype)
+                    layer_to_cov_cache[layer_name]["A"].addmm_(input_flat.T, input_flat)
+                    layer_to_cov_cache[layer_name]["B"].addmm_(grad_flat.T, grad_flat)
+                    # print(f"Layer {layer_name}: Added {input_flat.shape[0]} tokens to KFAC computation. trace of B is now {torch.trace(layer_to_cov_cache[layer_name]['B']).item()}")
+                # Update counters (only once per batch)
+                total_tokens += current_valid_tokens
 
-#                 # Clear captures for next batch
-#                 captured_inputs.clear()
-#                 captured_grads.clear()
+                # Clear captures for next batch
+                captured_inputs.clear()
+                captured_grads.clear()
                     
-#     # --- 5. Cleanup and Save ---
-#     for h in handles: h.remove()
-#     for name, param in model.named_parameters(): 
-#         param.requires_grad = grads[name]
+    # --- 5. Cleanup and Save ---
+    for h in handles: h.remove()
+    for name, param in model.named_parameters(): 
+        param.requires_grad = grads[name]
 
-#     for layer_name in layer_names:
-#         cov_cache = layer_to_cov_cache.pop(layer_name)
-#         layer_to_cov_cache[layer_name] = (cov_cache["A"].to("cpu")/total_tokens, cov_cache["B"].to("cpu")/total_tokens, total_tokens)
-#         # wandb.log({f"kfac_edit/{layer_name}_A_norm": torch.norm(layer_to_cov_cache[layer_name][0]).item(), f"kfac_edit/{layer_name}_B_norm": torch.norm(layer_to_cov_cache[layer_name][1]).item(), f"kfac_edit/{layer_name}_A_trace": torch.trace(layer_to_cov_cache[layer_name][0]).item(), f"kfac_edit/{layer_name}_B_trace": torch.trace(layer_to_cov_cache[layer_name][1]).item()})
-#         del cov_cache
-#         torch.cuda.empty_cache()
+    for layer_name in layer_names:
+        cov_cache = layer_to_cov_cache.pop(layer_name)
+        layer_to_cov_cache[layer_name] = (cov_cache["A"].to("cpu")/total_tokens, cov_cache["B"].to("cpu")/total_tokens, total_tokens)
+        del cov_cache
+        torch.cuda.empty_cache()
 
-#     return layer_to_cov_cache
+    return layer_to_cov_cache
 
 def layer_stats_kfac_with_txt_tgt(
     model,

@@ -56,6 +56,7 @@ def build_hparams_from_args(args):
     # hparams.evaluation_type = "WILD"
     hparams.model_name = args.model_name
     hparams.evaluation_criteria = args.evaluation_criteria
+    hparams.data_type = args.data_type
     return hparams
 
 if __name__ == "__main__":
@@ -92,9 +93,7 @@ if __name__ == "__main__":
             "post": edit_eval_method(model, hparams.model_name, hparams, tokenizer, request, device)
         }
         all_metrics.append(metrics)
-        breakpoint()
         summary_metrics(all_metrics, f"./logs/{run_name}")
-        # print(f"Edit {i} Metrics: {metrics['post']}")
 
     print_time("End Post Edit Eval Time") 
     artifact = wandb.Artifact('mean_metrics', type='dataset')

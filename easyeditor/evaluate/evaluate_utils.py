@@ -471,7 +471,40 @@ def test_prediction_acc(model, tok, hparams, prompts, targets, device, locality=
             return res
         else:
             return [np.mean(np.equal(answers, labels))]
+        
+def is_probability_higher(model, tok, hparams, prompts, targets_1, targets_2, device):
+    # we calculate the loss of two targets (mask the prompt) and see which one is lower
+    prompt_with_target_1, prompt_with_target_2 = f"{prompts} {targets_1}", f"{prompts} {targets_2}"
 
+    prompt_with_target_1_tok, prompt_with_target_2_tok = tok(
+        prompt_with_target_1,
+        return_tensors="pt",
+    ).to(f"cuda:{device}"), tok(
+        prompt_with_target_2,
+        return_tensors="pt",
+    ).to(f"cuda:{device}")
+
+    prompt_tok = tok(
+        prompts,
+        return_tensors="pt",
+    ).to(f"cuda:{device}")
+
+    mask_1, mask_2 = torch.ones_like(prompt_with_target_1_tok['input_ids']), torch.ones_like(prompt_with_target_2_tok['input_ids'])
+    mask_1[:, :prompt_tok['input_ids'].shape[1]] = 0
+    mask_2[:, :prompt_tok['input_ids'].shape[1]] = 0
+    with torch.no_grad():
+        loss_1 = model(
+            input_ids=prompt_with_target_1_tok['input_ids'],
+            attention_mask=prompt_with_target_1_tok['attention_mask'],
+            labels=prompt_with_target_1_tok['input_ids'],
+        ).loss * mask_1.sum()
+        loss_2 = model(
+            input_ids=prompt_with_target_2_tok['input_ids'],
+            attention_mask=prompt_with_target_2_tok['attention_mask'],
+            labels=prompt_with_target_2_tok['input_ids'],
+        ).loss * mask_2.sum()
+    return (loss_1 < loss_2).cpu().numpy().tolist()
+    
 def test_generation_quality_serac(
     model,
     tok,

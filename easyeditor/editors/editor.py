@@ -8,6 +8,7 @@ load_dotenv()
 import os
 os.environ["HF_DATASETS_CACHE"] = os.getenv("HF_DATASETS_DIR")
 HF_CACHE_DIR = os.getenv("HF_CACHE_DIR")
+BASE_DIR = os.getenv("HF_CACHE_DIR")
 import numpy as np
 import wandb
 import random
@@ -268,7 +269,6 @@ class BaseEditor:
                     sample_size=100
                 )
                 wandb.log({"Task 1 Loss": new_task_loss})
-                # save_model_and_tokenizer(edited_model, self.tok, f"alphaedit_{num_samples_processed//eval_every}_edits")
 
         return edited_model, self.tok
     

@@ -12,13 +12,14 @@ from typing import List, Optional
 import numpy as np
 import torch
 # from sklearn.feature_extraction.text import TfidfVectorizer
-from transformers import AutoTokenizer
+from transformers import AutoTokenizer, AutoModelForCausalLM
 from ..util import HyperParams
 from .evaluate_utils import (
     test_seq2seq_batch_prediction_acc, 
     test_batch_prediction_acc, 
     test_prediction_acc,
     test_prediction_acc_real,
+    is_probability_higher,
     test_safety_acc,
     test_generation_quality, 
     test_concept_gen,
@@ -80,6 +81,7 @@ def compute_edit_quality(
     """
     if isinstance(model,LORA):
         model=model.model
+
     # First, unpack rewrite evaluation record.
     target_new, ground_truth = (
         record[x] for x in ["target_new", "ground_truth"]
@@ -98,12 +100,19 @@ def compute_edit_quality(
                                                 rephrase_prompts, target_new, device=device, test_rephrase=True, eval_metric=eval_metric)
         )
 
+    if hasattr(hparams, 'evaluation_type') and hparams.evaluation_type == "WILD":
+        locality_function = compute_locality_quality
+    elif 'counterfact' not in hparams.data_type:
+        locality_function = compute_locality_quality
+    else:
+        locality_function = compute_locality_quality_counterfact
+
     if 'locality' in record.keys() and any(record['locality']):
         for locality_key in record['locality'].keys():
             ret['locality'].update(
-                compute_locality_quality(model, model_name, hparams, tok, locality_key,
+                locality_function(model, model_name, hparams, tok, locality_key,
                                          record['locality'][locality_key]['prompt'],
-                                         record['locality'][locality_key]['ground_truth'], device=device)
+                                         record['locality'][locality_key]['ground_truth'], record['target_new'], record, device=device)
             )
     if 'portability' in record.keys() and any(record['portability']):
         for portability_key in record['portability'].keys():
@@ -203,6 +212,8 @@ def compute_locality_quality(
     locality_key: str,
     prompt: typing.Union[str, List[str]],
     locality_ground_truth: typing.Union[str, List[str]],
+    locality_false_ground_truth: typing.Union[str, List[str]], # unused
+    record, # unused
     device,
 ) -> typing.Dict:
 
@@ -218,16 +229,171 @@ def compute_locality_quality(
 
         if type(acc) is not list:
             acc = [acc,]
-
-    # ret = {
-    #     f"{locality_key}_output": loc_tokens
-    # }
     ret = {
         f"{locality_key}_acc": acc,
         f"{locality_key}_gen_content": gen_content
         
     }
     return ret
+
+def compute_locality_quality_counterfact(
+    model,
+    model_name,
+    hparams: HyperParams,
+    tok: AutoTokenizer,
+    locality_key: str,
+    prompt: typing.Union[str, List[str]],
+    locality_ground_truth: typing.Union[str, List[str]],
+    locality_false_ground_truth: typing.Union[str, List[str]],
+    record,
+    device,
+) -> typing.Dict:
+
+    assert not hasattr(hparams, 'evaluation_type') or hparams.evaluation_type != "WILD", "We are doing synthetic evaluation for CounterFact locality! Change the code if you want WILD evaluation."
+    
+    ret_counterfact = compute_rewrite_quality_counterfact(model, tok, record)
+
+    ret = {
+        f"{locality_key}_acc": ret_counterfact["neighborhood_prompts_probs"][0]['target_true'] < ret_counterfact["neighborhood_prompts_probs"][0]['target_new'],
+        f"{locality_key}_gen_content": None,
+    }
+    return ret
+
+
+def compute_rewrite_quality_counterfact(
+    model: AutoModelForCausalLM,
+    tok: AutoTokenizer,
+    record: typing.Dict,
+) -> typing.Dict:
+    # borrowed from AlphaEdit. Use with caution.
+
+    # First, unpack rewrite evaluation record.
+    target_new, target_true = (
+        record["target_new"], record["locality"]["neighborhood"]["ground_truth"]
+    )
+    rewrite_prompts = [record["prompt"]]
+    paraphrase_prompts = [record["rephrase_prompt"]]
+    neighborhood_prompts = [record["locality"]["neighborhood"]["prompt"]]
+
+    # Form a list of lists of prefixes to test.
+    prob_prompts = [
+        rewrite_prompts,
+        paraphrase_prompts,
+        neighborhood_prompts,
+    ]
+    which_correct = [
+        [0 for _ in range(len(rewrite_prompts))],
+        [0 for _ in range(len(paraphrase_prompts))],
+        [1 for _ in range(len(neighborhood_prompts))],
+    ]
+    # Flatten all the evaluated prefixes into one list.
+    probs, targets_correct = test_batch_prediction(
+        model,
+        tok,
+        list(chain(*prob_prompts)),
+        list(chain(*which_correct)),
+        target_new,
+        target_true,
+    )
+    # Unflatten the results again into a list of lists.
+    cutoffs = [0] + np.cumsum(list(map(len, prob_prompts))).tolist()
+    ret_probs = [probs[cutoffs[i - 1] : cutoffs[i]] for i in range(1, len(cutoffs))]
+    ret_corrects = [
+        targets_correct[cutoffs[i - 1] : cutoffs[i]] for i in range(1, len(cutoffs))
+    ]
+    # Structure the restuls as a dictionary.
+    ret = {
+        f"{key}_probs": ret_probs[i]
+        for i, key in enumerate(
+            [
+                "rewrite_prompts",
+                "paraphrase_prompts",
+                "neighborhood_prompts",
+            ]
+        )
+    } | {
+        f"{key}_correct": ret_corrects[i]
+        for i, key in enumerate(
+            [
+                "rewrite_prompts",
+                "paraphrase_prompts",
+                "neighborhood_prompts",
+            ]
+        )
+    }
+
+    return ret
+
+def test_batch_prediction(
+    model,
+    tok,
+    prefixes: typing.List[str],
+    which_correct: str,
+    target_new: str,
+    target_true: str,
+):
+    """
+    which_correct: Which target to consider correct. Either 0 for "new" or 1 for "true".
+    """
+
+    prefix_lens = [len(n) for n in tok(prefixes)["input_ids"]]
+    prompt_tok = tok(
+        [
+            f"{prefix} {suffix}"
+            for prefix in prefixes
+            for suffix in [target_new, target_true]
+        ],
+        padding=True,
+        return_tensors="pt",
+    ).to("cuda")
+
+    a_tok, b_tok = (tok(f" {n}")["input_ids"] for n in [target_new, target_true])
+
+    if 'llama' in model.config._name_or_path.lower():
+        a_tok = a_tok[1:]
+        b_tok = b_tok[1:]
+        prefix_lens = [lengths -1 for lengths in prefix_lens]
+
+    choice_a_len, choice_b_len = (len(n) for n in [a_tok, b_tok])
+    with torch.no_grad():
+        logits = model(**prompt_tok).logits
+
+    if 'llama' in model.config._name_or_path.lower():
+        logits = logits[:, 1:, :]
+
+    probs = np.zeros((logits.size(0),), dtype=np.float32)
+    targets_correct = []
+
+    for i in range(logits.size(0)):
+        cur_len = choice_a_len if i % 2 == 0 else choice_b_len
+
+        # Compute suffix probabilities
+        for j in range(cur_len):
+            cur_tok = (a_tok if i % 2 == 0 else b_tok)[j]
+            probs[i] += -torch.nn.functional.log_softmax(
+                logits[i, prefix_lens[i // 2] + j - 1, :], dim=0
+            )[cur_tok].item()
+        probs[i] /= cur_len
+
+        # Compute accuracy on new targets
+        if (which_correct[i // 2] == 0 and i % 2 == 0) or (
+            which_correct[i // 2] == 1 and i % 2 == 1
+        ):
+            correct = True
+            for j in range(cur_len):
+                cur_tok = (a_tok if i % 2 == 0 else b_tok)[j]
+
+                if logits[i, prefix_lens[i // 2] + j - 1, :].argmax().item() != cur_tok:
+                    correct = False
+                    break
+            targets_correct.append(correct)
+
+    return [
+        {"target_new": probs[i].item(), "target_true": probs[i + 1].item()}
+        for i in range(0, len(probs), 2)
+    ], targets_correct
+
+
 
 def compute_portability_quality(
     model,
