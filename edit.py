@@ -44,7 +44,7 @@ def get_arguments():
     parser.add_argument('--batch_edit', default='False', type=str)
     parser.add_argument('--num_edits', type=int, default=100, help='Sequential edit batch. Only used if sequential_edit is True.')
     parser.add_argument('--batch_size', type=int, default=1, help='Batch size for fine-tuning in a sequential chunk. CAUTION: THIS IS HARDLY USED. MAKE SURE YOU KNOW WHAT YOU ARE DOING.')
-    parser.add_argument('--wandb_project', type=str, default='JIGSAW', help='WandB project name.')
+    parser.add_argument('--wandb_project', type=str, default='CrispEdit', help='WandB project name.')
     parser.add_argument('--no_wandb', action='store_true', help='Disable wandb logging.')
     args = parser.parse_args()
     return args

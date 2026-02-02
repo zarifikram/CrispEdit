@@ -36,7 +36,7 @@ def get_arguments():
     parser.add_argument('--eval_num', required=False, type=int, default=200, help='Number of evaluation instances to use for capability. Default uses 200.')
     parser.add_argument('--alg_name', required=True, type=str, default='ft_edit', help='Name of the editing algorithm used.')
     parser.add_argument('--model_name', required=True, type=str, default='gpt2-xl', help='Name of the base model used.')
-    parser.add_argument('--wandb_project', type=str, default='JIGSAW_EVAL', help='WandB project name.')
+    parser.add_argument('--wandb_project', type=str, default='CrispEdit_EVAL', help='WandB project name.')
     parser.add_argument('--wandb_run_id', type=str, default=None, help='WandB run ID for resuming runs.')
     args = parser.parse_args()
     return args

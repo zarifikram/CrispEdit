@@ -1,7 +1,7 @@
 import random
 import numpy as np
 import os
-from easyeditor.models.jigsaw.utils import update_model_and_tokenizer_with_appropriate_padding_token
+from easyeditor.models.crispedit.utils import update_model_and_tokenizer_with_appropriate_padding_token
 from snapedit import *
 from dotenv import load_dotenv
 load_dotenv()
@@ -21,7 +21,7 @@ import argparse
 import torch
 
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from easyeditor.models.jigsaw.Jigsaw_hparams import JigsawHyperParams
+from easyeditor.models.crispedit.CrispEdit_hparams import CrispEditHyperParams
 
 SEED = 69
 random.seed(SEED)
@@ -40,7 +40,7 @@ def get_arguments():
     parser.add_argument('--batch_size', type=int, default=32, help='Batch size for fine-tuning.')
     parser.add_argument('--num_edits', type=int, default=100, help='Sequential edit batch')
     parser.add_argument('--sequential_edit', action='store_true', help='Whether to use sequential editing or not. Default is False.')
-    parser.add_argument('--wandb_project', type=str, default='JIGSAW', help='WandB project name.')
+    parser.add_argument('--wandb_project', type=str, default='CrispEdit', help='WandB project name.')
     parser.add_argument('--recalculate_cache', action='store_true', help='Whether to recalculate the projection caches. Default is False.')
     parser.add_argument('--recalculate_weight_threshold', type=float, default=0.25, help='Threshold for recalculating weight projection caches. [0.0-1.0]')
     parser.add_argument('--no_snap', action='store_true', help='Disable SNAP optimization even if available.')
@@ -58,7 +58,7 @@ def get_arguments():
     return args
 
 def get_hparams(args):
-    hparams = JigsawHyperParams.from_hparams(f"./hparams/JIGSAW/{args.model}")
+    hparams = CrispEditHyperParams.from_hparams(f"./hparams/CrispEdit/{args.model}")
     hparams.batch_size = args.batch_size
     hparams.energy_threshold = args.energy_threshold
     hparams.mom2_n_samples = args.cache_sample_num

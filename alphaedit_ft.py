@@ -3,7 +3,7 @@ import numpy as np
 from tqdm import trange
 from copy import deepcopy
 from typing import Any, Dict, List
-from easyeditor.models.jigsaw.utils import update_model_and_tokenizer_with_appropriate_padding_token
+from easyeditor.models.crispedit.utils import update_model_and_tokenizer_with_appropriate_padding_token
 from utils import print_time, prepare_requests_from_data_type, save_model_and_tokenizer, chunks
 import os
 from dotenv import load_dotenv
@@ -36,7 +36,7 @@ def get_arguments():
     parser.add_argument('--cache_sample_num', type=int, default=1000, help='Number of samples to use for caching projection matrices.')
     parser.add_argument('--energy_threshold', type=float, default=0.9, help='Energy threshold for projection matrix computation.')
     parser.add_argument('--batch_size', type=int, default=32, help='Batch size for fine-tuning.')
-    parser.add_argument('--wandb_project', type=str, default='JIGSAW', help='WandB project name.')
+    parser.add_argument('--wandb_project', type=str, default='CrispEdit', help='WandB project name.')
     args = parser.parse_args()
     return args
 

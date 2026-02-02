@@ -1,5 +1,5 @@
-from easyeditor.models.jigsaw.utils import calculate_projection_caches
-from easyeditor.models.jigsaw.Jigsaw_hparams import JigsawHyperParams
+from easyeditor.models.crispedit.utils import calculate_projection_caches
+from easyeditor.models.crispedit.CrispEdit_hparams import CrispEditHyperParams
 from dotenv import load_dotenv
 import os
 import random
@@ -29,7 +29,7 @@ def get_arguments():
     parser.add_argument('--model', required=True, type=str)
     parser.add_argument('--cache_sample_num', type=int, default=1000, help='Number of samples to use for caching projection matrices.')
     parser.add_argument("--layer", required=True, type=int, help="Layer number to compute A, B for.")
-    parser.add_argument('--wandb_project', type=str, default='JIGSAW_CACHE_CALC', help='WandB project name.')
+    parser.add_argument('--wandb_project', type=str, default='CrispEdit_CACHE_CALC', help='WandB project name.')
     args = parser.parse_args()
     return args
 
@@ -37,7 +37,7 @@ def get_arguments():
 if __name__ == "__main__":
 
     args = get_arguments()
-    hparams = JigsawHyperParams.from_hparams(f"./hparams/JIGSAW/{args.model}")
+    hparams = CrispEditHyperParams.from_hparams(f"./hparams/CrispEdit/{args.model}")
     
     hparams.mom2_n_samples = args.cache_sample_num
     hparams.layers = [args.layer]

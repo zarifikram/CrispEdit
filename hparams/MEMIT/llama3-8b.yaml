@@ -1,6 +1,6 @@
 alg_name: "MEMIT"
 model_name: "meta-llama/Meta-Llama-3-8B-Instruct"
-stats_dir: "/data0/zikram/jigsaw/data/stats/"
+stats_dir: "/project2/rashidin_1753/zikram/crispedit_stats/"
 device: 0
 batch_size: 3000
 layers: [4, 5, 6, 7, 8]

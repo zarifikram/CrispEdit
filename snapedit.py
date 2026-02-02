@@ -7,8 +7,8 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 import wandb
 from utils import chunks, save_model_and_tokenizer
 
-from easyeditor.models.jigsaw.Jigsaw_hparams import JigsawHyperParams
-from easyeditor.models.jigsaw.utils import (
+from easyeditor.models.crispedit.CrispEdit_hparams import CrispEditHyperParams
+from easyeditor.models.crispedit.utils import (
     cache_weights_to_cpu, 
     calculate_cov_cache_with_old_data, 
     calculate_cov_cache_with_request, 
@@ -25,7 +25,7 @@ def execute_ft(
     model: AutoModelForCausalLM,
     tok: AutoTokenizer,
     requests: List[Dict],
-    hparams: JigsawHyperParams,
+    hparams: CrispEditHyperParams,
     **kwargs: Any,
 ) -> AutoModelForCausalLM:
     """
@@ -116,7 +116,7 @@ def execute_ft_sequential(
     model: AutoModelForCausalLM,
     tok: AutoTokenizer,
     requests: List[Dict],
-    hparams: JigsawHyperParams,
+    hparams: CrispEditHyperParams,
     **kwargs: Any,
 ) -> AutoModelForCausalLM:
     """
@@ -272,7 +272,7 @@ class AverageMeter:
         self.avg = self.sum / self.count
 
 def setup_requests_for_safeedit(requests: List[Dict]) -> List[Dict]:
-    # just a simple way to make safeedit dataset work with old jigsaw code
+    # just a simple way to make safeedit dataset work with old crispedit code
     if "target_new" in requests[0]:
         return requests
 

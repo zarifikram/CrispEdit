@@ -9,7 +9,7 @@ from easyeditor.editors.utils import summary_metrics
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import numpy as np
 from easyeditor.evaluate.evaluate import compute_edit_quality, compute_edit_quality_safety
-from easyeditor.models.jigsaw.utils import update_model_and_tokenizer_with_appropriate_padding_token
+from easyeditor.models.crispedit.utils import update_model_and_tokenizer_with_appropriate_padding_token
 import random
 import torch
 from tqdm import tqdm
@@ -41,7 +41,7 @@ def get_arguments():
     parser.add_argument('--alg_name', required=True, type=str, default='ft_edit', help='Name of the editing algorithm used.')
     parser.add_argument('--model_name', required=True, type=str, default='gpt2-xl', help='Name of the base model used.')
     parser.add_argument('--evaluation_criteria', required=True, type=str, default='exact_match', choices=['exact_match', 'llm_judge'], help='Evaluation criteria to use.')  
-    parser.add_argument('--wandb_project', type=str, default='JIGSAW_EVAL', help='WandB project name.')
+    parser.add_argument('--wandb_project', type=str, default='CrispEdit_EVAL', help='WandB project name.')
     parser.add_argument('--wandb_run_id', type=str, default=None, help='WandB run ID for resuming runs.')
     parser.add_argument('--no_wandb', action='store_true', help='Disable wandb logging.')
     args = parser.parse_args()

@@ -1,12 +1,12 @@
 import gc
 import wandb
 
-from easyeditor.models.jigsaw.projected_adam import ProjectedAdam
-from easyeditor.models.jigsaw.projected_sgd import ProjectedSGD
+from easyeditor.models.crispedit.projected_adam import ProjectedAdam
+from easyeditor.models.crispedit.projected_sgd import ProjectedSGD
 from ..rome.layer_stats import layer_stats_kfac, layer_stats_kfac_one_pass, layer_stats_kfac_with_txt_tgt, layer_stats_kfac_fisher_with_txt_tgt, calculate_cache_loss, calculate_request_loss
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from .Jigsaw_hparams import JigsawHyperParams
+from .CrispEdit_hparams import CrispEditHyperParams
 from typing import Dict, List, Tuple, Union
 from dotenv import load_dotenv
 from peft import LoraConfig, AdaLoraConfig, get_peft_model, TaskType
@@ -89,7 +89,7 @@ def calculate_projection_cache_by_layer(model, tok, layer, hparams, force_recomp
 
 def get_weights(
     model: AutoModelForCausalLM,
-    hparams: JigsawHyperParams,
+    hparams: CrispEditHyperParams,
     bias: bool,
     to_cpu: bool = False,
 ) -> Dict[str, torch.Tensor]:

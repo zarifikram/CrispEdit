@@ -20,5 +20,5 @@ from .deco import *
 from .dola import *
 from .deepedit_api import *
 from .defer import *
-from .jigsaw import *
+from .crispedit import *
 from .ultraedit import *

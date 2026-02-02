@@ -6,7 +6,7 @@ from ...util.hparams import HyperParams
 
 
 @dataclass
-class JigsawHyperParams(HyperParams):
+class CrispEditHyperParams(HyperParams):
     # Method
     layers: List[int]
     num_steps: int
@@ -48,6 +48,6 @@ class JigsawHyperParams(HyperParams):
             config = yaml.safe_load(stream)
             config = super().construct_float_from_scientific_notation(config)
 
-        assert (config and config['alg_name'] == 'JIGSAW') or print(f'JigsawHyperParams can not load from {hparams_name_or_path}, '
+        assert (config and config['alg_name'] == 'CRISPEDIT') or print(f'CrispEditHyperParams can not load from {hparams_name_or_path}, '
                                                 f'alg_name is {config["alg_name"]} ')
         return cls(**config)

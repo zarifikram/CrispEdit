@@ -5,7 +5,7 @@ from datetime import datetime
 from copy import deepcopy
 from typing import Any, Dict, List
 from utils import print_time, prepare_requests_from_data_type, save_model_and_tokenizer, chunks
-from easyeditor.models.jigsaw.utils import update_model_and_tokenizer_with_appropriate_padding_token
+from easyeditor.models.crispedit.utils import update_model_and_tokenizer_with_appropriate_padding_token
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -36,7 +36,7 @@ def get_arguments():
     parser.add_argument('--model', required=True, type=str)
     parser.add_argument('--data_type', required=True, type=str, default='zsre', choices=['zsre', 'counterfact', 'wiki'])
     parser.add_argument('--batch_size', type=int, default=32, help='Batch size for fine-tuning.')
-    parser.add_argument('--wandb_project', type=str, default='JIGSAW', help='WandB project name.')
+    parser.add_argument('--wandb_project', type=str, default='CrispEdit', help='WandB project name.')
     args = parser.parse_args()
     return args
 

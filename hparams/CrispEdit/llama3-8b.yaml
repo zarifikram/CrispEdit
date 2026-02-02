@@ -2,11 +2,11 @@
 #   1. prompt_last: the method of ROME's (https://arxiv.org/abs/2202.05262) original paper, which calculates nll loss through the last token of the input.
 #   2. target_new: the standard autoregressive method, using the cross-entropy loss function
 
-alg_name: "JIGSAW"
-model_name: "Qwen/Qwen2.5-7B-Instruct"
-device: 1
+alg_name: "CrispEdit"
+device: 0
+model_name: "meta-llama/Meta-Llama-3-8B-Instruct"
 
-layers: [15, 16, 17, 18, 19]
+layers: [19, 20, 21, 22, 23]
 num_steps: 25
 batch_size: 32
 max_length: 40
