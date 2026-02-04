@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="CrispEdit: Low-Curvature Projections for Scalable Non-Destructive LLM Editing">
+  <meta property="og:title" content="CrispEdit"/>
+  <meta property="og:description" content="Scalable Non-Destructive LLM Editing via Low-Curvature Projections"/>
+  <meta property="og:url" content="https://zarifikram.github.io/CrispEdit"/>
+  <meta property="og:image" content="static/images/banner.png" />
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+
+  <meta name="twitter:title" content="CrispEdit">
+  <meta name="twitter:description" content="Scalable Non-Destructive LLM Editing via Low-Curvature Projections">
+  <meta name="twitter:image" content="static/images/banner.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="keywords" content="LLM editing, model editing, capability preservation, K-FAC, machine learning">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>CrispEdit: Low-Curvature Projections</title>
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script src="static/js/bulma-carousel.min.js"></script>
+  <script src="static/js/bulma-slider.min.js"></script>
+  <script src="static/js/index.js"></script>
+
+  <style>
+    /* Minimalistic Overrides */
+    body { font-family: 'Noto Sans', sans-serif; background-color: #fcfcfc; }
+    .hero-body { padding-bottom: 2rem; }
+    .publication-title { font-family: 'Google Sans', sans-serif; font-weight: 700; color: #333; }
+    .publication-authors { font-family: 'Google Sans', sans-serif; color: #555; }
+    .button.is-dark { background-color: #333; border-color: transparent; transition: all 0.2s ease; }
+    .button.is-dark:hover { background-color: #555; }
+    .section.hero.is-light { background-color: #f5f5f5; }
+    .content h2 { font-weight: 600; color: #222; margin-top: 1.5rem; }
+    .teaser-image { max-width: 80%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 2rem auto; display: block;}
+    .method-box { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+  </style>
+</head>
+<body>
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">CrispEdit: Low-Curvature Projections for Scalable Non-Destructive LLM Editing</h1>
+            
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="http://zarifikram.github.io" target="_blank">Zarif Ikram</a><sup></sup>,</span>
+              <span class="author-block">
+                <a href="https://scholar.google.com/citations?user=oK4NwsUAAAAJ&hl=en" target="_blank">Arad Firouzkouhi</a><sup></sup>,</span>
+              <span class="author-block">
+                <a href="https://stephentu.github.io" target="_blank">Stephen Tu</a><sup></sup>,</span>
+              <span class="author-block">
+                <a href="https://scholar.google.com/citations?user=narJyMAAAAAJ&hl=en" target="_blank">Mahdi Soltanolkotabi</a><sup></sup>,</span>
+              <span class="author-block">
+                <a href="http://pariard.github.io" target="_blank">Paria Rashidinejad</a><sup></sup></span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">University of Southern California</span>
+              <!-- <span class="author-block"><sup>1</sup>USC</span> -->
+              <br>
+              <!-- <span class="author-block"><small>Under Review at ICML 202X</small></span> -->
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <span class="link-block">
+                  <a href="#" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                    <span>Paper</span>
+                  </a>
+                </span>
+
+                <span class="link-block">
+                  <a href="#" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="ai ai-arxiv"></i></span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+
+                <span class="link-block">
+                  <a href="#" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="fab fa-github"></i></span>
+                    <span>Code</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              A central challenge in large language model (LLM) editing is <strong>capability preservation</strong>: methods that successfully change targeted behavior can quietly game the editing proxy and corrupt general capabilities, producing degenerate behaviors reminiscent of proxy/reward hacking. 
+            </p>
+            <p>
+              We present <strong>CrispEdit</strong>, a scalable and principled second-order editing algorithm that treats capability preservation as an explicit constraint, unifying and generalizing several existing editing approaches. CrispEdit formulates editing as constrained optimization and enforces the constraint by projecting edit updates onto the low-curvature subspace of the capability-loss landscape. 
+            </p>
+            <p>
+              At the crux of CrispEdit is expressing capability constraint via <strong>Bregman divergence</strong>, whose quadratic form yields the Gauss-Newton Hessian exactly, even when the base model is not trained to convergence. We make this second-order procedure efficient at the LLM scale using Kronecker-factored approximate curvature (K-FAC) and a novel matrix-free projector that exploits Kronecker structure to avoid constructing massive projection matrices.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-full">
+          <h2 class="title is-3">Methodology</h2>
+          
+          <img src="static/images/crisp_overview.png" alt="CrispEdit Methodology Overview" class="teaser-image">
+          <div class="content has-text-centered">
+            <p>
+              <em>Figure 1: CrispEdit projects edit updates into the low-curvature direction of the capability loss, improving the edit objective while preserving general capabilities.</em>
+            </p>
+          </div>
+
+          <div class="method-box has-text-justified">
+            <h3 class="title is-4">1. Constraint-Aware Editing</h3>
+            <p>
+              Unlike heuristic guardrails that restrict updates to specific parameters or layers, CrispEdit solves a constrained optimization problem: minimize the edit loss subject to keeping the capability loss (measured via Bregman divergence) below a threshold.
+            </p>
+            
+            <h3 class="title is-4">2. Scalable Second-Order Projection</h3>
+            <p>
+               We utilize the Gauss-Newton Hessian (GNH) to identify "safe" directions for editing. To scale this to billion-parameter models (like LLaMA-3), we approximate the GNH using <strong>K-FAC</strong> and implement a <strong>matrix-free projector</strong>. This allows us to compute projections without ever instantiating the massive full curvature matrix.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3 has-text-centered">Results</h2>
+          <div class="content has-text-justified">
+            <p>
+              Across standard model-editing benchmarks (including ZsRE and counterfactual editing on LLaMA-3-8B-Instruct), CrispEdit consistently achieves high edit success while maintaining capability degradation below 1%. It significantly outperforms prior editors like MEMIT, AlphaEdit, and standard Fine-Tuning in preserving reasoning (GSM8K, ARC) and general instruction following (IFEval).
+            </p>
+            <div class="has-text-centered" style="margin-top: 2rem;">
+               <img src="static/images/results_table.png" alt="Comparison Results" style="max-width: 90%; border: 1px solid #ddd; border-radius: 5px;">
+               <p class="is-size-6"><em>Comparison of CrispEdit against baselines on edit reliability and generality.</em></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>@article{CrispEdit202X,
+  title={CrispEdit: Low-Curvature Projections for Scalable Non-Destructive LLM Editing},
+  author={Anonymous Authors},
+  journal={Under Review},
+  year={202X},
+  url={https://openreview.net/forum?id=placeholder}
+}</code></pre>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="content has-text-centered">
+        <p>
+          Website template adapted from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
