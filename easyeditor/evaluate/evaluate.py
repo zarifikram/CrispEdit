@@ -254,7 +254,7 @@ def compute_locality_quality_counterfact(
     ret_counterfact = compute_rewrite_quality_counterfact(model, tok, record)
 
     ret = {
-        f"{locality_key}_acc": ret_counterfact["neighborhood_prompts_probs"][0]['target_true'] < ret_counterfact["neighborhood_prompts_probs"][0]['target_new'],
+        f"{locality_key}_acc": sum([probs['target_true'] < probs['target_new'] for probs in ret_counterfact["neighborhood_prompts_probs"]]) / len(ret_counterfact["neighborhood_prompts_probs"]),
         f"{locality_key}_gen_content": None,
     }
     return ret
@@ -272,8 +272,8 @@ def compute_rewrite_quality_counterfact(
         record["target_new"], record["locality"]["neighborhood"]["ground_truth"]
     )
     rewrite_prompts = [record["prompt"]]
-    paraphrase_prompts = [record["rephrase_prompt"]]
-    neighborhood_prompts = [record["locality"]["neighborhood"]["prompt"]]
+    paraphrase_prompts = [record["rephrase_prompt"]] if type(record["rephrase_prompt"]) is str else record["rephrase_prompt"]
+    neighborhood_prompts = [record["locality"]["neighborhood"]["prompt"]] if type(record["locality"]["neighborhood"]["prompt"]) is str else record["locality"]["neighborhood"]["prompt"]
 
     # Form a list of lists of prefixes to test.
     prob_prompts = [

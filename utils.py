@@ -46,6 +46,7 @@ def prepare_prompts_from_data_type(data_type):
         "zsre": "zsre_mend_3k",
         "counterfact": "counterfact-edit_3k",
         "wiki": "wiki_big_edit_3k",
+        "multi_counterfact": "multi_counterfact"
     }[data_type]
     data = json.load(open(f"./data/{data_file}.json", 'r', encoding='utf-8'))
 
@@ -61,7 +62,7 @@ def prepare_prompts_from_data_type(data_type):
         subject = [d['subject'] for d in data]
         rephrase_prompts = [d['rephrase'] for d in data]
         target_new = [d['alt'] for d in data]
-        locality_prompts = [d['loc'] for d in data]
+        locality_prompts = [d['loc'][13:].capitalize() + "?" for d in data]
         locality_ans = [d['loc_ans'] for d in data]
     elif data_type == 'qaedit':
         prompts = [d['prompt'] for d in data]
@@ -77,6 +78,13 @@ def prepare_prompts_from_data_type(data_type):
         target_new = [d['target_new'] for d in data]
         locality_prompts = [d["locality_prompt"] for d in data]
         locality_ans = [d["locality_ground_truth"] for d in data]
+    elif data_type == "multi_counterfact":
+        prompts = [d['requested_rewrite']['prompt'].format(d['requested_rewrite']['subject']) for d in data]
+        subject = [d['requested_rewrite']['subject'] for d in data]
+        rephrase_prompts = [d['paraphrase_prompts'] for d in data]
+        target_new = [d['requested_rewrite']['target_new']['str'] for d in data]
+        locality_prompts = [d['neighborhood_prompts'] for d in data]
+        locality_ans = [d['requested_rewrite']['target_true']['str'] for d in data]
     else:
         raise NotImplementedError(f"Data type {data_type} not supported.")
 

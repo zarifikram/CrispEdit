@@ -34,7 +34,7 @@ def get_model_and_tokenizer_from_dir(edited_model_dir_local):
 def get_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('--edited_model_dir', required=True, type=str, default=None, help='Path to edited model for evaluation.')
-    parser.add_argument('--data_type', required=True, type=str, default='zsre', choices=['zsre', 'counterfact', 'wiki', 'safeedit_train', 'safeedit_test'])
+    parser.add_argument('--data_type', required=True, type=str, default='zsre', choices=['zsre', 'counterfact', 'multi_counterfact', 'wiki', 'safeedit_train', 'safeedit_test'])
     parser.add_argument('--eval_num', required=False, type=int, default=3000, help='Number of evaluation instances to use. Default uses all.')
     parser.add_argument('--max_length', required=False, type=int, default=40, help='Maximum length of the generated sequences.')
     parser.add_argument('--context_type', required=True, type=str, default='qa_inst', choices=['qa_inst', 'chat_temp', 'no_context'], help='Type of context to use for evaluation.')
