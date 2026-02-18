@@ -2,6 +2,8 @@
 
 This repository hosts the code and data for the paper: **CrispEdit**.
 
+https://arxiv.org/abs/2602.15823
+
 #### Requirements:
 - **Environment**: `requirements.txt` (Please use Python 3.9 for this repository)
 
