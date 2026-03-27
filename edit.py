@@ -46,6 +46,7 @@ def get_arguments():
     parser.add_argument('--batch_size', type=int, default=1, help='Batch size for fine-tuning in a sequential chunk. CAUTION: THIS IS HARDLY USED. MAKE SURE YOU KNOW WHAT YOU ARE DOING.')
     parser.add_argument('--wandb_project', type=str, default='CrispEdit', help='WandB project name.')
     parser.add_argument('--no_wandb', action='store_true', help='Disable wandb logging.')
+    parser.add_argument('--layers', type=str, default=None, help='Comma-separated layer indices to edit (e.g., "19,20,21"). Overrides config layers.')
     args = parser.parse_args()
     return args
 
@@ -80,6 +81,8 @@ def get_hparams_and_editor(args):
     hparams = editing_hparams.from_hparams(f"./hparams/{args.editing_method}/{args.model}")
     hparams.batch_size = args.num_edits ### NOTE: We try to match the naming convention in easy edit. batch_size here means the number of edits in a sequential edit.
     hparams.chunk_batch_size = args.batch_size ### NOTE: chunk_batch_size is the actual batch size for fine-tuning in a sequential chunk. Most methods in easyeditor do not use this parameter, so changing this will hardly affect anything.
+    if args.layers:
+        hparams.layers = [int(l) for l in args.layers.split(',')]
     assert hparams.chunk_batch_size == 1 or (hparams.chunk_batch_size > 1 and args.editing_method in ['LoRA']), "Currently only LoRA supports batch fine-tuning. Are you sure what you are doing?"
     editor = BaseEditor.from_hparams(hparams)
     return hparams, editor
@@ -89,6 +92,9 @@ if __name__ == "__main__":
     prompts, rephrase_prompts, subject, target_new, locality_inputs, ground_truth = prepare_prompts_from_data_type(args.data_type)
     hparams, editor = get_hparams_and_editor(args)
     save_model_name = f"{args.model}_{args.editing_method}_{args.data_type}"
+    if args.layers:
+        layer_str = '-'.join(args.layers.split(','))
+        save_model_name += f"_L{layer_str}"
     print(f"Model will be saved to BASE_DIR/{save_model_name}")
     wandb.init(project=args.wandb_project, name=save_model_name, config=vars(hparams), mode="online" if not args.no_wandb else "disabled")
 
