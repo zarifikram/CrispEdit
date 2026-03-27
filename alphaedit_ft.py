@@ -170,6 +170,10 @@ if __name__ == "__main__":
 
     # set appropriate padding token
     model, tokenizer = update_model_and_tokenizer_with_appropriate_padding_token(model, tokenizer, hparams)
+
+    # Enable gradient checkpointing
+    model.gradient_checkpointing_enable()
+    model.enable_input_require_grads()
     
     print_time("Begin FT Time")
     edited_model = execute_ft(model, tokenizer, requests, hparams)
