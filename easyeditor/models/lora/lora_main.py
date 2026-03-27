@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Tuple
 from peft import get_peft_model, AdaLoraConfig, TaskType, get_peft_model_state_dict, set_peft_model_state_dict, LoraConfig
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
+from peft import PeftModel
 
 from .lora_hparams import LoRAHyperParams
 
@@ -54,19 +55,19 @@ def execute_lora(
         Config = AdaLoraConfig
     else:
         raise NotImplementedError
-    if not keep_original_weight and hasattr(model,'peft_config'):
+    if isinstance(model, PeftModel):
         peft_model = model
     else:
         peft_config = Config(
             task_type=TaskType.CAUSAL_LM,
             inference_mode=False,
             r=hparams.rank,
-            lora_alpha=hparams.lora_alpha, lora_dropout=hparams.lora_dropout,
+            lora_alpha=hparams.lora_alpha,
+            lora_dropout=hparams.lora_dropout,
             layers_to_transform=hparams.layers if len(hparams.layers) > 0 else None,
             target_modules=hparams.target_modules
         )
         peft_model = get_peft_model(model, peft_config)
-
     peft_model.is_parallelizable = True
     peft_model.model_parallel = True
     if hasattr(peft_model, 'print_trainable_parameters'):
@@ -146,7 +147,11 @@ def execute_lora(
             break
 
     # merge lora weights back to the original model #NOTE: We ignore original weights attribute here (i have no idea why this is here)
-    peft_model = peft_model.merge_and_unload()
+    if isinstance(peft_model, PeftModel):
+        peft_model = peft_model.merge_and_unload()
+        # Subtle invariant: after merge, we must not be a PEFT model
+        assert not isinstance(peft_model, PeftModel)
+
     return peft_model
 
 
