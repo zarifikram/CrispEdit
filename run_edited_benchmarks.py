@@ -64,14 +64,19 @@ if __name__ == "__main__":
     hparams = build_hparams_from_args(args)
     requests = prepare_requests_from_data_type(args.data_type)
     model, tokenizer = get_model_and_tokenizer_from_dir(args.edited_model_dir)
+
+    # ### FIX: Llama 3 does not have a pad token by default. Set it to EOS.
+    if tokenizer.pad_token is None:
+        tokenizer.add_special_tokens({'pad_token': tokenizer.eos_token})
+        # Alternatively: tokenizer.pad_token = tokenizer.eos_token
     # device expects the device number only
     device = model.device.index
 
     # set appropriate padding token
     model, tokenizer = update_model_and_tokenizer_with_appropriate_padding_token(model, tokenizer, hparams)
 
-    run_name = args.edited_model_dir + f"_eval_{args.evaluation_criteria}_{args.context_type}"
-    run = wandb.init(project=args.wandb_project, name=run_name, config=vars(hparams), resume=args.wandb_run_id if not args.wandb_run_id else "must", id=args.wandb_run_id, mode="disabled" if args.no_wandb else "online")
+    run_name = f"{hparams.alg_name}_{args.data_type}_{hparams.model_name}"
+    run = wandb.init(project=args.wandb_project, name=run_name, config=vars(hparams), resume=args.wandb_run_id if not args.wandb_run_id else "must", id=args.wandb_run_id, mode="online")
 
     # before evaluation, always make sure tokenizer padding side is correct
     if tokenizer.padding_side != "left":
