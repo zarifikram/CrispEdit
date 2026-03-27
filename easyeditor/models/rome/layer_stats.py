@@ -437,7 +437,10 @@ def layer_stats_kfac_one_pass(
     if model_name is None:
         model_name = model.config._name_or_path.rsplit("/")[-1]
     stats_dir = Path(stats_dir)
-    
+    hook = getattr(model, "_require_grads_hook", None)
+    if hook is not None:
+        model.disable_input_require_grads()
+
     results = {}
     missing_layers = []
 
@@ -454,6 +457,7 @@ def layer_stats_kfac_one_pass(
         if filename.exists() and not force_recompute:
             loaded = torch.load(filename, map_location='cpu')
             results[layer_name] = (loaded['A'].to(dtype=dtype), loaded['B'].to(dtype=dtype), loaded['N'])
+            print(f"Layer {layer_name} found in cache.")
         else:
             missing_layers.append(layer_name)
 
@@ -633,7 +637,7 @@ def layer_stats_kfac_one_pass(
             torch.save({'A': A, 'B': B, 'N': total_tokens}, filename)
         
         results[layer_name] = (A, B, total_tokens)
-
+    model.enable_input_require_grads()
     return results
 
 def layer_stats_kfac_with_txt_tgt_old(
