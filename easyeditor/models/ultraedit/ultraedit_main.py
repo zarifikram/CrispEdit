@@ -75,6 +75,8 @@ class UltraEditRewriteExecutor:
                 request["prompt"] + targets[i]
                 for i, request in enumerate(batch)
             ]
+            if len(sentences) == 0:
+                continue
 
             # Tokenize
             sent_tok = self.tokenizer(sentences, padding=True, return_tensors="pt").to(
