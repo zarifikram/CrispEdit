@@ -239,7 +239,7 @@ class BaseEditor:
         old_task_loss = calculate_cache_loss(
             self.model,
             self.tok,
-            "wikipedia",
+            "wikimedia/wikipedia",
             sample_size=100
         )
         wandb.log({"Task 1 Loss": old_task_loss})
@@ -265,7 +265,7 @@ class BaseEditor:
                 new_task_loss = calculate_cache_loss(
                     edited_model,
                     self.tok,
-                    "wikipedia",
+                    "wikimedia/wikipedia",
                     sample_size=100
                 )
                 wandb.log({"Task 1 Loss": new_task_loss})
@@ -328,7 +328,7 @@ class BaseEditor:
                     new_task_loss = calculate_cache_loss(
                         edited_model,
                         self.tok,
-                        "wikipedia",
+                        "wikimedia/wikipedia",
                         sample_size=100
                     )
                     wandb.log({"Task 1 Loss": new_task_loss})
@@ -339,7 +339,7 @@ class BaseEditor:
                     new_task_loss = calculate_cache_loss(
                         edited_model,
                         self.tok,
-                        "wikipedia",
+                        "wikimedia/wikipedia",
                         sample_size=100
                     )
                     wandb.log({"Task 1 Loss": new_task_loss})
@@ -363,7 +363,7 @@ class BaseEditor:
         new_task_loss = calculate_cache_loss(
             edited_model,
             self.tok,
-            "wikipedia",
+            "wikimedia/wikipedia",
             sample_size=100
         )
         wandb.log({"Task 1 Loss": new_task_loss})

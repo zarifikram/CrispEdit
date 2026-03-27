@@ -36,7 +36,7 @@ def main():
         parser.add_argument(*args, **kwargs)
 
     aa("--model_name", default="gpt2-xl", choices=["gpt2-xl", "EleutherAI/gpt-j-6B"])
-    aa("--dataset", default="wikipedia", choices=["wikitext", "wikipedia"])
+    aa("--dataset", default="wikimedia/wikipedia", choices=["wikitext", "wikimedia/wikipedia"])
     aa("--layers", default=[17], type=lambda x: list(map(int, x.split(","))))
     aa("--to_collect", default=["mom2"], type=lambda x: x.split(","))
     aa("--sample_size", default=100000, type=lambda x: None if x == "all" else int(x))

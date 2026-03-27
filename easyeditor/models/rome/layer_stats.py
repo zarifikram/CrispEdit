@@ -44,7 +44,7 @@ def main():
         parser.add_argument(*args, **kwargs)
 
     aa("--model_name", default="gpt2-xl", choices=["gpt2-xl", "EleutherAI/gpt-j-6B"])
-    aa("--dataset", default="wikipedia", choices=["wikitext", "wikipedia"])
+    aa("--dataset", default="wikimedia/wikipedia", choices=["wikitext", "wikimedia/wikipedia"])
     aa("--layers", default=[17], type=lambda x: list(map(int, x.split(","))))
     aa("--to_collect", default=["mom2"], type=lambda x: x.split(","))
     aa("--sample_size", default=100000, type=lambda x: None if x == "all" else int(x))
@@ -799,7 +799,7 @@ def layer_stats_kfac_with_txt_tgt(
     def get_ds(txt, tgt):
         all_texts = [t + g for t, g in zip(txt, tgt)]
         if add_pretrain_data:
-            raw_ds_pretrain = load_wiki_ds("wikipedia")["train"]
+            raw_ds_pretrain = load_wiki_ds("wikimedia/wikipedia")["train"]
             pretrain_texts = get_shuffled_subset_texts(
                 raw_ds_pretrain, 
                 sample_size=pretrain_sample_size,
@@ -1313,9 +1313,15 @@ def create_text_dataset(text_list):
     return Dataset.from_dict(data_dict)
 
 def load_wiki_ds(ds_name):
+    dsets_map = {
+        "wikitext": "wikitext-103-raw-v1",
+        "wikipedia": "20220301.en",
+        "wikimedia/wikipedia": "20231101.en",
+    }
+    print(f"Loading wiki dataset: {ds_name}")
     raw_ds = load_dataset(
             ds_name,
-            dict(wikitext="wikitext-103-raw-v1", wikipedia="20220301.en")[ds_name],
+            dsets_map[ds_name],
             trust_remote_code=True,
             cache_dir=CACHE_DIR,
         )
