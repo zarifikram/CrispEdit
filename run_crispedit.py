@@ -53,6 +53,7 @@ def get_arguments():
     parser.add_argument('--lora_dropout', type=float, default=0.1, help='LoRA dropout if LoRA is used.')
     parser.add_argument('--lora_type', type=str, default='lora', choices=['lora', 'adalora'], help='Type of LoRA to use.')
     parser.add_argument('--target_modules', type=list, default=["q_proj", "v_proj"], help='Target modules for LoRA adaptation.')
+    parser.add_argument('--layers', type=str, default=None, help='Comma-separated layer indices to edit (e.g., "19,20,21"). Overrides config layers.')
     args = parser.parse_args()
     return args
 
@@ -68,6 +69,10 @@ def get_hparams(args):
     hparams.disable_old_loss_check = args.disable_old_loss_check
     hparams.edit_cache_style = args.edit_cache_style
     hparams.perform_lora = args.perform_lora
+    args_layer_in : str = args.layers
+    args_layer_in = args_layer_in.strip("'")
+    if args.layers:
+        hparams.layers = [int(l) for l in args_layer_in.split(',')]
 
     assert not (not args.no_crisp and args.perform_lora), "We don't currently support using CrispEdit and LoRA together. Please set --no_crisp if you want to use LoRA."
     if hparams.perform_lora and args.sequential_edit:
@@ -84,26 +89,36 @@ def get_hparams(args):
         assert args.num_edits >= args.batch_size, "Makes no sense to have a batch_size bigger than number of edits..."
         hparams.num_edits = args.num_edits
     return hparams
+    
 
 def calculate_model_name(args, hparams):
     if args.perform_lora:
-        # it's basically lora ft
-        name = f"{args.model}_LoRA_FT_{args.data_type}"
+        alg_name = "LoRAFT"
     elif args.no_crisp:
-        # it's basically ft
-        name = f"{args.model}_FT_{args.data_type}"
+        alg_name = "CRISPEDITFT"
     else:
-        name = f"{args.model}_{hparams.alg_name}_{args.data_type}_{args.energy_threshold}_{hparams.mom2_n_samples}"
-    
+        alg_name = hparams.alg_name
+    # alg_name = hparams.alg_name if not args.no_snap else "JigsawFT"
+    # if args.no_snap:
+    #     # it's basically ft
+    #     name = f"{args.model}_FT_{args.data_type}_{args.energy_threshold}"
+    # else:
+    #     name = f"{args.model}_{hparams.alg_name}_{args.data_type}_{args.energy_threshold}"
+    # default for sequential stuff is 1000, rest was 10k
+    alg_name+=f"Cache{args.cache_sample_num}"
     if args.sequential_edit:
-        name += f"_sequential_{args.num_edits}"
+        #name += f"_sequential_{args.num_edits}"
+        alg_name+=f"Seq{args.num_edits}"
     
     if hparams.recalculate_cache:
-        name += f"_recalc_cache_{args.recalculate_weight_threshold}_edit_sample_{hparams.edit_n_samples}"
-    if args.sequential_edit:
-        name += f"_edit_cache_{hparams.edit_cache_style}"
-        
-    return name.replace('.', '_')
+        # name += f"_recalc_cache_{args.recalculate_weight_threshold}"\
+        str_recalc_thr = f"{args.recalculate_weight_threshold:.2f}".replace("0.","")
+        alg_name +=f"Recalc{str_recalc_thr}"
+    name = f"{args.model}_{alg_name}_{args.data_type}_{args.energy_threshold}"
+    if args.layers:
+        layer_str = '-'.join(args.layers.strip("'").split(','))
+        name += f"_L{layer_str}"
+    return name
 
 if __name__ == "__main__":
     args = get_arguments()
