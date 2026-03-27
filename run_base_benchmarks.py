@@ -32,7 +32,7 @@ def get_model_and_tokenizer_from_dir(edited_model_dir_local):
 def get_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('--edited_model_dir', required=True, type=str, default=None, help='Path to edited model for evaluation.')
-    parser.add_argument('--data_type', required=True, type=str, default='zsre', choices=['zsre', 'counterfact', 'wiki', 'safeedit_train', 'safeedit_test'])
+    parser.add_argument('--data_type', required=True, type=str, default='zsre', choices=['zsre', 'zsre10k', 'counterfact', 'wiki', 'safeedit_train', 'safeedit_test'])
     parser.add_argument('--eval_num', required=False, type=int, default=200, help='Number of evaluation instances to use for capability. Default uses 200.')
     parser.add_argument('--alg_name', required=True, type=str, default='ft_edit', help='Name of the editing algorithm used.')
     parser.add_argument('--model_name', required=True, type=str, default='gpt2-xl', help='Name of the base model used.')
@@ -54,7 +54,8 @@ if __name__ == "__main__":
     # device expects the device number only
     device = model.device.index
 
-    run_name = args.edited_model_dir
+    # run_name = args.edited_model_dir
+    run_name = f"{hparams.alg_name}_{args.data_type}_{hparams.model_name}"
     run = wandb.init(project=args.wandb_project, name=run_name, config=vars(hparams), resume=args.wandb_run_id if not args.wandb_run_id else "must", id=args.wandb_run_id)
 
     # before evaluation, always make sure tokenizer padding side is correct
@@ -69,23 +70,25 @@ if __name__ == "__main__":
     print_time("Begin Capability Eval Time")
 
     tasks_with_config = {
-        "ifeval":         {"shots": 0, "batch": "auto"},
-        "truthfulqa_mc2": {"shots": 0, "batch": "auto"},
-        "mmlu":           {"shots": 5, "batch": "auto"}, 
+        "ifeval":         {"shots": 0, "batch": 64},
+        "truthfulqa_mc2": {"shots": 0, "batch": 64},
+        
 
         # HEAVY tasks (High shots + CoT): STRICT batch limit needed
-        "gsm8k_cot":      {"shots": 8,  "batch": 2}, # CoT generates long outputs, eats memory, add "batch": 1 (or whatever else) if OOM
-        "arc_challenge":  {"shots": 25, "batch": 1}  # 25-shot context is massive, add "batch": 1 if OOM
+        "gsm8k_cot":      {"shots": 8,  "batch": 64}, # CoT generates long outputs, eats memory, add "batch": 1 (or whatever else) if OOM
+        "arc_challenge":  {"shots": 25, "batch": 64},  # 25-shot context is massive, add "batch": 1 if OOM
+        "mmlu":           {"shots": 5, "batch": 64}, 
     }
     results = {"results": {}}
 
     for task_name, config in tasks_with_config.items():
         print(f"Running {task_name} (Shots: {config['shots']}, Batch: {config['batch']})...")
-        
+        # limit = 30 if task_name == "mmlu" else args.eval_num
+        limit = args.eval_num
         _results = simple_evaluate(
             model=lm_wrapper,
             tasks=[task_name],
-            limit=args.eval_num,
+            limit=limit,
             num_fewshot=config['shots'],
             batch_size=config['batch'],
             apply_chat_template=True,
