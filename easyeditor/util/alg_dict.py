@@ -60,6 +60,7 @@ PER_ALG_DICT = {
 DS_DICT = {
     "cf": CounterFactDataset,
     "zsre": ZsreDataset,
+    "zsre10k": ZsreDataset
 }
 
 MULTIMODAL_DS_DICT = {
