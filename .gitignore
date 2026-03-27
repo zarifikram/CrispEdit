@@ -10,4 +10,14 @@ toy_experiment/plots/
 *.slurm
 eval.sh
 run.sh
-run_edited_benchmarks_chunk.py
+outputs/
+outputs_zsre/
+outputs_zsre_no_ctx/
+eval_joblists/
+*.tsv
+logs2/
+logs_slurm/
+logs_slurm2/
+logs_slurm2_train/
+*.out
+*.err
