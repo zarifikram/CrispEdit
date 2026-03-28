@@ -48,8 +48,8 @@ set -euo pipefail
 #   example: LAYERS="19,20,21"
 
 export PYTORCH_CUDA_ALLOC_CONF="max_split_size_mb:128,garbage_collection_threshold:0.8"
-MODEL="${MODEL:-qwen2.5-7b}"
-WANDB_PROJECT="${WANDB_PROJECT:-JIGSAW_QWEN_SWEEP}"
+MODEL="${MODEL:-qwen2.5-32b}"
+WANDB_PROJECT="${WANDB_PROJECT:-JIGSAW_LARGE}"
 BATCH_SIZE="${BATCH_SIZE:-32}"
 
 WORKDIR="/home1/firouzko/jigsaw"
@@ -86,8 +86,9 @@ nvidia-smi || true
 # Environment
 # ---------------------------
 module unload python 2>/dev/null || true
-export HF_CACHE_DIR="/project2/rashidin_1793/arad_cache/data/huggingface/hub/"
+export HF_CACHE_DIR="/project2/rashidin_1842/arad_cache/data/huggingface/hub/"
 export HF_DATASETS_DIR="/project2/rashidin_1793/arad_cache/data/huggingface/datasets/"
+export HF_HUB_CACHE="/project2/rashidin_1842/arad_cache/data/huggingface/hub/"
 
 export WANDB_ENTITY="aradfir-usc"
 
@@ -109,7 +110,7 @@ case "${RECALC_CACHE:-0}" in
   1|true|TRUE|yes|YES) NEEDS_UNIQUE_STATS=1 ;;
 esac
 
-export STATS_DIR="/project2/rashidin_1793/arad_cache/data/jigsaw_stats"
+export STATS_DIR="/project2/rashidin_1842/arad_cache/data/jigsaw_stats"
 if [ "$NEEDS_UNIQUE_STATS" -eq 1 ]; then
     STATS_DIR="${STATS_DIR}/unique_${RANDOM}"
 fi

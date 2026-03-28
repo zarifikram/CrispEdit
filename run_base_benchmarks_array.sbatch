@@ -2,7 +2,7 @@
 #SBATCH --job-name=base_bench
 #SBATCH --account=rashidin_1842
 #SBATCH --partition=ce_hopper
-#SBATCH --time=04:00:00
+#SBATCH --time=06:00:00
 
 #SBATCH --cpus-per-task=30
 #SBATCH --mem=100G
@@ -25,9 +25,10 @@ cd "$WORKDIR"
 export WANDB_ENTITY="aradfir-usc"
 
 module unload python 2>/dev/null || true
-export HF_CACHE_DIR="/project2/rashidin_1793/arad_cache/data/huggingface/hub/"
+export HF_CACHE_DIR="/project2/rashidin_1842/arad_cache/data/huggingface/hub/"
 export HF_DATASETS_DIR="/project2/rashidin_1793/arad_cache/data/huggingface/datasets/"
-export STATS_DIR="/project2/rashidin_1793/arad_cache/data/jigsaw_stats/"
+export STATS_DIR="/project2/rashidin_1842/arad_cache/data/jigsaw_stats/"
+export HF_HUB_CACHE="/project2/rashidin_1842/arad_cache/data/huggingface/hub/"
 
 if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
   source "$HOME/miniconda3/etc/profile.d/conda.sh"
@@ -87,11 +88,11 @@ nvidia-smi || true
 
 CMD=("$PY" run_base_benchmarks.py
   --edited_model_dir "${edited_model_dir}"
-  --model_name "qwen2.5-7b"
+  --model_name "qwen2.5-32b"
   --alg_name "${alg_name}"
   --data_type "${data_type}"
   --eval_num 200
-  --wandb_project "QWEN_JIGSAW_SWEEP_BASE_EVAL"
+  --wandb_project "JIGSAW_LARGE_BASE_EVAL"
 )
 
 echo "=== RUN ==="

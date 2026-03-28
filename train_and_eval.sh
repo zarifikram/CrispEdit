@@ -27,7 +27,7 @@ NUM_EDITS="${5:-}"  # optional -> enables sequential if provided
 # Force finetuning + recalc OFF in this interface
 FT_MODE=0
 RECALC_WEIGHT_THR=""
-MODEL="qwen2.5-7b"
+MODEL="qwen2.5-32b"
 
 # ---- Normalize energy threshold like Python float -> str(float) ----
 ENERGY_THRESHOLD="$(python -c 'import sys; print(float(sys.argv[1]))' "$ENERGY_IN")"
