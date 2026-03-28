@@ -1,10 +1,10 @@
-from easyeditor.models.crispedit.utils import calculate_projection_caches
 from easyeditor.models.crispedit.CrispEdit_hparams import CrispEditHyperParams
 from dotenv import load_dotenv
 import os
 import random
 import numpy as np
 from transformers import AutoModelForCausalLM, AutoTokenizer
+from easyeditor.models.crispedit.utils import calculate_cov_cache_with_old_data
 
 load_dotenv()
 HF_CACHE_DIR = os.getenv("HF_CACHE_DIR")
@@ -52,12 +52,7 @@ if __name__ == "__main__":
     model = AutoModelForCausalLM.from_pretrained(MODEL_NAME, cache_dir=HF_CACHE_DIR, device_map='auto')
     device = model.device
 
-    # set appropriate padding token
-    tokenizer.add_special_tokens({'pad_token': '[PAD]'})
-    model.resize_token_embeddings(len(tokenizer), mean_resizing=False)
-    model.config.pad_token_id = tokenizer.pad_token_id
-    model.gradient_checkpointing_enable()
-    model.enable_input_require_grads()
+    model, tokenizer = update_model_and_tokenizer_with_appropriate_padding_token(model, tokenizer, hparams)
 
     layer = int(args.layer)  # specify the layer number you want to compute A, B for
 
@@ -66,7 +61,9 @@ if __name__ == "__main__":
     
     if tokenizer.padding_side != "right":
         tokenizer.padding_side = "right"
-    weight_to_projection_cache = calculate_projection_caches(model, tokenizer, hparams, force_recompute=False)
+    weight_to_projection_cache = calculate_cov_cache_with_old_data(
+        model, tok, hparams, force_recompute=False
+    )
     print(f"Projection caches computed for model {MODEL_NAME} at layer {layer}.")
     # print weight_to_projection_cache keys
     for key in weight_to_projection_cache.keys():
